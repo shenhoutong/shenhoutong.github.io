@@ -1,0 +1,2629 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F2F2EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161914" media="(prefers-color-scheme: dark)">
+<meta name="description" content="家人過世後要辦哪些事：回答幾個簡單的問題，看到依期限排好的待辦清單，附官方連結。">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://shenhoutong.github.io/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="application-name" content="身後通">
+<meta name="apple-mobile-web-app-title" content="身後通">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:site_name" content="身後通">
+<meta property="og:title" content="身後通：家人過世後要辦的事">
+<meta property="og:description" content="家人過世後要辦哪些事：回答幾個簡單的問題，看到依期限排好的待辦清單，附官方連結。">
+<meta property="og:url" content="https://shenhoutong.github.io/">
+<meta property="og:image" content="https://shenhoutong.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="身後通：家人過世後要辦哪些事？回答幾個問題，看到依期限排好的待辦清單">
+<meta name="twitter:card" content="summary_large_image">
+<title>身後通</title>
+<!--
+  身後通 v3.7（2026-10-15；舊名「身後事導航」）
+  v3.7：公開網站版（GitHub Pages）。程式和內容都和 v3.6.1 一樣，只改版本號；
+  公開網站要用的設定（分享預覽、主畫面圖示、禁止連外的安全設定）由 make_site.py 在做網站時加上，這個檔案本身不變。
+  v3.6.1：接上「回報錯誤」Google 表單（身後通 錯誤回報表單）；只改設定，內容和程式都沒改。
+  v3.6（2026-10-15）
+  v3.6：改名「身後通」；開始頁、清單頁、PDF、列印、傳給家人都加上「有問題請自行詢問律師、地政士（代書）或辦理單位」；
+  加「回報錯誤或過時的資料」連結（Google 表單，只帶入版本和頁面名稱，不傳出使用者的回答）。內容沒有改。
+  v3.5（2026-10-15）
+  v3.5：新增「如果是車禍過世：申請強制險的死亡給付」「如果是因為犯罪過世：申請犯罪被害補償金」（共 25 項）；
+  保留喪葬費收據也給車禍、犯罪的情況看；介面改成比較溫暖的設計（竹紙底色、松綠、明體標題、開始頁的茶杯插圖）。
+  v3.4（2026-10-14）
+  v3.4：第六輪檢查後修正：查財產改成過世後 1 個月內申請（結果要 30 天後才拿得到）、不要先挑一位債主還錢（民法第 1162 條之 1、之 2）、
+  在戶政事務所申請家屬死亡給付前先比較本人死亡給付、假日說明改清楚、PDF 不把電話和日期切斷、清單日期不從中間換行、多處文字。
+  v3.3：新增「退休公務人員的遺屬金」，第 6 題加「公務人員的月退休金（月退）」選項（共 23 項）。
+  v3.2：聲請費更正為 1,500 元（司法院公告）、補戶籍法罰鍰、火化也要死亡證明、保單清查結果不回覆、
+  低收入戶與急難救助的申請地點和期限、保管箱、牌照稅、未保存登記房屋、多處白話改寫。
+  v3.1：新增「急難救助」一項，每個人都看得到（共 22 項）。
+  v3 改了什麼：低收入戶項目不再用臺北市的例子（改寫社會救助法和去哪裡問）、拋棄繼承聲請費兩種說法並列、
+  拿掉查不到來源的「相驗屍體證明書不收費」、多處文字修正。
+  v2 改了什麼：先不要做 3 條附「為什麼」、21 項（新增保留喪葬費收據）、死亡證明和拋棄繼承重寫、
+  更多查證過的電話、存成 PDF 拿去超商印（先選 7-ELEVEN／全家）、匯出不寫「還有幾天」、字大時精簡排版。
+  一個檔案就是整個工具：上面是樣式（style），下面兩段程式：
+  1. 內容表（CONTENT）：每一項待辦的文字、期限、官方來源。法規改了只要改這一段。
+  2. 程式（APP）：問答流程、期限計算、打勾、列印、分享。
+  Single-file app: styles, then CONTENT (data, edit when rules change), then APP (logic).
+  不連任何外部網站、不上傳資料；打勾進度只存在使用者自己的瀏覽器（localStorage）。
+  No network requests; progress is stored only in the user's own browser.
+-->
+<style>
+/* ===== 顏色與大小（Design tokens） ===== */
+:root {
+  --paper: #F2F2EA;      /* 背景：竹紙 bamboo paper */
+  --surface: #FFFEF9;    /* 面板：素白 warm white panels */
+  --ink: #2A2C27;        /* 主要文字：墨 main text */
+  --ink-2: #585B51;      /* 次要文字 secondary text */
+  --line: #DCDCCF;       /* 線 lines */
+  --line-strong: #7F8A78; /* 按鈕外框（對比 3:1 以上） button outlines */
+  --danger: #A3392B;     /* 確定清除：印泥紅 destructive */
+  --danger-ink: #FFFFFF;
+  --accent: #3E5E44;     /* 主色：松綠 primary */
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E4EBDD;
+  --hinoki: #A87A30;     /* 點綴：檜木 decorative accent */
+  --caution-bg: #F9EFD8; /* 先不要做 */
+  --caution-line: #D9A748;
+  --caution-ink: #5A3D06;
+  --late: #A3392B;       /* 已超過期限 overdue */
+  --late-bg: #F8E6E0;
+  --focus: #1F5FAF;
+  --note-bg: rgba(255, 255, 255, .35); /* 聲明框底色 note box */
+  --shadow: 0 1px 0 rgba(70, 66, 40, .05), 0 10px 24px -18px rgba(70, 66, 40, .45); /* 面板的淡陰影 soft panel shadow */
+  /* 標題用明體，比較有溫度；手機沒有明體時會用一般字體 Ming/serif headings, falls back to sans */
+  --serif: "Noto Serif TC", "Noto Serif CJK TC", "Source Han Serif TC", "Songti TC", "PMingLiU", serif;
+  --scale: 1;            /* 字放大倍數 font scale */
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #161914;
+    --surface: #1F231D;
+    --ink: #E9E8DE;
+    --ink-2: #B4B5A8;
+    --line: #363B33;
+    --line-strong: #7F8B79;
+    --danger: #F2A497;
+    --danger-ink: #2A0F0B;
+    --accent: #A8C8A0;
+    --accent-ink: #12190F;
+    --accent-soft: #26301F;
+    --hinoki: #D2A95E;
+    --shadow: 0 1px 0 rgba(0, 0, 0, .2);
+    --note-bg: rgba(255, 255, 255, .04);
+    --caution-bg: #2E2512;
+    --caution-line: #8C6E2E;
+    --caution-ink: #F0D9A6;
+    --late: #F2A497;
+    --late-bg: #3A2420;
+    --focus: #8DB8F2;
+    color-scheme: dark;
+  }
+}
+/* 手動指定深色時也套用 Also apply when dark is set explicitly */
+:root[data-theme="dark"] {
+    --paper: #161914;
+    --surface: #1F231D;
+    --ink: #E9E8DE;
+    --ink-2: #B4B5A8;
+    --line: #363B33;
+    --line-strong: #7F8B79;
+    --accent: #A8C8A0;
+    --accent-ink: #12190F;
+    --accent-soft: #26301F;
+    --hinoki: #D2A95E;
+    --shadow: 0 1px 0 rgba(0, 0, 0, .2);
+    --note-bg: rgba(255, 255, 255, .04);
+    --caution-bg: #2E2512;
+    --caution-line: #8C6E2E;
+    --caution-ink: #F0D9A6;
+    --late: #F2A497;
+    --late-bg: #3A2420;
+    --focus: #8DB8F2;
+    color-scheme: dark;
+  }
+
+
+/* ===== 基本設定（Base） ===== */
+/* iOS：跟著手機的「文字大小」設定 Follow iOS Dynamic Type */
+@supports (font: -apple-system-body) { html { font: -apple-system-body; } }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "PingFang TC", "Noto Sans TC", "Noto Sans CJK TC", "Microsoft JhengHei", sans-serif;
+  font-size: calc(1.125rem * var(--scale));
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+a { color: var(--accent); text-underline-offset: .2em; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: .3em; }
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ===== 上方列（Top bar） ===== */
+.topbar {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  padding-top: env(safe-area-inset-top);
+}
+.topbar-in {
+  font-size: 1rem; /* 上方列不跟著工具內的字放大，避免擠在一起 keep the bar compact */
+  max-width: 38em; margin: 0 auto; padding: .35em 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: .5em;
+}
+.brand { display: flex; align-items: center; gap: .4em; font-family: var(--serif); font-weight: 700; font-size: 1.08em; letter-spacing: .12em; color: var(--ink); text-decoration: none; padding: .3em 0; white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.brand svg { flex: none; width: 1.5em; height: 1.5em; color: var(--accent); }
+.font-btn {
+  flex: none; font: inherit; font-size: 1.05em; color: var(--ink);
+  background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: 2em;
+  min-height: 2.6em; padding: .2em 1em; cursor: pointer; white-space: nowrap;
+}
+
+/* ===== 版面（Layout） ===== */
+main { display: block; outline: none; }
+.wrap { max-width: 38em; margin: 0 auto; padding: 1.2em 16px calc(2.5em + env(safe-area-inset-bottom)); }
+h1 { font-family: var(--serif); font-weight: 700; font-size: 1.55em; line-height: 1.4; margin: .2em 0 .5em; letter-spacing: .04em; }
+h1:focus { outline: none; }
+h2 { font-family: var(--serif); font-weight: 700; font-size: 1.16em; line-height: 1.5; margin: 1.7em 0 .45em; letter-spacing: .03em; }
+p { margin: .5em 0; }
+.muted { color: var(--ink-2); }
+.small { font-size: .9em; }
+.lead { font-size: 1.08em; }
+.stack > * + * { margin-top: .75em; }
+
+/* ===== 按鈕（Buttons） ===== */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: .4em;
+  width: 100%; min-height: 3.1em; padding: .55em 1em;
+  border-radius: 14px; border: 2px solid transparent;
+  font: inherit; font-weight: 700; letter-spacing: .04em; text-align: center; cursor: pointer;
+  text-decoration: none;
+}
+.btn-primary { background: var(--accent); color: var(--accent-ink); box-shadow: 0 2px 0 rgba(30, 45, 30, .18); }
+.btn-primary:active { transform: translateY(1px); box-shadow: none; }
+.btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--line-strong); }
+.btn-danger { background: var(--danger); color: var(--danger-ink); }
+.btn-text {
+  display: inline-flex; align-items: center; min-height: 2.75em;
+  background: none; border: 0; padding: .3em .1em; font: inherit;
+  color: var(--accent); text-decoration: underline; text-underline-offset: .2em; cursor: pointer;
+}
+.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: .7em; }
+@media (max-width: 22em) { .btn-row { grid-template-columns: 1fr; } }
+
+/* ===== 開始頁（Welcome） ===== */
+.welcome h1 { font-size: 2em; margin: .1em 0 .1em; letter-spacing: .1em; }
+.welcome .comfort { font-family: var(--serif); font-size: 1.3em; line-height: 1.6; color: var(--accent); margin: .1em 0 .9em; letter-spacing: .05em; }
+.hero-art { display: block; width: 7.5em; height: auto; margin: .8em 0 .2em -.3em; }
+.note-box {
+  background: var(--note-bg); border: 1px solid var(--line); border-radius: 14px;
+  padding: .8em 1em; color: var(--ink-2); font-size: .95em;
+}
+
+/* ===== 問題頁（Questions） ===== */
+.progress-text { color: var(--ink-2); font-size: .95em; margin: 0 0 .3em; }
+.progress { height: .45em; background: var(--line); border-radius: 1em; overflow: hidden; margin-bottom: 1.2em; }
+.progress > span { display: block; height: 100%; background: var(--accent); border-radius: 1em; }
+.q-hint { color: var(--ink-2); margin: -.2em 0 1em; }
+.opts { display: grid; gap: .7em; margin: 0; padding: 0; border: 0; }
+.opt {
+  display: flex; align-items: center; gap: .85em;
+  width: 100%; min-height: 3.3em; padding: .7em 1em;
+  background: var(--surface); color: var(--ink);
+  border: 2px solid var(--line); border-radius: 14px; box-shadow: var(--shadow);
+  font: inherit; text-align: left; cursor: pointer;
+}
+.opt .mark {
+  flex: none; width: 1.45em; height: 1.45em; border-radius: 50%;
+  border: 2px solid var(--ink-2); display: grid; place-items: center;
+}
+.opt.multi .mark { border-radius: .35em; }
+.opt[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+.opt[aria-checked="true"] .mark { background: var(--accent); border-color: var(--accent); }
+.opt[aria-checked="true"] .mark::after {
+  content: ""; width: .38em; height: .7em; margin-top: -.12em;
+  border: solid var(--accent-ink); border-width: 0 .17em .17em 0; transform: rotate(45deg);
+}
+.date-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: .6em; }
+.field label { display: block; font-weight: 700; margin-bottom: .2em; }
+select {
+  width: 100%; min-height: 3em; font: inherit; color: var(--ink);
+  background: var(--surface); border: 2px solid var(--line); border-radius: 12px; padding: .3em .5em;
+}
+.error {
+  color: var(--late); background: var(--late-bg); border-radius: .6em;
+  padding: .6em .9em; font-weight: 700; margin: .8em 0 0;
+}
+.q-actions { margin-top: 1.4em; display: grid; gap: .6em; }
+.back-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5em; margin-top: .8em; }
+
+/* ===== 清單頁（List） ===== */
+.summary { margin: 0 0 1em; }
+.done-count { display: flex; align-items: center; gap: .8em; margin: .8em 0 1.2em; }
+.done-count .bar { flex: 1; height: .45em; background: var(--line); border-radius: 1em; overflow: hidden; }
+.done-count .bar > span { display: block; height: 100%; background: var(--accent); }
+.storage-warn { background: var(--caution-bg); color: var(--caution-ink); border-radius: .6em; padding: .6em .9em; font-size: .92em; margin-bottom: 1em; }
+
+.caution {
+  background: var(--caution-bg); color: var(--caution-ink);
+  border: 1px solid var(--caution-line); border-left-width: .35em; border-radius: 14px;
+  padding: .7em 1em .5em; margin-bottom: 1.8em;
+}
+.caution h2 { margin: .1em 0 .2em; color: var(--caution-ink); font-size: 1.12em; }
+.caution details { border-top: 1px solid var(--caution-line); }
+.caution details:first-of-type { border-top: 0; }
+.caution summary {
+  cursor: pointer; padding: .55em 0; list-style: none; display: flex; gap: .5em; font-weight: 700;
+}
+.caution summary::-webkit-details-marker { display: none; }
+.caution summary::before { content: "＋"; flex: none; }
+.caution details[open] summary::before { content: "－"; }
+.caution .detail-body { padding: 0 0 .7em 1.5em; font-weight: 400; }
+.caution .dont-head { display: block; }
+.caution .dont-title { display: block; }
+.caution .dont-why { display: block; font-weight: 400; font-size: .92em; margin-top: .15em; }
+.caution .detail-body ul { padding-left: 1.2em; margin: .3em 0; }
+.caution .detail-body li { margin: .2em 0; }
+.caution a { color: var(--caution-ink); }
+
+/* 時間軸：依期限排的各組 Timeline of groups (the content is a real time sequence) */
+.timeline { position: relative; margin: 0 0 0 .55em; padding-left: 1.5em; border-left: 2px dotted var(--line-strong); }
+.group { position: relative; padding-bottom: 1.3em; }
+.group::before {
+  content: ""; position: absolute; left: calc(-1.5em - 9px); top: .95em;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--paper); border: 3px solid var(--hinoki);
+}
+.group.all-done::before { background: var(--accent); border-color: var(--accent); }
+.group-head {
+  display: flex; align-items: center; justify-content: space-between; gap: .6em; width: 100%;
+  background: none; border: 0; padding: .5em 0; font: inherit; color: var(--ink); text-align: left; cursor: pointer;
+  min-height: 2.9em;
+}
+.group-title { font-family: var(--serif); font-size: 1.2em; font-weight: 700; letter-spacing: .04em; }
+.group-sub { color: var(--ink-2); font-size: .9em; font-weight: 400; display: block; }
+.group-count { color: var(--ink-2); font-size: .9em; white-space: nowrap; }
+.chev { display: inline-block; transition: transform .15s; }
+.group-head[aria-expanded="true"] .chev { transform: rotate(90deg); }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); }
+.row { display: flex; align-items: stretch; }
+.row + .row { border-top: 1px solid var(--line); }
+.row .check { flex: none; display: grid; place-items: center; width: 3.3em; cursor: pointer; }
+.row .check input { width: 1.55em; height: 1.55em; margin: 0; accent-color: var(--accent); cursor: pointer; }
+.row .body {
+  flex: 1; display: flex; align-items: center; gap: .5em;
+  padding: .7em .9em .7em .1em; color: var(--ink); text-decoration: none; min-height: 3.6em;
+}
+.row .body .txt { flex: 1; }
+.row .t { display: block; font-weight: 700; line-height: 1.5; }
+.row .due { display: block; color: var(--ink-2); font-size: .92em; line-height: 1.5; margin-top: .15em; }
+.row .due.late { color: var(--late); font-weight: 700; }
+.nw { white-space: nowrap; } /* 日期不從中間換行 keep dates on one line */
+.row .go { color: var(--ink-2); font-size: 1.3em; flex: none; }
+.row.done .t { color: var(--ink-2); text-decoration: line-through; text-decoration-thickness: 1px; }
+.tag { display: inline-block; font-size: .78em; font-weight: 700; padding: 0 .6em; border-radius: 999px; margin: 0 0 0 .35em; vertical-align: .12em; white-space: nowrap; }
+.tag-imp { background: var(--late-bg); color: var(--late); }
+.tag-chk { background: var(--caution-bg); color: var(--caution-ink); }
+
+.tools { margin-top: 1.6em; }
+.phones { margin-top: 1.6em; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: .3em 1em; box-shadow: var(--shadow); }
+.phones summary { cursor: pointer; font-weight: 700; padding: .6em 0; min-height: 2.9em; display: flex; align-items: center; }
+.phones ul { list-style: none; margin: 0; padding: 0 0 .6em; }
+.phones li { border-top: 1px solid var(--line); }
+.tel-row { display: block; padding: .6em 0; color: var(--ink); text-decoration: none; min-height: 3em; }
+.tel-row .tel { display: block; color: var(--accent); font-weight: 700; font-size: 1.05em; text-decoration: underline; text-underline-offset: .2em; }
+.foot { margin-top: 2em; color: var(--ink-2); font-size: .9em; }
+.foot p { margin: .4em 0; }
+.foot .disclaim { color: var(--ink); }
+/* 回報錯誤連結 Feedback link */
+.feedback { margin-top: .6em; }
+.feedback .btn-text { padding-left: 0; }
+.feedback p { margin: 0; }
+
+/* ===== 詳細頁（Item detail） ===== */
+.due-pill {
+  display: inline-block; padding: .3em 1em; border-radius: 2em;
+  border: 1.5px solid var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 700; margin: .2em 0 .4em;
+}
+.due-pill.late { border-color: var(--late); background: var(--late-bg); color: var(--late); }
+.late-msg { color: var(--late); font-weight: 700; }
+.confirm-note { background: var(--caution-bg); color: var(--caution-ink); border-radius: 12px; padding: .6em .9em; margin: .8em 0; }
+.detail ul { padding-left: 1.3em; margin: .4em 0; }
+.detail li { margin: .3em 0; }
+.detail .law { color: var(--ink-2); }
+.sources { list-style: none; padding-left: 0 !important; }
+.sources li { margin: .5em 0; }
+.sources .date { display: block; color: var(--ink-2); font-size: .88em; }
+.detail-actions { margin-top: 2em; display: grid; gap: .7em; }
+.top-back { margin-bottom: .3em; }
+
+/* ===== 對話框（Dialog） ===== */
+.modal-bg {
+  position: fixed; inset: 0; z-index: 20; background: rgba(0,0,0,.45);
+  display: flex; align-items: flex-end; justify-content: center; padding: 16px;
+}
+.modal {
+  background: var(--surface); color: var(--ink); border-radius: 20px; width: 100%; max-width: 34em;
+  padding: 1.2em 1.1em calc(1.1em + env(safe-area-inset-bottom)); max-height: 90vh; overflow: auto;
+}
+.modal h2 { margin-top: 0; }
+.modal h3.store { font-size: 1.05em; margin: 1.1em 0 .2em; }
+.modal h3.pick { font-size: 1.05em; margin: 1.2em 0 .5em; }
+.store-pick { display: grid; grid-template-columns: 1fr 1fr; gap: .7em; }
+@media (max-width: 22em) { .store-pick { grid-template-columns: 1fr; } }
+.btn-store {
+  flex-direction: column; gap: .1em; min-height: 4.2em; font-size: 1.1em;
+  background: var(--surface); color: var(--ink); border-color: var(--line-strong);
+}
+.btn-store .sub { font-size: .8em; font-weight: 400; color: var(--ink-2); }
+.btn-store[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+.btn-store .picked { display: none; font-size: .75em; color: var(--accent); }
+.btn-store[aria-pressed="true"] .picked { display: block; }
+.btn-store span { overflow-wrap: normal; word-break: keep-all; }
+/* 字「大」「特大」時改成一個一列，字才不會被切開 One per row at large text so words don't break */
+html[data-scale="1.2"] .store-pick, html[data-scale="1.4"] .store-pick { grid-template-columns: 1fr; }
+.where-box { background: var(--accent-soft); border-radius: .6em; padding: .6em .9em; margin: .7em 0; }
+.where-box p { margin: .2em 0; }
+.store-steps:focus { outline: none; }
+.store-steps h3:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.modal ol.steps { padding-left: 1.4em; margin: .3em 0; }
+.modal ol.steps li { margin: .35em 0; }
+.modal textarea {
+  width: 100%; min-height: 12em; font: inherit; font-size: .9em; color: var(--ink);
+  background: var(--paper); border: 1px solid var(--line); border-radius: .6em; padding: .6em;
+}
+@media (min-width: 40em) { .modal-bg { align-items: center; } }
+
+/* ===== 錯誤訊息列（Error bar） ===== */
+.error-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  background: var(--late-bg); color: var(--late); border-top: 2px solid var(--late);
+  padding: .8em 16px calc(.8em + env(safe-area-inset-bottom));
+}
+.error-bar .in { max-width: 38em; margin: 0 auto; }
+.error-bar .btn-row { margin-top: .5em; }
+
+/* ===== 列印（Print） ===== */
+#printArea { display: none; }
+@media print {
+  @page { margin: 14mm 12mm; }
+  body { background: #fff; color: #000; font-size: 11.5pt; line-height: 1.6; }
+  body > *:not(#printArea) { display: none !important; }
+  #printArea { display: block !important; }
+  #printArea h1 { font-size: 16pt; margin: 0 0 4pt; }
+  #printArea h2 { font-size: 13pt; margin: 12pt 0 4pt; border-bottom: 1px solid #000; }
+  #printArea .p-item { break-inside: avoid; margin: 0 0 8pt; }
+  #printArea .p-title { font-weight: 700; }
+  #printArea .p-box { display: inline-block; width: 11pt; height: 11pt; border: 1.2pt solid #000; margin-right: 5pt; vertical-align: -1pt; text-align: center; line-height: 10pt; font-size: 9pt; }
+  #printArea ul { margin: 2pt 0 0 18pt; padding: 0; }
+  #printArea .p-meta { margin-left: 16pt; }
+  #printArea a { color: #000; text-decoration: none; }
+}
+
+/* 字放大或螢幕很窄時，清單改成精簡排版，讓文字有足夠寬度
+   Compact list layout for large text or narrow screens so the text column stays wide */
+html[data-scale="1.2"] .timeline, html[data-scale="1.4"] .timeline { margin-left: 0; padding-left: 0; border-left: 0; }
+html[data-scale="1.2"] .group::before, html[data-scale="1.4"] .group::before { display: none; }
+html[data-scale="1.2"] .row .check, html[data-scale="1.4"] .row .check { width: 2.5em; }
+html[data-scale="1.2"] .row .go, html[data-scale="1.4"] .row .go { display: none; }
+html[data-scale="1.2"] .row .body, html[data-scale="1.4"] .row .body { padding-right: .6em; }
+@media (max-width: 360px) {
+  .timeline { margin-left: 0; padding-left: 0; border-left: 0; }
+  .group::before { display: none; }
+  .row .check { width: 2.5em; }
+  .row .go { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#/"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 20c3.5-6.5 8-11 14-14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10.5 13.2c-3.2-.6-4.6-3.4-4-6 3 .2 5.1 2.4 4 6z" fill="currentColor"/><path d="M14.4 9.6c.6-3.2 3.4-4.6 6-4-.2 3-2.4 5.1-6 4z" fill="var(--hinoki)"/></svg><span>身後通</span></a>
+    <button type="button" class="font-btn" id="fontBtn" aria-live="polite">字放大</button>
+  </div>
+</header>
+<main id="main" tabindex="-1"><div class="wrap"><p>載入中…</p></div></main>
+<div class="error-bar" id="errorBar" role="alert" hidden></div>
+<div id="modalRoot"></div>
+<section id="printArea" aria-hidden="true"></section>
+<noscript><div class="wrap"><p>這個工具需要開啟 JavaScript 才能使用。請換用手機或電腦內建的瀏覽器打開。</p></div></noscript>
+
+<!-- =====================================================================
+     內容表 CONTENT
+     每一項都只用官方來源查證過的內容（查證日期 2026-10-11）。
+     改內容時：只改這一段，並更新 VERIFIED_ON 和來源日期。
+     Content table — only officially verified facts. Edit here when rules change.
+     ===================================================================== -->
+<script>
+'use strict';
+window.CONTENT = (function () {
+  const VERIFIED_ON = '2026-10-11 至 2026-10-15';
+  // 工具版本（回報錯誤時自動帶入） Tool version, pre-filled in feedback reports
+  const APP_VERSION = 'v3.7';
+
+  // ---- 回報錯誤的 Google 表單 Feedback Google Form ----
+  // url：表單網址（docs.google.com/forms/.../viewform）。空的就不顯示回報連結。
+  // whereEntry、versionEntry：預先填入連結裡「哪一項或哪一頁」「版本」兩題的代號（entry.數字）；空的就不帶入。
+  // url: the form URL; empty hides the feedback links. *Entry: pre-fill field ids (entry.NNN); empty = no pre-fill.
+  const FEEDBACK = { url: 'https://docs.google.com/forms/d/e/1FAIpQLSdPFNdDilUX2UND4gsJLcKALenhBB3WpdUIFkAxoZwRC7Om7g/viewform', whereEntry: 'entry.200621041', versionEntry: 'entry.1764836413' };
+
+  // ---- 官方來源 Official sources ----
+  const SRC = {
+    tncFlow: ['臺南地檢署：司法相驗流程圖', 'https://www.tnc.moj.gov.tw/media/129742/58241821516.pdf', '頁面無日期'],
+    risDeath: ['內政部戶政司：死亡登記', 'https://www.ris.gov.tw/documents/html/2/3/1/386.html', '頁面無日期'],
+    risOnline: ['內政部戶政司：線上申辦死亡登記', 'https://www.ris.gov.tw/apply-registration/app/awf060220/description', '頁面無日期'],
+    molOneStop: ['勞動部：辦死亡登記時同時申請家屬死亡給付', 'https://www.mol.gov.tw/1607/1632/1640/80994/', '2026-10-08 更新'],
+    nhiForm: ['健保署：保險對象退保申報表', 'https://www.nhi.gov.tw/ch/dl-6207-7fcf9ef13cce4241a18975ccd3742bb7-1.pdf', '2017-06 版'],
+    finSearch: ['財政部：金融遺產查詢作業要點（新北市稅捐處轉載）', 'https://www.tax.ntpc.gov.tw/dl-5758-ba51be22e8264dbca0cb6ab729c25a34.html', '2024-01-01 生效'],
+    taxTrial: ['新北市稅捐處：遺產稅稅額試算', 'https://www.tax.ntpc.gov.tw/dl-5908-8360ee6156504645ad7e419abd3a9df2.html', '頁面無日期'],
+    etaxFlow: ['財政部稅務入口網：繼承案件申辦流程', 'https://www.etax.nat.gov.tw/etwmain/tax-info/house-land-transfer-taxtation-calculation-area/inheritance/file-process', '2026-06-25 更新'],
+    etaxPhone: ['財政部稅務入口網：國稅局地址電話（含免付費電話）', 'https://www.etax.nat.gov.tw/etwmain/tax-info/understanding/tax-introduction/Wb8KMzW', '2026-05-18'],
+    liaForm: ['壽險公會：保單查詢申請表（利害關係人用）', 'https://www.lia-roc.org.tw/storage/uploads/655c3688373b0.pdf', '2023-01 版'],
+    judRenounce: ['司法院：如何辦理拋棄繼承', 'https://www.judicial.gov.tw/tw/dl-51086-f45fa139e0ae437581a67c41707cbde0.html', '頁面無日期'],
+    judInventory: ['司法院：如何辦理陳報遺產清冊', 'https://www.judicial.gov.tw/tw/dl-51085-d920cd2f83e84418afdf8333d22e4086.html', '頁面無日期'],
+    civil1174: ['民法第 1174 條（全國法規資料庫）', 'https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=B0000001&flno=1174', '2026-10-11 查閱'],
+    civil1156: ['民法第 1156 條（全國法規資料庫）', 'https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=B0000001&flno=1156', '2026-10-11 查閱'],
+    gazette: ['總統府公報第 6867 號（民法繼承編修正條文）', 'https://www.president.gov.tw/Portals/0/Bulletins/paper/pdf/6867-7.pdf', '2009-06-10 公布'],
+    tax71_1: ['所得稅法第 71 條之 1（全國法規資料庫）', 'https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=G0340003&flno=71-1', '2026-10-11 查閱'],
+    ntbtLife: ['臺北國稅局：人生大事－身後篇', 'https://www.ntbt.gov.tw/singlehtml/b661e5a93dea4d94875efee1ad0388b3?cntId=31e065577eaa41719b1a5c68832849e0', '2025-04-30'],
+    socialAssist: ['社會救助法第 16、21 條（臺北市法規查詢系統引用）', 'https://laws.gov.taipei/law/LawSearch/LawArticleContent/FL002611', '最新修正 2015-12-30'],
+    mohw1957: ['衛福部：1957 福利諮詢專線', 'https://mohw.gov.tw/cp-16-65789-1.html', '2022-01-24'],
+    estateLaw: ['遺產及贈與稅法（財政部法規系統）', 'https://law-out.mof.gov.tw/LawContent.aspx?id=FL006067', '2026-09-11 修正版'],
+    ntbtQA: ['臺北國稅局：遺產稅常見問答', 'https://www.ntbt.gov.tw/singlehtml/0baa381b53034993a08862dfde2243b9?cntId=cabf41336d564011b185b4535130ded5', '2025-12-02'],
+    ntbcaFile: ['中區國稅局：申報遺產稅', 'https://www.ntbca.gov.tw/singlehtml/73956170c8c84f6caf14e77161f938ab?cntId=30e3cea4885c4f89a8f33a9d3b0ad44f', '2025-08-22'],
+    mof2026: ['財政部：115 年（2026 年）遺產稅免稅額及扣除額', 'https://www.mof.gov.tw/singlehtml/384fb3077bb349ea973e7fc6f13b6974?cntId=f2a148bdd1614850be9fa56df8cc9d5c', '2026-05-21'],
+    ssla: ['臺北市松山地政事務所：繼承登記', 'https://ssla.land.gov.taipei/News_Content.aspx?n=447D94B382B7BE81&sms=F8A51CDEA87F637B&s=AF3883BB23BC8718', '2025-07-29'],
+    hlLand: ['花蓮縣地政處：未辦繼承登記 Q&A', 'https://la.hl.gov.tw/Detail_sp/e4513c996586486c9d28cbdb492ef1de', '2020-01-30'],
+    tpLandList: ['臺北市地政局：未辦繼承登記列冊管理', 'https://land.gov.taipei/News_Content.aspx?n=26F3F58329CF6BDE&sms=87415A8B9CE81B16&s=A3235049244AD858', '2022-09-20'],
+    tnLandFee: ['臺南地政事務所：繼承登記規費', 'https://tnland.tainan.gov.tw/News_Content.aspx?n=30743&s=7925130', '2026-10-08'],
+    trafficRule33: ['道路交通安全規則第 33 條（全國法規資料庫）', 'https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=K0040013&flno=33', '法規整編至 2026-10-02'],
+    thbVehicle: ['公路局：繼承車輛要辦理過戶登記', 'https://www.thb.gov.tw/News_Content_table.aspx?n=87&s=55190', '2017-07-21，較舊'],
+    tmvVehicle: ['臺中區監理所：車輛繼承過戶', 'https://tmv.thb.gov.tw/cp.aspx?n=2507', '2026-04-17'],
+    fscSmall: ['金管會：小額存款繼承簡便措施', 'https://www.fsc.gov.tw/ch/home.jsp?id=96&parentpath=0%2C2&mcustomize=news_view.jsp&dataserno=202210060003&aplistdn=ou%3Dnews%2Cou%3Dmultisite%2Cou%3Dchinese%2Cou%3Dap_root%2Co%3Dfsc%2Cc%3Dtw&dtable=News', '2022-10-06'],
+    tdccQA: ['集保結算所：繼承轉帳業務詢答', 'https://www.tdcc.com.tw/portal/zh/investor/securitiesQA', '頁面無日期'],
+    tdccInquiry: ['集保結算所：查詢被繼承人的集保資料', 'https://www.tdcc.com.tw/portal/zh/investor/infoInquiry', '頁面無日期'],
+    ins65: ['保險法第 65 條（全國法規資料庫）', 'https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=G0390002&flno=65', '2026-10-11 查閱'],
+    bliSelfQA: ['勞保局：本人死亡給付問答', 'https://www.bli.gov.tw/0017483.html', '2024-03-21'],
+    bliSurvivor: ['勞保局：遺屬年金給付標準', 'https://www.bli.gov.tw/0019827.html', '2024-02-23'],
+    bliSelfProc: ['勞保局：本人死亡給付請領手續', 'https://www.bli.gov.tw/0007880.html', '2026-01-15'],
+    bliSelfDocs: ['勞保局：本人死亡給付應備書件', 'https://www.bli.gov.tw/0017484.html', '2025-02-27'],
+    bliPrescr: ['勞保局：給付請求權時效（行政解釋）', 'https://www.bli.gov.tw/0013040.html', '2025-01-22'],
+    bliFamStd: ['勞保局：家屬死亡給付標準', 'https://www.bli.gov.tw/0007868.html', '2020-03-09'],
+    bliFamProc: ['勞保局：家屬死亡給付請領手續', 'https://www.bli.gov.tw/0007881.html', '2026-06-12'],
+    bliChoose: ['勞保局給付資訊站：本人與家屬死亡給付只能擇一', 'https://child.bli.gov.tw/0000000050.html', '頁面無日期'],
+    bliPassed: ['勞保局：不幸身故', 'https://www.bli.gov.tw/0100091.html', '2022-04-22'],
+    bliPension: ['勞保局：遺屬請領退休金', 'https://www.bli.gov.tw/0009536.html', '2025-12-01'],
+    bliPensionOrder: ['勞保局：勞工死亡，退休金由誰請領', 'https://www.bli.gov.tw/0017621.html', '2019-05-24'],
+    bliPension10: ['勞保局：勞退 10 年請求權時效宣導', 'https://events.bli.gov.tw/Activities/202504_06/', '頁面無日期'],
+    tpPensionLaw: ['勞工退休金條例（臺北市法規查詢系統）', 'https://laws.gov.taipei/law/LawSearch/LawPrint/FL030634?type=2', '2019-05-15 修正版'],
+    bliNpFuneral: ['勞保局：國民年金喪葬給付', 'https://www.bli.gov.tw/0017731.html', '2026-01-02'],
+    bliNpNews: ['勞保局：國保被保險人死亡，家屬可請領國保給付', 'https://www.bli.gov.tw/0105823.html', '2022-02-25'],
+    bliFarmer: ['勞保局：農保喪葬津貼', 'https://www.bli.gov.tw/0006759.html', '2026-07-20'],
+    bliOldFarmer: ['勞保局：老農津貼問答', 'https://www.bli.gov.tw/0017563.html', '2026-01-21'],
+    botGei: ['臺灣銀行：公保服務', 'https://www.bot.com.tw/tw/policy-business/government-employees-insurance-service', '頁面無更新日期'],
+    mndIns: ['軍人保險條例（國防部）', 'https://www.mnd.gov.tw/File/33947', '2019-05-22 修正版'],
+    tpcWithdraw: ['臺北地檢署：領取死後存款是否會犯罪？', 'https://www.tpc.moj.gov.tw/292885/976681/661783/1247485/post', '2025-01-02'],
+    moi1996: ['內政部：1996 內政服務熱線', 'https://www.moi.gov.tw/cp.aspx?n=8370', '2023-09-20 更新'],
+    nhiSite: ['健保署網站（諮詢專線）', 'https://www.nhi.gov.tw/', '頁面無日期'],
+    liaPhone: ['壽險公會：電子保單存證資料調閱作業辦法（含公會電話）', 'https://lia-roc.org.tw/storage/uploads/65378e43e3c54.pdf', '2022-11-02'],
+    tnHealth: ['臺南市衛生局：行政相驗說明', 'https://health.tainan.gov.tw/warehouse/1A11299C-F793-48FF-BD0D-E76E0DC7D2A0/F_1706586281792e.pdf', '頁面無日期'],
+    tcEastPhc: ['臺中市東區衛生所：行政相驗', 'https://www.eastphc.taichung.gov.tw/media/98905/6171083171.pdf', '頁面無日期'],
+    hsHosp: ['國軍桃園總醫院新竹分院：證明書收費一覽表', 'https://813.mnd.gov.tw/media/國軍桃園總醫院新竹分院各類證明書表申辦作業收費一覽表115修.pdf', '115 年修訂版'],
+    tncVictim: ['臺南地檢署：犯罪被害人權益問答（相驗時可以當場說需要幾份）', 'https://www.tnc.moj.gov.tw/media/129743/46410262515.pdf', '頁面無日期'],
+    ntcCert: ['南投地檢署：補發相驗屍體證明書', 'https://www.ntc.moj.gov.tw/296976/297107/297112/870775/post', '2025-03-26 更新'],
+    judFee: ['司法院：高等法院提高非訟事件程序費用（2025 年 1 月 1 日起加收一半）', 'https://www.judicial.gov.tw/tw/cp-1887-1228003-6d778-1.html', '2024-12-30 發布'],
+    govFuneralAid: ['我的E政府：處理身後事，喪葬津貼及補助有哪些？', 'https://www.gov.tw/News_Content_26_567306', '2024-12-19 更新'],
+    govEstate: ['我的E政府：親人離世後，遺產稅申報與過戶該如何處理？（財政部）', 'https://www.gov.tw/News_Content.aspx?n=26&s=539843', '2025-04-28 更新'],
+    etaxVehicleTax: ['財政部稅務入口網：車主過世，繼承人要繳使用牌照稅（臺中市地方稅務局）', 'https://www.etax.nat.gov.tw/etwmain/announcement/news/1PVeWvO', '2021-11-04'],
+    etaxHouseTax: ['財政部稅務入口網：沒有權狀的房屋繼承，要改房屋稅名義（臺中市地方稅務局）', 'https://www.etax.nat.gov.tw/etwmain/announcement/news/JG7n7N2', '2022-01-21'],
+    tpFuneralRule: ['臺北市市立殯葬設施使用管理辦法（火化、使用殯儀館要附死亡證明書）', 'https://laws.gov.taipei/law/LawSearch/LawExport/FL077597?type=0', '2026-08-18 修正'],
+    householdAct: ['戶籍法第 48、79 條（臺北市法規查詢系統轉載）', 'https://laws.gov.taipei/law/LawSearch/LawExport/FL002320?type=0', '2015-01-21 修正版'],
+    feeTydv: ['桃園地院 114 年度司繼字第 4065 號裁定（聲請費 1,500 元：依規定加收一半）', 'https://judgment.judicial.gov.tw/FILES/TYDV/114%2c%e5%8f%b8%e7%b9%bc%2c4065%2c20260114%2c1.pdf', '2026-01-14'],
+    feeNtdv: ['南投地院 114 年度司繼字第 54 號裁定（陳報遺產清冊聲請費 1,500 元；只繳 1,000 元、沒補繳，被駁回）', 'https://judgment.judicial.gov.tw/FILES/NTDV/114,司繼,54,20250312,1.pdf', '2025-03-12'],
+    pcdvRuling: ['新北地院 114 年度司繼字第 626 號裁定（拋棄繼承由過世者住所地法院管轄）', 'https://judgment.judicial.gov.tw/FILES/PCDV/114,司繼,626,20250217,1.pdf', '2025-02-17'],
+    csrAct: ['公務人員退休資遣撫卹法第 43、45、48、73、95 條（臺北市法規查詢系統轉載）', 'https://laws.gov.taipei/law/LawSearch/LawExport/FL085768?type=0', '最新修正 2025-12-26'],
+    csrRule: ['公務人員退休資遣撫卹法施行細則第 48、51、95、106 條（臺北市法規查詢系統轉載）', 'https://laws.gov.taipei/law/LawSearch/LawExport/FL088113?type=0', '最新修正 2023-10-05'],
+    tcSurvivor: ['臺中市政府人事處：退休公務人員遺族遺屬一次金及遺屬年金（辦理流程和應備文件）', 'https://www.personnel.taichung.gov.tw/media/715421/三-退休公務人員遺族遺屬一次金及遺屬年金.pdf', '頁面無日期'],
+    apa131: ['法務部函（引用行政程序法第 131 條：人民的公法上請求權 10 年）', 'https://laws.gov.taipei/law/Interpretation/ContentExport/FE260614?type=5', '2013-08-02'],
+    clevRuling: ['桃園地院 115 年度壢司小調字第 847 號裁定（引用民法第 1162 條之 1、第 1162 條之 2：沒陳報遺產清冊要按比例用遺產還債）', 'https://judgment.judicial.gov.tw/FILES/CLEV/115%2c%e5%a3%a2%e5%8f%b8%e5%b0%8f%e8%aa%bf%2c847%2c20260507%2c1.pdf', '2026-05-07'],
+    caliAct: ['強制汽車責任保險法第 7、11、14、25、28、32、35、40 條（國防部國軍法學資料庫法規全文）', 'https://afrc.mnd.gov.tw/AFRCWeb/UPL/Files/StayMession/law/carinsu_law_02.pdf', '法規最新修正 2022-06-15'],
+    caliStd: ['強制汽車責任保險給付標準第 6、7 條（金管會主管法規查詢系統）', 'https://law.fsc.gov.tw/LawContent.aspx?id=FL006901', '2026-05-29 修正，2026-07-01 施行'],
+    caliNotice: ['強制險官網：強制險理賠申請須知（金管會委託保險事業發展中心建置）', 'https://www.cali.org.tw/files/Notice/Notice1150715.pdf', '2026-07 修正'],
+    caliQA: ['強制險官網：理賠常見問答（自摔、雙方都有過失）', 'https://www.cali.org.tw/Consumer1/Detail.aspx?sn=24', '頁面無日期'],
+    mvacf: ['財團法人汽車交通事故特別補償基金：申請補償', 'https://www.mvacf.org.tw/Service/Application', '2026-07-01 更新'],
+    avsComp: ['財團法人犯罪被害人保護協會：犯罪被害補償金', 'https://www.avs.org.tw/page/19082', '頁面無日期'],
+    avsServ: ['財團法人犯罪被害人保護協會：服務綜覽', 'https://www.avs.org.tw/page/19220', '頁面無日期'],
+    mojForm: ['苗栗地檢署：犯罪被害補償金申請書（遺屬補償金 180 萬、第 62 條）', 'https://www.mlc.moj.gov.tw/media/329500/附件1補償金申請書-1120731.pdf', '2023-07-31 版'],
+    mojCheck: ['金門地檢署：犯罪被害補償審議案件檢核表（犯罪被害人權益保障法第 50、53、56、59、63、69 條）', 'https://www.qtc.moj.gov.tw/media/328809/新法-檢察署補償審議案件結案檢核表-1120731.pdf', '2023-07-31 版'],
+    civil197: ['民法第 192、194、197 條（臺北市法規查詢系統轉載）', 'https://laws.gov.taipei/Law/LawSearch/LawChapterArticle/FL001351?chapterno=27', '民法最新修正 2026-08-17'],
+    judLaf: ['司法院：常見問答（法律扶助基金會專線 412-8518，手機加區碼 02）', 'https://www.judicial.gov.tw/tw/cp-1654-91165-cd895-1.html', '2026-10-15 查閱'],
+    caliStdOld: ['強制汽車責任保險給付標準 2026-02-25 版（舊制：死亡給付 200 萬，合計最高 220 萬）', 'https://law.fsc.gov.tw/LawContentHistory.aspx?hid=1358&id=FL006901', '2026-02-25 版'],
+    period: ['民法第 120、121 條、行政程序法第 48 條（臺北市法規查詢系統引用）', 'https://laws.gov.taipei/law/Interpretation/RelatedLaw/FE365217', '法務部 2022-12-28 函引用']
+  };
+
+  // ---- 常用電話（只放官方頁面上查到的號碼） Verified phone numbers ----
+  const PHONES = {
+    tax: { name: '國稅局免付費電話（國稅問題）', tel: '0800000321', show: '0800-000-321', src: 'etaxPhone' },
+    moi1996: { name: '內政部 1996 內政服務熱線（人口、土地等內政業務；每天 8:00–22:00）', tel: '1996', show: '1996（市話、手機免費；公共電話除外）', src: 'moi1996' },
+    nhiMobile: { name: '健保署諮詢專線（用手機打）', tel: '0224128678', show: '02-4128-678', src: 'nhiSite' },
+    nhiLand: { name: '健保署諮詢專線（用家裡電話打，免付費）', tel: '0800030598', show: '0800-030-598', src: 'nhiSite' },
+    lia: { name: '中華民國人壽保險商業同業公會（壽險公會）', tel: '0225612144', show: '(02) 2561-2144', src: 'liaPhone' },
+    bli: { name: '勞保局總機（勞保、勞退）', tel: '0223961266', show: '(02) 2396-1266', src: 'bliPassed' },
+    bliNp: { name: '勞保局國民年金組', tel: '0223961266,6066', show: '(02) 2396-1266 分機 6066', src: 'bliNpNews' },
+    bliFarm: { name: '勞保局農保喪葬津貼', tel: '0223961266,2330', show: '(02) 2396-1266 分機 2330', src: 'bliFarmer' },
+    bot: { name: '臺灣銀行公教保險部現金給付科（公保）', tel: '0227013411,5521', show: '(02) 2701-3411 分機 5521、5530', src: 'botGei' },
+    mohw1957: { name: '衛福部 1957 福利諮詢專線（社會救助、急難救助等；每天 8:00–22:00）', tel: '1957', show: '1957（免付費）', src: 'mohw1957' },
+    tii: { name: '保險事業發展中心（不知道對方保哪一家強制險時）', tel: '0800825688', show: '0800-825-688', src: 'caliNotice' },
+    mvacf: { name: '汽車交通事故特別補償基金（肇事逃逸、對方沒保險時）', tel: '0800565678', show: '0800-565-678', src: 'mvacf' },
+    avs: { name: '犯罪被害人保護協會（全國免付費專線）', tel: '0800005850', show: '0800-005-850', src: 'avsServ' },
+    laf: { name: '法律扶助基金會（經濟有困難、需要律師協助）', tel: '0224128518', show: '412-8518（用手機打請撥 02-412-8518）', src: 'judLaf' },
+    tdcc: { name: '集保結算所（查股票）', tel: '0227195805', show: '(02) 2719-5805（分機 112、141、185、195、379）', src: 'tdccInquiry' }
+  };
+
+  // ---- 問題 Questions ----
+  // 第 1 題（日期）和第 3 題（關係）不放「不確定」：日期是算期限的基礎；關係是您自己的身分。
+  const QUESTIONS = [
+    { id: 'date', type: 'date', title: '家人是哪一天過世的？', hint: '記不清楚的話，可以看死亡證明書上的日期。' },
+    { id: 'cause', type: 'single', title: '家人是在什麼情況下過世的？', hint: '在其他地方過世、不知道選哪一個的話，選「不確定」，清單會把幾種情況都列出來。', options: [
+      ['hospital', '在醫院因病過世'],
+      ['home', '在家因病過世'],
+      ['notdisease', '不是因病過世，或懷疑不是因病'],
+      ['unsure', '不確定']
+    ] },
+    { id: 'rel', type: 'single', title: '您是過世家人的什麼人？', options: [
+      ['spouse', '配偶（先生或太太）'],
+      ['child', '子女（兒子或女兒）'],
+      ['parent', '父母（爸爸或媽媽）'],
+      ['sibling', '兄弟姊妹'],
+      ['other', '其他親友']
+    ] },
+    { id: 'assets', type: 'multi', title: '過世的家人名下有這些財產嗎？', hint: '可以選好幾個。存款不用選，清單一定會列出來。不清楚還有沒有其他的，可以再加選「不確定」。', options: [
+      ['land', '房子或土地'], ['vehicle', '汽車或機車'], ['stock', '股票'], ['none', '都沒有'], ['unsure', '不確定']
+    ] },
+    { id: 'debt', type: 'single', title: '過世的家人可能有欠款嗎？', hint: '例如貸款、卡債、幫別人作保。', options: [
+      ['maybe', '可能有'], ['no', '應該沒有'], ['unsure', '不確定']
+    ] },
+    { id: 'ins', type: 'multi', title: '過世的家人生前有這些保險或退休金嗎？', hint: '可以選好幾個。只知道一部分的話，選知道的，再加選「不確定」。清單會把其他可能的也列出來。公保和月退休金要分開選，兩樣都有就都選。', options: [
+      ['labor', '勞保（包括在領勞保年金）'], ['np', '國民年金'], ['farmer', '農保'], ['gov', '公保或軍保'],
+      ['govpension', '公務人員的月退休金（月退）'], ['pension', '勞工退休金（新制）'], ['commercial', '人壽保險等商業保險'], ['none', '都沒有'], ['unsure', '不確定']
+    ] },
+    { id: 'selfLabor', type: 'single', title: '家人過世那天，您自己有勞保嗎？', hint: '這會決定您能不能申請勞保的「家屬死亡給付」。',
+      // 還沒回答第 3 題時先算進題數，避免題數從 7 跳到 8 Count it until Q3 says otherwise
+      showIf: (a) => a.rel == null || ['spouse', 'child', 'parent'].includes(a.rel),
+      options: [['yes', '有'], ['no', '沒有'], ['unsure', '不確定']] },
+    { id: 'flags', type: 'multi', title: '過世的家人生前有這些情況嗎？', hint: '可以選好幾個。不清楚的話，可以選「不確定」。', options: [
+      ['lowincome', '低收入戶或中低收入戶'], ['oldfarmer', '在領老農津貼'], ['none', '都沒有'], ['unsure', '不確定']
+    ] }
+  ];
+
+  // ---- 分組（依期限） Groups by deadline ----
+  const GROUPS = [
+    { id: 'now', title: '現在先做', sub: '過世後幾天內' },
+    { id: 'd30', title: '30 天內' },
+    { id: 'm3', title: '3 個月內' },
+    { id: 'm6', title: '6 個月內' },
+    { id: 'y1', title: '1 年內' },
+    { id: 'long', title: '期限比較長的', sub: '有空就先辦，不要拖到最後' }
+  ];
+
+  const LATE_GENERAL = '依過世日期估算，已經超過期限。請盡快詢問辦理單位要怎麼補辦。';
+  // 有請求權時效的給付：過了就不能領 Claims that lapse after the period
+  const lateClaim = (years, who) => `依過世日期估算，可能已經超過 ${years} 年的請領期限；超過就不能請領。請盡快${who}，問還能不能申請。`;
+  const LATE_BLI = (y) => lateClaim(y, '打勞保局電話 (02) 2396-1266');
+  const LATE_COURT = '這個期限從「知道自己是繼承人」的那天開始算，是不是還來得及，要看您是什麼時候知道的。請馬上打電話問過世者住所地的地方法院，或請教律師，不要再等。';
+  // 匯出（傳給家人、列印、PDF）時接在「已超過期限」後面的簡短說明 Short remedy shown after "overdue" in exports
+  const LATE_COURT_SHORT = '期限是從知道自己是繼承人時開始算，可能還來得及，請馬上打電話問法院';
+  const LATE_CLAIM_SHORT = '超過期限可能就不能領了，請盡快問還能不能申請';
+  const START_COURT = '工具用過世日期估算。如果您比較晚才知道自己是繼承人（例如前面順位的家人都拋棄了），期限會從您知道的時候開始算。';
+
+  // ---- 先不要做 Don'ts ----
+  // c = 情境（由程式提供） context from APP
+  // why＝為什麼不要做（畫面上直接顯示）；body＝點開後的補充說明
+  // why = shown directly under the title; body = extra detail when expanded
+  const DONTS = [
+    { id: 'no-withdraw', show: () => true,
+      title: '沒經過其他繼承人同意，不要自己領過世家人帳戶裡的錢',
+      why: '可能觸犯詐欺、偽造文書或侵占等罪名；就算說是拿去付喪葬費，也不一定沒事。請先和其他繼承人說好。',
+      body: ['地檢署說明，最好的做法是事先取得其他繼承人同意。'],
+      src: ['tpcWithdraw'] },
+    { id: 'no-split', show: () => true,
+      title: '遺產稅繳清（或拿到免稅證明）之前，不要分遺產或過戶',
+      why: '法律規定遺產稅繳清或拿到免稅證明之前，不能分割遺產或辦過戶；違反可能被處 1 年以下有期徒刑。',
+      body: ['依據：遺產及贈與稅法第 8 條（不能分割、過戶）、第 50 條（處罰）。'],
+      src: ['estateLaw', 'ntbtQA'] },
+    { id: 'no-hide', show: (c) => c.debtRisk,
+      title: '可能有欠款時：不要隱瞞或賣掉遺產，也不要先挑一位債主還錢',
+      why: '隱瞞遺產（情況嚴重時），或為了躲債把遺產賣掉、送人，可能要拿自己的錢還債。沒有陳報遺產清冊的話，要按每位債主的金額比例用遺產還；先還了其中一位，其他債主沒拿到的部分，可以向您要。',
+      // 民法第 1163 條原文：一、隱匿遺產情節重大；二、在遺產清冊為虛偽之記載情節重大；三、意圖詐害被繼承人之債權人之權利而為遺產之處分
+      body: [
+        '民法第 1163 條規定，有下面任何一種情形，就不能再主張這個保護：',
+        { ul: [
+          '把遺產藏起來、隱瞞不報，而且情況嚴重',
+          '在交給法院的遺產清冊上寫不實的內容，而且情況嚴重',
+          '為了讓過世家人的債主拿不到錢，故意把遺產賣掉、送人或轉走'
+        ] },
+        '「情況嚴重」法律上叫「情節重大」，要看個別情況；不確定的話，請先問律師。',
+        '民法第 1162 條之 1、之 2 規定：沒有陳報遺產清冊的繼承人，要按每位債主的金額比例，用遺產分別還；沒照這樣還，沒拿到錢的債主可以就沒拿到的部分向繼承人要。不確定怎麼還，請先問律師或地方法院。'
+      ],
+      src: ['gazette', 'clevRuling'] }
+  ];
+
+  // ---- 待辦項目 To-do items ----
+  // deadline 種類：days／months（依法律算法估算）、none／soon／local（沒有固定日期）、suggest（建議日期）
+  const ITEMS = [
+    {
+      id: 'death-cert', group: 'now', show: () => true,
+      feedbackName: '拿到「死亡證明書」或「相驗屍體證明書」', // 回報用，不洩漏過世原因 for feedback; hides the cause
+      title: (c) => ({
+        hospital: '向醫院申請「死亡證明書」',
+        home: '請衛生所醫師開立「死亡證明書」',
+        notdisease: '報警相驗，拿「相驗屍體證明書」'
+      }[c.a.cause] || '拿到「死亡證明書」或「相驗屍體證明書」'),
+      deadline: { type: 'none', text: '官方沒有寫期限；辦死亡登記要用到' },
+      why: () => [
+        '到戶政事務所櫃檯辦死亡登記（除戶），要交這份證明的正本，戶政事務所會留下、不退還；後面很多手續也會用到。'
+      ],
+      // 「要申請幾份」自己一段，放在「要帶什麼」後面 Own section after "what to bring"
+      howMany: (c) => {
+        const n = c.certCount();
+        const hospitalFee = '費用和份數各醫院不同。例如國軍桃園總醫院新竹分院：死亡證明書前 3 張免費，第 4 張起每張 50 元。';
+        const homeFee = '費用各地不同。例如臺中市東區衛生所：行政相驗 1,000 元，含 10 份，加開每份 10 元。';
+        const policeTips = [
+          '相驗的時候，可以當場向檢察官說需要幾份（臺南地檢署說明）。',
+          '建議自己留 1 份正本不要交出去：之後份數不夠要補發時，地檢署要看相驗當天拿到的正本（這是工具依南投地檢署說明給的建議）。'
+        ];
+        const insAny = c.hasOrUnsure('ins', 'labor') || c.hasOrUnsure('ins', 'np') || c.hasOrUnsure('ins', 'farmer');
+        return [
+          `參考：約 ${n} 份。依您的清單，有 ${n} 項手續要附死亡證明書（或相驗屍體證明書），還沒算辦喪事要用的。這是工具算的，不是官方建議。`,
+          '辦喪事也會用到：例如臺北市規定，申請火化、使用市立殯儀館，都要附死亡證明書或相驗屍體證明書（沒寫份數和要不要正本）。要幾份，請問禮儀公司或殯葬管理單位。',
+          '申報遺產稅：可以改用「載有死亡日期的戶口名簿影本」或除戶資料（例如除戶謄本）。',
+          '向國稅局查財產：已經辦好死亡登記的，可以不附死亡證明書。',
+          insAny ? '勞保、國民年金、農保的申請文件都列了死亡證明書，但沒有寫要正本還是影本；送件前可以先打勞保局電話問。' : null,
+          // 第 2 題選「不確定」時，每段開頭寫是哪一種情況 Label each case when cause is unsure
+          ...(c.a.cause === 'hospital' ? [hospitalFee]
+            : c.a.cause === 'home' ? [homeFee]
+              : c.a.cause === 'notdisease' ? policeTips
+                : ['在醫院過世：' + hospitalFee, '在家過世：' + homeFee, '不是因病過世：' + policeTips[0], policeTips[1]])
+        ];
+      },
+      where: (c) => {
+        const hospital = '在醫院因病過世：向醫院申請，由醫師開立「死亡證明書」。';
+        const home = [
+          '在家因病過世：向遺體所在地的衛生所申請「行政相驗」（由衛生所醫師確認死因），醫師會開立「死亡證明書」。',
+          '請先打電話給遺體所在地的衛生所，問申請方式、費用和要帶的文件。',
+          '如果是意外、自殺、他殺或身分不明，衛生所不受理，要改向警察機關申請司法相驗（臺南市衛生局說明）。'
+        ];
+        const police = [
+          '不是因為生病過世（或懷疑不是）：向遺體所在地的警察分局報案。在醫院或衛生所的，醫院、衛生所也可能幫忙通報。之後由檢察官和法醫到遺體所在地相驗（檢查遺體、確認死因）。',
+          '死因確定後，由地方檢察署開立「相驗屍體證明書」。要不要收費、怎麼領，可以問承辦的地檢署。'
+        ];
+        const policeMore = [
+          '如果要解剖或再檢驗，鑑定報告大約要一到兩個月（以工作天算）；這段期間可能先開立「暫時的相驗屍體證明書」。',
+          '份數不夠時：帶相驗當天拿到的正本 1 份、您的身分證、印章、過世者和您的戶口名簿，到地檢署的服務中心申請補發；也可以到您住家附近的地檢署跨區申請，或在法務部網站線上申請（南投地檢署說明）。'
+        ];
+        if (c.a.cause === 'hospital') return [hospital];
+        if (c.a.cause === 'home') return home;
+        if (c.a.cause === 'notdisease') return [...police, ...policeMore];
+        return [hospital, home[0], police[0], police[1]];
+      },
+      bring: (c) => (c.a.cause === 'home'
+        ? ['過世者的疾病診斷證明書，或生前就診的病歷摘要（臺南市衛生局列的；各縣市可能不同）', '申請人和過世者的身分證明文件']
+        : c.a.cause === 'hospital'
+          ? ['各醫院規定不同，請先問醫院。例如國軍桃園總醫院新竹分院的收費表列了「身分證」和「領取人的身分證」，領取人只限配偶、直系親屬（例如父母、子女）。']
+          : null),
+      sources: ['tncFlow', 'tnHealth', 'tcEastPhc', 'hsHosp', 'tncVictim', 'ntcCert', 'tpFuneralRule', 'risDeath', 'etaxFlow']
+    },
+    {
+      id: 'funeral-receipt', group: 'now',
+      show: (c) => c.hasOrUnsure('ins', 'labor') || c.hasOrUnsure('ins', 'np') || c.hasOrUnsure('ins', 'farmer') || c.notDisease,
+      confirm: (c) => !c.has('ins', 'labor') && !c.has('ins', 'np') && !c.has('ins', 'farmer'),
+      // 收據先留著不會有損失，所以不說「確定有的話再辦」 Keeping a receipt costs nothing
+      confirmText: (c) => (c.insFuneral
+        ? '還不確定會不會用到。收據先收好不會有損失，建議先留著。'
+        : '如果是車禍或犯罪過世，向對方要求賠償殯葬費時會用到。收據先收好不會有損失，建議先留著。'),
+      confirmTag: '先留著',
+      confirmTagExport: '（先留著，還不確定能不能申請）',
+      title: '保留喪葬費用的收據正本',
+      deadline: { type: 'none', text: '付喪葬費的時候就要開始保留' },
+      why: (c) => [
+        c.insFuneral ? '申請過世者本人勞保的喪葬津貼、國民年金的喪葬給付，都要附「付喪葬費的證明」正本；農保的喪葬津貼也要附付喪葬費的證明（官方沒有寫要不要正本）。所以正本請自己收好。' : null,
+        c.hasOrUnsure('ins', 'farmer') ? '農保還規定：收據上要有過世者的姓名，抬頭要寫申請人的姓名。所以請收款的單位開收據時，寫上過世者的姓名，抬頭寫將來要去申請農保喪葬津貼那個人的姓名。' : null,
+        c.notDisease ? '如果是車禍或犯罪過世，可以向對方要求賠償殯葬費；法律規定是賠給實際付殯葬費的人（民法第 192 條），收據就是付了多少錢、由誰付的證明。' : null
+      ],
+      where: () => ['向禮儀公司、殯葬場所等收款的單位索取收據，正本自己收好。'],
+      bring: false,
+      phones: (c) => (c.insFuneral ? ['bli'] : []),
+      sources: ['bliSelfDocs', 'bliNpFuneral', 'bliFarmer', 'civil197']
+    },
+    {
+      id: 'death-reg', group: 'd30', show: () => true,
+      title: '辦死亡登記（除戶）',
+      deadline: { type: 'days', n: 30, law: '死亡事件發生或死亡事實確定後 30 天內（戶籍法第 48 條）。沒有正當理由逾期，可能被罰 300 到 900 元；戶政事務所催告後還不辦，罰 900 元（戶籍法第 79 條）。', late: '依過世日期估算，已經超過 30 天。逾期還是可以辦，請盡快到任何一間戶政事務所補辦，或先打 1996 內政服務熱線問。', lateShort: '請盡快到戶政事務所補辦' },
+      why: () => [
+        '「除戶」就是在戶籍資料上登記過世。',
+        '就算醫院已經通報死亡，家屬還是要自己去辦。沒去辦，戶政事務所會寄通知催您辦；沒有正當理由逾期，可能被罰 300 到 900 元（戶籍法第 79 條）。',
+        '很多後面的手續要先辦好死亡登記，例如勞保家屬死亡給付；拋棄繼承、房地繼承登記也要附除戶謄本，辦好死亡登記才申請得到。'
+      ],
+      where: () => [
+        '全國任何一間戶政事務所都可以辦。',
+        '家屬、戶長、同住的人或辦喪事的人都可以申請，也可以委託別人。',
+        '一般直接到櫃檯辦就好。',
+        { h: '想上網辦的話，要全部符合：', ul: [
+          '申請人是成年人，有自然人憑證（上網辦政府業務用的電子憑證卡）',
+          '申請人是過世者的配偶、親屬或同戶的人',
+          '過世者在國內過世，已經有機關通報死亡',
+          '在過世後 30 天內申請'
+        ] }
+      ],
+      bring: () => [
+        '死亡證明書或相驗屍體證明書（要正本，戶政事務所會收走、不退還）',
+        '申請人的身分證、印章（或簽名）',
+        '過世者的身分證、戶口名簿',
+        '過世者有配偶時：配偶的身分證和最近 2 年內的相片（要換發配偶的身分證）',
+        '請別人代辦時：委託書'
+      ],
+      also: (c) => [
+        '在戶政事務所櫃檯：過世者的子女、配偶或父母，如果過世那天自己有勞保，可以一起申請「勞保家屬死亡給付」。'
+          + (c.shows('labor-self') ? '但過世者自己也有勞保的話，「本人死亡給付」和「家屬死亡給付」只能選一種；請先打勞保局電話問哪一種比較適合，再決定要不要在這裡一起申請。' : ''),
+        '要帶申請人自己在國內金融機構（銀行、郵局等）的存摺影本；沒辦法自己去，要寫委託書。',
+        '上網辦死亡登記時，可以勾選一起申請：健保退保（大約 3 到 5 個工作天完成）、「死亡者人身保單清查及通知」、勞保家屬死亡給付。',
+        '保單清查的結果不會回覆給您（戶政司說明）。想自己知道過世者有哪些保單，請看「查過世家人有沒有買人壽保險」那一項。',
+        '在櫃檯能不能也一起辦健保退保和保單清查，官方說明沒有寫，可以在櫃檯問。'
+      ],
+      notes: (c) => [
+        '換發戶口名簿或配偶的身分證時，過世者的身分證要繳回戶政事務所。',
+        '上網申請如果「不受理」，就沒有完成死亡登記，也不會幫您通報其他機關，要改到櫃檯辦。',
+        c.a.cause === 'notdisease' ? '如果還在等相驗屍體證明書，可以先打電話問戶政事務所。' : null
+      ],
+      phones: ['moi1996'],
+      sources: ['risDeath', 'risOnline', 'molOneStop', 'householdAct', 'moi1996']
+    },
+    {
+      id: 'nhi', group: 'd30', show: () => true,
+      title: '如果有家人的健保掛在過世者名下：要改到別處投保',
+      whyTitle: '說明',
+      deadline: { type: 'soon', text: '請盡快（官方寫「儘速」，沒有寫天數）' },
+      why: () => [
+        '過世者的健保，在過世當天晚上 12 點停止。',
+        '原本掛在過世者名下的眷屬，健保也要跟著退保，所以要盡快改到別的地方投保。沒有這種家人的話，這一項可以直接打勾。'
+      ],
+      where: () => [
+        '到新的投保單位辦理投保。',
+        '沒有工作、也不能當其他家人眷屬的人：到戶籍所在地的鄉（鎮、市、區）公所投保。',
+        '過世者本人的健保退保：上網辦死亡登記時可以一起申請。'
+      ],
+      bring: () => ['到公所投保時：身分證、戶口名簿等'],
+      notes: () => ['只在櫃檯辦死亡登記時，健保會不會自動退保，官方說明沒有寫清楚，可以打健保署諮詢專線問。'],
+      phones: ['nhiMobile', 'nhiLand'],
+      sources: ['nhiForm', 'risOnline', 'nhiSite']
+    },
+    {
+      id: 'fin-search', group: 'd30', show: () => true,
+      title: '查清楚過世家人有哪些財產和欠款',
+      deadline: { type: 'suggest', months: 1, text: '建議在這天前申請', law: '查詢本身沒有期限。但查詢結果要等申請後第 30 天起才能上網下載（也可以選擇由國稅局掛號寄給您）；要不要拋棄繼承，要在 3 個月內決定，所以建議過世後 1 個月內就申請。如果要同時申請「遺產稅稅額試算」，要在過世後 6 個月內申請。', late: '建議的時間已經過了，但查詢本身沒有期限，現在還是可以申請，請盡快申請。' },
+      why: () => [
+        '用「金融遺產查詢」，一次查 12 類：存款、基金、股票等有價證券、短期票券、人身保險、期貨、保管箱、貸款和信用卡債務、電子支付帳戶、記名式儲值卡、投資理財帳戶、信用合作社社員股金。',
+        '知道有多少財產和欠款，才好決定要不要拋棄繼承。'
+      ],
+      where: () => [
+        '國稅局（包括分局、稽徵所、服務處）或直轄市稅捐處的櫃檯。',
+        '也可以用自然人憑證上網申請（沒有或不會用的話，到櫃檯辦就好）。',
+        '不是在戶政事務所辦。',
+        '可以申請的人：還沒拋棄繼承的繼承人、遺囑執行人或遺產管理人。所以想拋棄繼承的人，請在拋棄之前先申請。'
+      ],
+      bring: () => [
+        '申請人的身分證正本',
+        '過世者的死亡證明書或除戶資料（已經辦好死亡登記的，可以不附）',
+        '關係證明：配偶或子女等第一順位繼承人，帶身分證或相關證明；其他繼承人，帶自己簽章的繼承系統表（列出有哪些繼承人、彼此是什麼關係的表）',
+        '請別人代辦：代理人的身分證正本和委任書（委託書）'
+      ],
+      notes: () => [
+        '結果可以選擇由國稅局掛號寄給您，或在申請後第 30 天到第 90 天之間上網下載；用「遺產稅電子申辦程式」可以下載到過世後 9 個月。',
+        '查到的結果只供申報遺產稅參考；過世者如果還有其他財產，也要申報。'
+      ],
+      together: { ids: ['income-tax', 'estate-tax'], text: '一樣是國稅局的事' },
+      phones: ['tax'],
+      sources: ['finSearch', 'taxTrial', 'etaxFlow']
+    },
+    {
+      id: 'life-ins', group: 'm3', show: () => true,
+      title: '查過世家人有沒有買人壽保險',
+      deadline: { type: 'none', text: '官方沒有寫期限' },
+      why: () => ['向「中華民國人壽保險商業同業公會」（壽險公會）查詢，可以知道過世者有哪些人壽保單，再去那些保險公司申請理賠。不確定家人有沒有保險時，特別有用。'],
+      where: () => [
+        '填申請表，掛號郵寄到壽險公會（地址以公會最新表單為準）。申請表可以在壽險公會網站下載（下面「官方說明」的第一個連結就是申請表）。',
+        '上網辦死亡登記時，也可以勾選「死亡者人身保單清查及通知」；但這樣查到的結果不會回覆給您（戶政司說明）。想自己知道過世者有哪些保單，請用申請表查詢。',
+        '最近順位的法定繼承人等可以申請；要自己申請，壽險公會不接受請別人代辦。'
+      ],
+      bring: () => [
+        '申請表',
+        '申請人身分證正反面影本',
+        '過世者的除戶謄本正本（上面有死亡紀錄的戶籍謄本）',
+        '如果您不是過世者的子女：另附前面順位繼承人的除戶謄本正本，或拋棄繼承文件影本',
+        '查詢費的劃撥收據影本（金額以公會最新表單為準；低收入戶附證明可以免費）'
+      ],
+      notes: () => ['沒附劃撥收據影本，公會不受理，文件也不退還。', '查到保單後，打電話給那家保險公司，問保單是否有效、理賠要帶什麼。保險理賠有時效（保險法第 65 條，一般是 2 年），查到後請盡快申請。'],
+      phones: ['lia'],
+      sources: ['liaForm', 'risOnline', 'liaPhone', 'ins65']
+    },
+    {
+      id: 'renounce', group: 'm3', show: () => true,
+      important: (c) => c.debtRisk,
+      // 超過期限時上面已經有一段紅字說明，這裡不重複 Overdue text already shown above; don't repeat
+      importantText: (c, due) => (due && due.late
+        ? null
+        : (c.a.debt === 'maybe'
+          ? '您說家人可能有欠款，這一項很重要，請在期限內決定。'
+          : '您不確定家人有沒有欠款，這一項很重要，請先查清楚，並在期限內決定。')),
+      title: '決定要不要拋棄繼承',
+      deadline: { type: 'months', n: 3, law: '從知道自己是繼承人的那天起 3 個月內，用書面向法院提出（民法第 1174 條）', start: START_COURT, late: LATE_COURT, lateShort: LATE_COURT_SHORT },
+      why: () => [
+        { h: '什麼是拋棄繼承', ul: [
+          '拋棄繼承以後，過世者的財產和欠款都不接；就算還完債還有剩，也一樣不能拿。'
+        ] },
+        { h: '不拋棄會怎樣', ul: [
+          '依法，繼承人對過世者的欠款，只要用「繼承到的遺產」來還，不用拿自己的錢還，也不用另外申請（民法第 1148 條）。',
+          '但有這些情形，就不能主張這個保護，可能要拿自己的錢還（民法第 1163 條）：把遺產藏起來，或在交給法院的遺產清冊上寫不實的內容，而且情況嚴重；為了讓債主拿不到錢，故意把遺產賣掉、送人。',
+          '沒有陳報遺產清冊的話，要按每位債主的金額比例用遺產還，不能先挑一位還；先還了其中一位，其他債主沒拿到的部分，可以向繼承人要（民法第 1162 條之 1、之 2）。'
+        ] },
+        { h: '會影響到誰', ul: [
+          '配偶一定是繼承人。配偶以外，依序是：子女（再來是孫子女）、父母、兄弟姊妹、祖父母；前面順位有人繼承，後面順位的人就不是繼承人。',
+          '子女當中有人拋棄，他的份歸給其他一起繼承的人；子女全部拋棄時，孫子女會變成繼承人。',
+          '拋棄的人，要用書面通知因為他拋棄而變成繼承人的人（沒辦法通知的除外）。送件時就要附通知的證明，所以請照下面的步驟先通知。'
+        ] },
+        { h: '怎麼辦（依序）', ol: [
+          '先申請「金融遺產查詢」，查清楚財產和欠款。拋棄繼承以後就不能申請了，所以一定要先查。',
+          '準備下面「要帶什麼」的文件，寫好聲請狀。',
+          '用書面（例如郵局的存證信函，可以證明寄過、寄了什麼）通知因為您拋棄而會變成繼承人的人，留下通知的證明。司法院列的送件文件包含這份證明；如果還沒辦法通知，請先打電話問法院怎麼處理。',
+          '在期限內，把聲請狀和文件送到過世者住所地的地方法院，並繳聲請費。',
+          '法院准予備查（審查後同意登記）以後，申報遺產稅時要附上這份文件。'
+        ] }
+      ],
+      where: () => [
+        '過世者住所地的地方法院（住所地一般看戶籍地，不確定就打電話問法院）。在高雄，是「臺灣高雄少年及家事法院」。',
+        '法院的轄區不一定和縣市一樣。例如過世者住在新北市新店區，拋棄繼承是由臺灣臺北地方法院管轄（新北地院 114 年度司繼字第 626 號裁定）。不確定的話，先打電話到附近的地方法院問。',
+        '聲請狀可以從司法院網站或各法院拿到。'
+      ],
+      bring: () => [
+        '聲請狀',
+        '過世者的除戶謄本（上面有死亡紀錄的戶籍謄本）、死亡證明書',
+        '戶籍謄本（每一位要拋棄繼承的人都要附）',
+        '繼承系統表',
+        '已經通知「因為您拋棄而變成繼承人的人」的證明（例如通知書、存證信函、收據）',
+        '其他法院要求的文件'
+      ],
+      notes: () => ['聲請費：1,500 元（2025 年 1 月 1 日起，原本的 1,000 元依規定加收一半，司法院公告）。有些舊資料還寫 1,000 元，送件前可以先打電話問法院確認。', '法院如果寄通知，要您補繳費用或補文件，一定要在通知寫的期限內補好；沒補好，聲請會被駁回。', '不確定要不要拋棄，建議先請教律師，或打電話問過世者住所地的地方法院。'],
+      together: { ids: ['inventory', 'fin-search'], text: '相關的事' },
+      sources: ['judRenounce', 'civil1174', 'gazette', 'clevRuling', 'pcdvRuling', 'judFee', 'feeTydv', 'finSearch', 'ntbcaFile']
+    },
+    {
+      id: 'inventory', group: 'm3', show: (c) => c.debtRisk,
+      confirm: (c) => c.a.debt === 'unsure',
+      confirmText: '您不確定家人有沒有欠款，請先查清楚。如果決定要陳報遺產清冊，要在期限內向法院陳報。',
+      title: '陳報遺產清冊（不是一定要做）',
+      whyTitle: '說明',
+      deadline: { type: 'months', n: 3, law: '從知道自己是繼承人的那天起 3 個月內；可以向法院聲請延長（民法第 1156 條）', start: START_COURT, late: LATE_COURT, lateShort: LATE_COURT_SHORT },
+      why: () => [
+        '把遺產和欠款列成清單交給法院。這不是一定要做。',
+        '沒陳報的話，債主也可以請法院要求繼承人陳報。而且沒陳報的繼承人，要按每位債主的金額比例用遺產還，不能先挑一位還（民法第 1162 條之 1、之 2）。',
+        '有好幾位繼承人時，一個人陳報，就等於全部繼承人都陳報了（民法第 1156 條）。'
+      ],
+      where: () => ['過世者住所地的地方法院（住所地一般看戶籍地，不確定就打電話問法院）。聲請狀怎麼寫，可以問法院的訴訟輔導科。'],
+      bring: () => [
+        '聲請狀',
+        '過世者的除戶謄本（上面有死亡紀錄的戶籍謄本）',
+        '全體繼承人的戶籍謄本',
+        '繼承系統表和繼承人名冊',
+        '遺產清冊（列出已知的債權、債務，並附土地、建物登記簿謄本）',
+        '其他法院要求的文件'
+      ],
+      notes: () => ['陳報後，在法院定的債主申報期間內（不是遺產稅的申報期間），不能先還錢給任何一位債主。', '聲請費：1,500 元（2025 年 1 月 1 日起，原本的 1,000 元依規定加收一半，司法院公告）。有些舊資料還寫 1,000 元，送件前可以先打電話問法院確認。', '法院如果寄通知，要您補繳費用或補文件，一定要在通知寫的期限內補好；沒補好，聲請會被駁回。'],
+      together: { ids: ['renounce'], text: '一樣在地方法院辦' },
+      sources: ['judInventory', 'civil1156', 'gazette', 'clevRuling', 'judFee', 'feeNtdv']
+    },
+    {
+      id: 'income-tax', group: 'm3', show: () => true,
+      title: '報過世那一年的綜合所得稅',
+      // 所得稅法第 71 條之 1：配偶是境內居住者時，由配偶依第 71 條合併申報，不適用 3 個月
+      // Art. 71-1: a resident spouse files jointly under the normal filing (art. 71); the 3-month rule does not apply
+      deadline: (c) => c.a.rel === 'spouse'
+        ? { type: 'none', text: '由配偶合併申報，跟著一般的結算申報期限（不適用 3 個月期限）', law: '過世者的配偶是臺灣居住者時，由配偶依一般的結算申報合併申報（所得稅法第 71 條之 1 但書）。' }
+        : { type: 'months', n: 3,
+            law: '死亡之日起 3 個月內（所得稅法第 71 條之 1）；有特殊情形可以在期限前申請延期，但不能超過遺產稅的申報期限。',
+            start: '但過世者的配偶如果還在、而且是臺灣居住者，就由配偶依一般的結算申報合併申報，不適用這個 3 個月期限。',
+            late: '依過世日期估算，已經超過 3 個月。如果是由配偶合併申報，就不適用這個期限；不是的話，請盡快詢問國稅局要怎麼補辦。',
+            lateShort: '如果由配偶合併申報就不適用；不是的話，請盡快問國稅局怎麼補辦' },
+      why: (c) => c.a.rel === 'spouse'
+        ? [
+            '您是配偶：過世家人那一年的所得，在您每年報綜合所得稅的時候，和您自己的所得一起報（前提是您是臺灣居住者；不確定可以問國稅局）。',
+            '全年所得沒有超過當年的免稅額加標準扣除額，可以不用申報；不確定就打國稅局電話問。'
+          ]
+        : [
+            '過世那一年的所得（以前還沒報的年度也一樣），要由繼承人、遺囑執行人或遺產管理人幫忙申報；要繳的稅，用遺產來繳（以遺產為限）。',
+            '過世者的配偶如果還在、而且是臺灣居住者，就改由配偶合併申報，期限跟著一般的結算申報。',
+            '全年所得沒有超過當年的免稅額加標準扣除額，可以不用申報；不確定就打國稅局電話問。'
+          ],
+      where: () => ['國稅局。要帶的文件和申報方式，可以先打國稅局免付費電話 0800-000-321 問。'],
+      bring: () => null,
+      together: { ids: ['fin-search', 'estate-tax'], text: '一樣是國稅局的事' },
+      phones: ['tax'],
+      sources: ['tax71_1', 'ntbtLife']
+    },
+    {
+      id: 'low-income', group: 'now', show: (c) => c.hasOrUnsure('flags', 'lowincome'),
+      confirm: (c) => c.unsureOnly('flags', 'lowincome'),
+      title: '問問看有沒有喪葬補助（低收入戶、中低收入戶）',
+      deadline: { type: 'local', text: '多數縣市是過世後 3 個月內，部分縣市 2 個月內（以各縣市規定為準）' },
+      why: (c) => [
+        c.pastMonths(3) ? '過世已經超過 3 個月，可能已經過了申請期限；還是可以打電話問問看。' : null,
+        '過世者如果是低收入戶或中低收入戶，家屬可能可以申請喪葬補助。只有部分縣市有這項補助；中低收入戶的喪葬補助更少，只有少數縣市有。',
+        '這項補助由各縣市政府自己決定要不要辦、怎麼辦（社會救助法第 16 條），所以有沒有、條件、金額，請直接問。'
+      ],
+      where: () => [
+        '過世者戶籍地的鄉（鎮、市、區）公所；臺北市是向社會局所屬的社會福利服務中心申請（我的E政府說明）。',
+        '不知道怎麼問：打公所或縣市政府總機，說要問「低收入戶、中低收入戶的喪葬補助」，請他們轉給負責的單位；或打衛福部 1957 福利諮詢專線。',
+        '問的時候，請一起問：要帶什麼、期限多久。'
+      ],
+      bring: () => null,
+      together: { ids: ['emergency-aid'], text: '打電話時可以一起問' },
+      phones: ['mohw1957'],
+      sources: ['socialAssist', 'govFuneralAid', 'mohw1957']
+    },
+    {
+      // 社會救助法第 21 條沒有限定低收入戶，所以每個人都看得到
+      // Social Assistance Act art. 21 is not limited to low-income households, so show it to everyone
+      id: 'emergency-aid', group: 'now', show: () => true,
+      title: '家裡付不出喪葬費的話：問問看「急難救助」',
+      whyTitle: '說明',
+      deadline: { type: 'local', text: '多數縣市是過世後 3 個月內，部分縣市 2 個月內（以各縣市規定為準）' },
+      why: (c) => [
+        c.pastMonths(3) ? '過世已經超過 3 個月，可能已經過了申請期限；還是可以打電話問問看。' : null,
+        '家裡有人過世、沒有錢辦喪事的，可以申請「急難救助」（社會救助法第 21 條），一般是到戶籍地的公所申請（見下面「去哪裡辦」）。不是低收入戶也可以申請。',
+        '能領多少、要符合什麼條件，各縣市規定不同，請直接問。家裡負擔得起的話，這一項可以直接打勾。'
+      ],
+      where: () => [
+        '戶籍地的鄉（鎮、市、區）公所（我的E政府說明）。過世者和您的戶籍不在同一個地方時，要去哪裡申請，打電話問就好。',
+        '不知道怎麼問：打公所或縣市政府總機，說要問「急難救助」；或打衛福部 1957 福利諮詢專線。',
+        '也可以一起問「急難紓困」（關懷救助金）：一樣是過世後 3 個月內，向戶籍地公所申請。',
+        '問的時候，請一起問：要帶什麼、能領多少、期限多久。'
+      ],
+      bring: () => null,
+      together: { ids: ['low-income'], text: '打電話時可以一起問' },
+      phones: ['mohw1957'],
+      sources: ['socialAssist', 'govFuneralAid', 'mohw1957']
+    },
+    {
+      id: 'estate-tax', group: 'm6', show: () => true,
+      title: '申報遺產稅',
+      deadline: { type: 'months', n: 6, law: '死亡次日起算 6 個月內（遺產及贈與稅法第 23 條）；有正當理由，可以在期限前用書面申請延長，原則上最多 3 個月；遇到不可抗力等特殊情形，由國稅局核定（第 26 條）。', late: '依過世日期估算，已經超過 6 個月的申報期限，可能會被罰。請盡快打國稅局免付費電話 0800-000-321，問要怎麼補辦。', lateShort: '可能會被罰，請盡快打國稅局電話問怎麼補辦' },
+      why: (c) => {
+        const out = [
+          '遺產再少、不用繳稅也要申報。',
+          '申報後拿到「遺產稅繳清證明書」或「免稅證明書」，才能辦房子、土地、車子、存款和股票的過戶。'
+        ];
+        if (c.deathYear === 2026) {
+          out.push({ h: '2026 年過世適用的金額', ul: [
+            '免稅額：1,333 萬元',
+            '喪葬費扣除額：138 萬元',
+            '配偶扣除額：553 萬元',
+            '子女等直系血親卑親屬：每人 56 萬元；未成年的，按距離成年還有幾年，每年再加扣 56 萬元',
+            '父母：每人 138 萬元',
+            '重度以上身心障礙特別扣除額：每人 693 萬元',
+            '受過世者扶養的兄弟姊妹、祖父母：每人 56 萬元；兄弟姊妹未成年的，按距離成年還有幾年，每年再加扣 56 萬元'
+          ] });
+        } else {
+          out.push('過世的年份不是 2026 年：免稅額和扣除額可能不同，請看財政部當年度的公告，或打國稅局免付費電話 0800-000-321 問。');
+        }
+        out.push('這個工具不幫您算稅額。可以向國稅局申請「遺產稅稅額試算」（過世後 6 個月內，和金融遺產查詢一起申請）。');
+        return out;
+      },
+      where: () => [
+        '過世者戶籍地的國稅局；符合規定的，也可以就近到任一分局、稽徵所或服務處辦（跨局臨櫃）。',
+        '也可以下載「遺產稅電子申辦程式」上網申報；上傳後 10 天內，要把文件送到過世者戶籍地的國稅局。'
+      ],
+      bring: () => [
+        '遺產稅申報書',
+        '過世者的除戶資料、各繼承人現在的戶籍資料、繼承系統表',
+        '有人拋棄繼承：法院准予備查的文件',
+        '財產證明、扣除額證明等'
+      ],
+      notes: () => [
+        '國稅局核定後，收到繳稅通知的隔天起 2 個月內要繳清；必要時可以申請延 2 個月。',
+        '繳完稅以後，拿繳款收據申請「遺產稅繳清證明書」；不用繳稅的，申請「免稅證明書」。後面房地、存款、車子過戶都要用（財政部說明）。',
+        '一次繳不出現金，可以在繳稅期限內向國稅局申請分 18 期以內繳納（要加計利息；能不能分期，以國稅局核准為準）。',
+        '沒有按時申報，最多罰應納稅額的 2 倍。'
+      ],
+      together: { ids: ['fin-search', 'income-tax'], text: '一樣是國稅局的事' },
+      phones: ['tax'],
+      sources: ['estateLaw', 'ntbtQA', 'ntbcaFile', 'mof2026', 'govEstate', 'taxTrial']
+    },
+    {
+      id: 'land', group: 'm6', show: (c) => c.hasOrUnsure('assets', 'land'),
+      confirm: (c) => c.unsureOnly('assets', 'land'),
+      title: '房子、土地辦繼承登記',
+      deadline: { type: 'months', n: 6, law: '繼承開始之日起 6 個月內（土地法第 73 條）', late: '依過世日期估算，已經超過 6 個月，可能要繳罰鍰。請盡快打電話問地政事務所，或打 1996 內政服務熱線，問要怎麼辦。', lateShort: '可能要繳罰鍰，請盡快問地政事務所' },
+      why: () => [
+        '要先拿到遺產稅繳清證明書或免稅證明書，才能辦。遺產稅的期限也是 6 個月，記得預留時間。',
+        '逾期的話，每超過 1 個月，可能被罰登記費 1 倍，最多 20 倍。',
+        '超過 1 年沒辦，地政機關會公告；之後還沒辦，可能被「列冊管理」（列入名單管理）；列冊管理 15 年後還沒辦，會交給國有財產署標售（公開賣掉）。'
+      ],
+      where: () => ['地政事務所。要去哪一間、能不能就近送件，可以打 1996 內政服務熱線問（服務範圍包含土地業務）。'],
+      bring: () => [
+        '登記申請書',
+        '繼承系統表',
+        '過世者的除戶謄本（上面有死亡紀錄的戶籍謄本）、繼承人的現戶謄本',
+        '遺產稅繳清證明書或免稅證明書',
+        '權利書狀',
+        '有人拋棄繼承：拋棄繼承文件或法院准予備查的文件',
+        '分割繼承時：分割協議書和印鑑證明'
+      ],
+      notes: () => [
+        '登記費：土地按申報地價的千分之一；建物（房屋）按國稅局核定的遺產稅價值的千分之一。',
+        '書狀費：每張 80 元。',
+        '沒有權狀的房子（沒辦保存登記）：要到房屋所在地的稅捐稽徵機關，辦「房屋稅納稅義務人名義變更」，帶遺產稅繳清（免稅）證明書、繼承系統表、繼承人身分證明等；沒辦的話，房屋稅的納稅人名義會一直是過世者，或是全體繼承人共有。'
+      ],
+      phones: ['moi1996'],
+      sources: ['ssla', 'hlLand', 'tpLandList', 'tnLandFee', 'etaxHouseTax', 'moi1996']
+    },
+    {
+      id: 'vehicle', group: 'y1', show: (c) => c.hasOrUnsure('assets', 'vehicle'),
+      confirm: (c) => c.unsureOnly('assets', 'vehicle'),
+      title: '汽車、機車過戶或報廢',
+      deadline: { type: 'months', n: 12, law: '過世後 1 年內要辦（道路交通安全規則第 33 條）；繼承人沒有在 1 年內辦，監理機關會直接註銷車牌。', late: '依過世日期估算，已經超過 1 年，車牌可能已經被註銷（不會另外通知）。請盡快到監理站、監理所問要怎麼辦。', lateShort: '車牌可能已經被註銷，請盡快問監理站' },
+      why: () => [
+        '沒有拋棄繼承的話，就算還沒過戶，繼承人也要繳使用牌照稅。車子不要了，也要在 1 年內辦過戶或報廢。',
+        '車牌被註銷以後還開上路，駕駛人可能被罰；開在路上或停在路上被查到，還要補繳牌照稅，並可能被罰應納稅額 2 倍以下。',
+        '要先拿到遺產稅繳清證明書（或免稅證明書），並繳清當年度的稅費和交通罰單。'
+      ],
+      where: () => ['交通部公路局的監理站、監理所。'],
+      bring: () => [
+        '遺產稅繳清證明書（或免稅、不計入遺產總額證明書）',
+        '繼承人的身分證、印章，以及駕照或健保卡',
+        '行照、強制險卡（電子式保險證）',
+        '家族會議協議書（或分割協議書、法院文件）',
+        '領牌登記書',
+        '請別人代辦：代辦人的身分證'
+      ],
+      notes: () => [
+        '來不及在 1 年內辦的，可以在期限到之前，用書面寫明理由，申請延長 6 個月（只能延 1 次）。',
+        '因為沒辦繼承而被註銷車牌時，依規定監理機關不用另外寄註銷通知給車主，所以不要等通知。',
+        '汽車滿 10 年、機車滿 5 年，要先做臨時檢驗（公路局 2017 年的說明）。'
+      ],
+      sources: ['trafficRule33', 'thbVehicle', 'tmvVehicle', 'etaxVehicleTax']
+    },
+    {
+      id: 'deposit-stock', group: 'long', show: () => true,
+      feedbackName: '存款、股票辦繼承', // 回報用，固定名稱 for feedback
+      title: (c) => c.hasOrUnsure('assets', 'stock') ? '存款、股票辦繼承' : '存款辦繼承',
+      deadline: { type: 'none', text: '官方沒有寫期限' },
+      why: () => ['要先拿到遺產稅繳清證明書或免稅證明書，才能把存款、股票轉給繼承人（遺產及贈與稅法第 8、42 條）。'],
+      where: (c) => [
+        '存款：過世者開戶的銀行、郵局。',
+        c.hasOrUnsure('assets', 'stock') ? '股票：過世者開戶的證券商，申請轉到繼承人的集保帳戶。' : null
+      ],
+      bring: (c) => [
+        '存款：官方沒有統一的文件清單，出發前先打電話問過世者開戶的銀行或郵局。',
+        c.hasOrUnsure('assets', 'stock') ? '股票：遺產稅繳清證明書或免稅證明書，和證券商要求的證明文件；申請書叫「繼承、贈與、抵繳股款及拋棄股份轉帳／撤銷申請書」。' : null
+      ],
+      notes: (c) => [
+        '部分銀行有「小額存款繼承簡便措施」：到場的繼承人寫切結書後，不用再附其他繼承人的印鑑證明；門檻由各銀行自己訂。',
+        '過世者如果有租銀行保管箱：不要自己先開。要先和銀行約好手續和日期，再通知國稅局派人一起點驗（財政部說明）。',
+        c.hasOrUnsure('assets', 'stock') ? '不知道過世者有哪些股票，可以透過國稅局（金融遺產查詢）或集保結算所查。' : null
+      ],
+      phones: (c) => c.hasOrUnsure('assets', 'stock') ? ['tdcc'] : [],
+      sources: ['estateLaw', 'fscSmall', 'govEstate', 'tdccQA', 'tdccInquiry']
+    },
+    {
+      // 強制汽車責任保險法第 7、11、14、25、28、32、35、40 條；給付標準第 6、7 條（2026-07-01 起死亡給付 300 萬）
+      // Compulsory auto liability insurance: death benefit, claimants, 2/10-year limit, special compensation fund
+      id: 'car-accident', group: 'long', show: (c) => c.notDisease,
+      confirm: () => true,
+      confirmText: '這一項只適用於車禍過世。不是車禍的話，這一項不用辦，直接打勾就好。',
+      confirmTag: '車禍才需要',
+      confirmTagExport: '（車禍過世才需要）',
+      title: '如果是車禍過世：申請強制險的死亡給付',
+      deadline: { type: 'months', n: 24,
+        law: '從知道有損害、也知道是哪一家保險公司起 2 年內；最長從車禍發生起 10 年（強制汽車責任保險法第 14 條）。找特別補償基金的，從知道肇事車找不到、沒有保險等情況時起算。',
+        start: '工具用過世日期估算，請盡早申請。',
+        late: lateClaim(2, '打電話問保險公司，或特別補償基金 0800-565-678'), lateShort: LATE_CLAIM_SHORT },
+      why: (c) => {
+        const d = c.a.date;
+        // 新金額看「車禍發生日」：過世日在 2026-07-01 以前，車禍一定也在這之前 The amount follows the accident date
+        const before = d && (d.y * 10000 + d.m * 100 + d.d) < 20260701;
+        return [
+          '因為車禍過世，不論是誰的過失，家屬都可以向對方車輛（家人是乘客的話，就是他搭的那輛車）的「強制汽車責任保險」（強制險）申請死亡給付（強制汽車責任保險法第 7 條）。',
+          before
+            ? '死亡給付每人 200 萬元（車禍發生在 2026 年 6 月 30 日以前）。過世前的醫療費可以另外申請，加起來最多 220 萬元（強制汽車責任保險給付標準 2026 年 2 月版）。'
+            : '死亡給付每人 300 萬元；車禍如果是在 2026 年 6 月 30 日以前發生的，是 200 萬元（強制汽車責任保險給付標準第 6 條）。過世前的醫療費可以另外申請，加起來最多 320 萬元。',
+          '可以先申請一半（第 35 條）；文件交齊後，保險公司要在 10 個工作日內付款（第 25 條）。',
+          '誰可以領：父母、子女、配偶，同一順位的人平分；都沒有的話，依序是祖父母、孫子女、兄弟姊妹。這些家人都沒有的話，幫忙付殯葬費的人，可以在殯葬費的金額內申請（第 11 條）。',
+          '過世的家人自己也有過失，還是可以向對方車輛的保險公司申請。但如果是自己開車或騎車自撞、自摔，沒有和別的車相撞，開車、騎車的人本人不能申請；同車的乘客可以（強制險官網問答）。',
+          '少數情況保險公司可以不付：車禍是過世的家人故意造成的，或是在從事犯罪行為時發生的（第 28 條）。不確定的話，先問保險公司。'
+        ];
+      },
+      where: () => [
+        '向肇事車輛投保強制險的產物保險公司申請。不知道是哪一家，可以打保險事業發展中心 0800-825-688 問（強制險官網申請須知）。',
+        '肇事車逃逸找不到、沒有保強制險、是被偷的車，或是不用保強制險的車：改向「汽車交通事故特別補償基金」申請，一樣到產物保險公司的分支機構送件（強制汽車責任保險法第 40 條；特別補償基金說明）。',
+        '車禍的處理證明、現場圖、現場照片、初步分析研判表，向處理車禍的警察機關（交通隊）申請（強制險官網申請須知）。什麼時候拿得到，請直接問處理的警察機關。'
+      ],
+      bring: () => [
+        '請領人的身分證明文件',
+        '警察機關的處理證明（或其他相關證明文件）',
+        '死亡證明書或相驗屍體證明書',
+        '過世後申請的全戶戶籍謄本（請領人和過世者不同戶的話，也要附請領人的戶籍謄本）',
+        '由一個人代表大家去辦的話：全體請領人簽的授權委託書，和代理人的身分證明',
+        '已經從對方拿到賠償的話：拿到賠償的證明',
+        '存摺封面影本',
+        '其他保險公司要求的文件'
+      ],
+      notes: () => [
+        '向肇事者要求賠償（殯葬費、扶養費、精神慰撫金）是另一件事（民法第 192、194 條）：從知道損害和要賠償的人起 2 年內，最長從車禍起 10 年（民法第 197 條）。強制險付的錢，會從賠償金額裡扣掉（強制汽車責任保險法第 32 條）。',
+        '經濟有困難、需要律師協助的，可以問法律扶助基金會。',
+        '車禍過世、可以申請強制險的，不能再申請犯罪被害補償金（犯罪被害人權益保障法第 50 條）。'
+      ],
+      phones: ['tii', 'mvacf', 'laf'],
+      sources: ['caliAct', 'caliStd', 'caliStdOld', 'caliNotice', 'caliQA', 'mvacf', 'civil197', 'mojCheck', 'judLaf']
+    },
+    {
+      // 犯罪被害人權益保障法第 50、53、56、57、59、62、63、69 條 Crime Victim Rights Protection Act
+      id: 'crime-victim', group: 'long', show: (c) => c.notDisease,
+      confirm: () => true,
+      confirmText: '這一項只適用於家人因為別人的犯罪行為而過世（對方是故意或過失都算；車禍請看強制險那一項）。不是的話，這一項不用辦，直接打勾就好。',
+      confirmTag: '犯罪被害才需要',
+      confirmTagExport: '（因為別人的犯罪行為過世才需要）',
+      title: '如果家人是因為別人的犯罪行為過世：申請犯罪被害補償金',
+      deadline: { type: 'months', n: 60,
+        law: '從知道有犯罪被害時起 5 年內；最長從犯罪發生起 10 年（犯罪被害人權益保障法第 63 條）。家屬在犯罪發生時還未成年的，成年後 5 年內還可以申請。',
+        start: '工具用過世日期估算。',
+        late: lateClaim(5, '打電話問犯罪被害人保護協會 0800-005-850'), lateShort: LATE_CLAIM_SHORT },
+      why: () => [
+        '家人因為犯罪過世（故意或過失的犯罪都算），遺屬可以向國家申請「遺屬補償金」180 萬元（犯罪被害人權益保障法第 57 條；犯罪被害人保護協會說明）。',
+        '急需用錢的，可以先申請「暫時補償金」，最多 40 萬元。之後決定的補償金，會扣掉已經領的部分；但如果申請最後沒有通過，或決定的金額比暫時補償金少，要把錢（或多領的部分）還回去（第 69 條）。',
+        '誰可以領：父母、配偶、子女；都沒有的話，依序是祖父母、孫子女、兄弟姊妹。180 萬元是同一順序的人一起分，例如 3 個人，每人 60 萬元。原則上要一起領；有人沒有一起申請，審議會會請大家協議由一個人代表領，談不攏就平均分給每個人（第 53 條；犯罪被害人保護協會說明）。',
+        '車禍過世、可以申請強制險的，不能申請這項補償（第 50 條），請看「如果是車禍過世」那一項。'
+      ],
+      where: () => [
+        '用書面向犯罪發生地的地方檢察署「犯罪被害人補償審議會」申請（第 62 條）；也可以用法務部的「犯罪被害補償金線上申辦系統」申請（犯罪被害人保護協會網頁有連結）。',
+        '財團法人犯罪被害人保護協會可以協助申請補償，也有法律諮詢、殯葬協助、心理諮商等服務。'
+      ],
+      bring: () => [
+        '補償金申請書',
+        '案件的證明文件，例如受（處）理案件證明單、起訴書或判決書',
+        '身分證正反面影本，和新式戶口名簿或戶籍謄本',
+        '繼承系統表（或其他可以證明遺屬人數和順序的文件）',
+        '同一順序有好幾個人時：共同具領同意書（只有 1 個人申請的不用附）'
+      ],
+      notes: () => [
+        '領到補償金以後，加害人才賠償的，補償金不用還（犯罪被害人保護協會說明）。',
+        '過世的家人自己對被害有故意或重大過失時，審議會可能少補償或不補償（第 59 條）。',
+        '向加害人要求賠償（殯葬費、扶養費、精神慰撫金）是另一件事：從知道損害和加害人起 2 年內，最長 10 年（民法第 192、194、197 條）。',
+        '補償金額和條件，以審議會的決定為準。'
+      ],
+      together: { ids: ['car-accident'], text: '另一種情況' },
+      phones: ['avs', 'laf'],
+      sources: ['avsComp', 'mojForm', 'mojCheck', 'avsServ', 'civil197', 'judLaf']
+    },
+    {
+      id: 'commercial-ins', group: 'long', show: (c) => c.hasOrUnsure('ins', 'commercial'),
+      confirm: (c) => c.unsureOnly('ins', 'commercial'),
+      title: '申請人壽保險等商業保險的理賠',
+      deadline: { type: 'months', n: 24, law: '自可以請求之日起 2 年（保險法第 65 條）', start: '有些情況起算點比較晚，例如能證明自己不是因為疏忽才不知情的，從知道的時候起算（同條第 2 款）。工具用過世日期估算，建議早一點申請。', late: lateClaim(2, '打電話問過世者投保的保險公司'), lateShort: LATE_CLAIM_SHORT },
+      why: () => ['保險理賠有時效，超過就不能請求。'],
+      where: () => ['打電話給過世者投保的保險公司，問理賠要帶什麼。不知道是哪一家，先做「查過世家人有沒有買人壽保險」那一項。'],
+      bring: () => null,
+      together: { ids: ['life-ins'], text: '先查有哪些保單' },
+      sources: ['ins65']
+    },
+    {
+      id: 'labor-self', group: 'long', show: (c) => c.hasOrUnsure('ins', 'labor'),
+      confirm: (c) => c.unsureOnly('ins', 'labor'),
+      title: '申請勞保的本人死亡給付',
+      deadline: { type: 'months', n: 60, law: '自可以請領之日起 5 年（勞工保險條例第 30 條）', late: LATE_BLI(5), lateShort: LATE_CLAIM_SHORT },
+      why: () => [
+        { h: '過世時還有勞保', ul: [
+          '付喪葬費的人可以領「喪葬津貼」：5 個月的平均月投保薪資；沒有符合條件的家人（遺屬）時，是 10 個月。',
+          '符合條件的家人可以領每月的「遺屬年金」；2009 年 1 月 1 日勞保年金開始以前就有勞保年資的，也可以改選一次領的「遺屬津貼」（兩種只能選一種）。',
+          '退保後 1 年內，因為同一個傷病過世，也算在內。'
+        ] },
+        { h: '在領勞保老年年金或失能年金時過世', ul: [
+          '符合條件的家人可以改領「遺屬年金」，金額是原本年金的一半。在領老年年金、2009 年 1 月 1 日以前就有年資並符合條件的，也可以改選一次領的「差額金」，請問勞保局。',
+          '這種情況能不能領喪葬津貼，官方說明沒有寫，請問勞保局。'
+        ] },
+        '因為職業災害過世，另外有給付，請問勞保局。'
+      ],
+      where: () => ['勞保局，郵寄或親自送件。', '在職過世時，申請書原則上要請過世者的公司蓋章；公司也要幫過世者辦勞保退保。'],
+      bring: () => [
+        '勞工保險本人死亡給付申請書及給付收據',
+        '死亡證明書或檢察官相驗屍體證明書',
+        '喪葬津貼：載有死亡日期的全戶戶籍謄本、請領人的現住址戶籍謄本、付喪葬費的證明正本',
+        '遺屬年金或遺屬津貼：戶籍謄本等（詳細文件請看勞保局說明）'
+      ],
+      notes: (c) => [c.shows('labor-family') ? '「本人死亡給付」和「家屬死亡給付」只能選一種申請。' : null],
+      together: { ids: ['pension', 'np'], text: '一樣在勞保局辦' },
+      phones: ['bli'],
+      sources: ['bliSelfQA', 'bliSurvivor', 'bliSelfProc', 'bliSelfDocs', 'bliPrescr', 'bliChoose', 'bliPassed']
+    },
+    {
+      id: 'labor-family', group: 'long',
+      show: (c) => ['spouse', 'child', 'parent'].includes(c.a.rel) && ['yes', 'unsure'].includes(c.a.selfLabor),
+      confirm: (c) => c.a.selfLabor === 'unsure',
+      title: '申請勞保的家屬死亡給付',
+      deadline: { type: 'months', n: 60, law: '5 年（勞工保險條例第 30 條）', late: LATE_BLI(5), lateShort: LATE_CLAIM_SHORT },
+      why: (c) => {
+        const base = c.a.rel === 'parent'
+          ? '過世那天您自己有勞保，過世的是您的子女：滿 12 歲的，可以領 2.5 個月；未滿 12 歲的，1.5 個月（按您自己的平均月投保薪資計算）。'
+          : `過世那天您自己有勞保，過世的是您的${c.a.rel === 'spouse' ? '配偶' : '父母'}：可以領 3 個月的「家屬死亡給付」（按您自己的平均月投保薪資計算；不用附喪葬費收據）。`;
+        return [base, c.a.selfLabor === 'unsure' ? '您不確定自己那天有沒有勞保：可以問公司，或打電話問勞保局。' : null];
+      },
+      where: (c) => [
+        c.shows('labor-self') ? '過世者自己也有勞保的話，「本人死亡給付」和「家屬死亡給付」只能選一種：請先打勞保局電話問哪一種比較適合，再決定申請哪一種。' : null,
+        '最方便：辦死亡登記時，在戶政事務所一起申請。',
+        '或填申請書，附存摺影本，郵寄或親送勞保局。',
+        '或用自然人憑證等登入勞保局網站申請（沒有或不會用的話，用前面兩種方式就好）。',
+        '在國內有戶籍的人可以自己申請，不用公司蓋章。',
+        '要先辦好死亡登記，才能申請。'
+      ],
+      bring: () => ['您自己在國內金融機構（銀行、郵局等）的存摺影本', '請別人代辦：委託書'],
+      notes: (c) => [c.shows('labor-self') ? '和「本人死亡給付」只能選一種申請。' : null],
+      together: { ids: ['death-reg'], text: '可以和死亡登記一起辦' },
+      phones: ['bli'],
+      sources: ['bliFamStd', 'bliFamProc', 'bliChoose', 'molOneStop', 'risOnline']
+    },
+    {
+      id: 'pension', group: 'long', show: (c) => c.hasOrUnsure('ins', 'pension'),
+      confirm: (c) => c.unsureOnly('ins', 'pension'),
+      title: '申請勞工退休金（新制）',
+      deadline: { type: 'months', n: 120, law: '自可以請領之日起 10 年（勞工退休金條例第 28 條）；勞保局宣導寫「過世隔天起 10 年內」。', late: LATE_BLI(10), lateShort: LATE_CLAIM_SHORT },
+      why: () => [
+        '過世者勞退新制專戶裡的錢，由家人（遺屬）或遺囑指定的人一次領回。勞保局收件後 30 天內發給。',
+        '家人的順位：配偶和子女、父母、祖父母、孫子女、兄弟姊妹。'
+      ],
+      where: () => ['勞保局。想先知道專戶有多少錢，要到勞保局櫃檯查詢。'],
+      bring: () => [
+        '勞工退休金（遺屬或指定請領人）申請書及收據（不是勞保死亡給付的申請書）',
+        '載有過世者死亡日期的戶口名簿影本（要印到「非現住人口」和「詳細記事」的部分）',
+        '死亡證明書（勞保局寫「死亡診斷書」）、檢察官相驗屍體證明書，或法院的死亡宣告裁定等證明',
+        '請領人和過世者不同戶籍：證明身分關係的戶口名簿影本',
+        '遺囑指定請領人：身分證明影本和遺囑影本',
+        '申請人未成年：法定代理人簽章，附法定代理人的戶口名簿影本'
+      ],
+      notes: () => ['不要等通知：過世超過 2 年還沒申請，勞保局才會發函通知，但還是要在 10 年內申請。'],
+      together: { ids: ['labor-self', 'np'], text: '一樣在勞保局辦' },
+      phones: ['bli'],
+      sources: ['bliPension', 'bliPensionOrder', 'bliPension10', 'tpPensionLaw']
+    },
+    {
+      id: 'np', group: 'long', show: (c) => c.hasOrUnsure('ins', 'np'),
+      confirm: (c) => c.unsureOnly('ins', 'np'),
+      title: '申請國民年金的喪葬給付',
+      deadline: { type: 'months', n: 60, law: '過世隔天起 5 年內', late: LATE_BLI(5).replace('可能已經超過', '喪葬給付可能已經超過') + '遺屬年金的規定不一樣，也請一起問。', lateShort: LATE_CLAIM_SHORT },
+      why: () => [
+        '過世者在 65 歲前、有國民年金的期間過世：付喪葬費的人可以領 5 個月的月投保金額。',
+        '65 歲以後或退保期間過世的，不能領喪葬給付；遺屬年金的條件不一樣，請一起問勞保局。',
+        '符合條件的家人也可以申請每月的「遺屬年金」。'
+      ],
+      where: () => ['郵寄到勞保局國民年金組，或送到勞保局各地辦事處。申請書可以在勞保局網站下載，或向勞保局各地辦事處、鄉鎮市區公所索取。'],
+      bring: () => [
+        '國民年金喪葬給付申請書（貼申請人身分證正反面影本和存摺封面影本）',
+        '死亡證明書或檢察官相驗屍體證明書',
+        '載有死亡登記日期的戶口名簿影本',
+        '付喪葬費的證明正本'
+      ],
+      together: { ids: ['labor-self', 'pension'], text: '一樣在勞保局辦' },
+      phones: ['bliNp'],
+      sources: ['bliNpFuneral', 'bliNpNews']
+    },
+    {
+      id: 'farmer', group: 'long',
+      feedbackName: '申請農保喪葬津貼、老農津貼沒領到的部分', // 回報用，固定名稱 for feedback
+      show: (c) => c.hasOrUnsure('ins', 'farmer') || c.hasOrUnsure('flags', 'oldfarmer'),
+      confirm: (c) => c.unsureOnly('ins', 'farmer') || c.unsureOnly('flags', 'oldfarmer'),
+      title: (c) => {
+        const f = c.hasOrUnsure('ins', 'farmer'), o = c.hasOrUnsure('flags', 'oldfarmer');
+        if (f && o) return '申請農保喪葬津貼、老農津貼沒領到的部分';
+        return f ? '申請農保喪葬津貼' : '申請老農津貼沒領到的部分';
+      },
+      deadline: (c) => c.hasOrUnsure('ins', 'farmer')
+        ? { type: 'months', n: 60, law: '農保喪葬津貼：過世日起 5 年內；老農津貼沒領到的部分：官方沒有寫期限。', late: LATE_BLI(5).replace('可能已經超過', '農保喪葬津貼可能已經超過') + (c.hasOrUnsure('flags', 'oldfarmer') ? '老農津貼沒領到的部分，官方沒有寫期限，也請一起問。' : ''), lateShort: LATE_CLAIM_SHORT }
+        : { type: 'none', text: '官方沒有寫期限' },
+      why: (c) => [
+        c.hasOrUnsure('ins', 'farmer') ? '過世時有農保：付喪葬費的人可以領 15 個月投保金額的喪葬津貼（限 1 人請領）。' : null,
+        c.hasOrUnsure('flags', 'oldfarmer') ? '過世者在領老農津貼：還沒領到的金額，可以由法定繼承人附切結書申請；繼承人 2 人以上時，用「共同委任及切結書」，由 1 人代表申請。' : null,
+        c.hasOrUnsure('flags', 'oldfarmer') && !c.hasOrUnsure('ins', 'farmer') ? '過世者如果也有農保，還可以申請農保的喪葬津貼；不確定有沒有，請問過世者投保的農會。' : null
+      ],
+      where: (c) => [
+        c.hasOrUnsure('ins', 'farmer') ? '農保喪葬津貼：投保的農會櫃檯；或先辦好死亡登記，再用自然人憑證等上網申請（申請後要打電話向農會確認）。' : null,
+        c.hasOrUnsure('flags', 'oldfarmer') ? '老農津貼：自己郵寄到勞保局，或請農會幫忙寄。' : null
+      ],
+      bring: (c) => [
+        ...(c.hasOrUnsure('ins', 'farmer') ? [
+          '農保喪葬津貼申請書暨給付收據',
+          '死亡證明書或檢察官相驗屍體證明書',
+          '申請人的身分證正反面影本或戶口名簿影本',
+          '付喪葬費的證明：上面要有過世者的姓名，抬頭寫申請人的姓名',
+          '沒有付喪葬費的證明時：申請人是配偶或二親等以內的親屬（例如父母、子女、兄弟姊妹、祖父母、孫子女），可以改附切結書和親屬關係證明；但好幾個人都要申請、又談不攏時，不能這樣辦',
+          '含過世者詳細記事的戶口名簿影本'
+        ] : []),
+        ...(c.hasOrUnsure('flags', 'oldfarmer') ? ['老農津貼：切結書（或共同委任及切結書，可以在勞保局網站下載）'] : [])
+      ],
+      phones: (c) => c.hasOrUnsure('ins', 'farmer') ? ['bliFarm'] : ['bli'],
+      sources: ['bliFarmer', 'bliOldFarmer']
+    },
+    {
+      // 公務人員退休資遣撫卹法第 43、45、48、73 條；施行細則第 48、51、95、106 條；行政程序法第 131 條
+      // Civil Servants Retirement Act arts. 43/45/48/73; rules arts. 48/51/95/106; APA art. 131 (10-year claim period)
+      id: 'gov-pension', group: 'long', show: (c) => c.hasOrUnsure('ins', 'govpension'),
+      confirm: (c) => c.unsureOnly('ins', 'govpension'),
+      title: '申請退休公務人員的遺屬金',
+      deadline: { type: 'months', n: 120,
+        law: '從過世那天起算 10 年內（公務人員退休資遣撫卹法第 73 條、行政程序法第 131 條；起算日見施行細則第 106 條）。',
+        late: lateClaim(10, '打電話問過世者原服務機關的人事單位'), lateShort: LATE_CLAIM_SHORT },
+      why: () => [
+        '過世的家人是退休公務人員，每個月領退休金（月退），家人可以申請「遺屬金」（公務人員退休資遣撫卹法第 43 條）。退休時一部分一次領、一部分每月領（叫「兼領」）的也可以。',
+        { h: '有兩種，選一種', ul: [
+          '遺屬一次金：一次領完。',
+          '遺屬年金：每月領，金額是過世者月退休金的一半。只有配偶、未成年子女、身心障礙且沒有工作能力的成年子女、父母可以選，而且要符合下面的條件。'
+        ] },
+        { h: '遺屬一次金給誰', ul: [
+          '沒有再婚的配偶領一半，另一半給子女；沒有子女，給父母。子女和父母都沒有，配偶全部領。',
+          '沒有配偶：全部先給子女，再來是父母、兄弟姊妹、祖父母。',
+          '同一種家人有好幾個，就平分。'
+        ] },
+        { h: '遺屬年金的條件', ul: [
+          '配偶：沒有再婚，到過世時婚姻關係加起來滿 10 年，而且年滿 55 歲，或身心障礙且沒有工作能力。還沒滿 55 歲的，可以等滿 55 歲再開始領。',
+          '未成年子女領到成年；配偶、父母、身心障礙且沒有工作能力的子女，領一輩子。',
+          '「身心障礙且沒有工作能力」是指：重度以上身心障礙，或被法院宣告需要監護（監護宣告）；而且平均每個月的所得沒有超過基本工資，每年都要交前一年的所得資料。',
+          '要選年金的家人，自己也在領政府的退休金、撫卹金等每月的給付時，不能選年金；除非放棄自己那一份，而且發給的機關同意（第 45 條第 4 項）。'
+        ] },
+        '要領多少，可以請人事單位先試算，看過再決定選哪一種。'
+      ],
+      where: () => [
+        '過世者退休前服務的機關（原服務機關）的人事單位（人事室）。人事單位會幫忙填表，送銓敘部審定後發給。',
+        '打電話給那個機關，說「退休人員過世了，要申請遺屬金」就可以。',
+        '這一項寫的是公務人員的規定。退休的公立學校教職員、軍人，請直接問過世者原本服務的學校或單位。'
+      ],
+      bring: () => [
+        '遺屬一次金或遺屬年金申請書（向人事單位拿，人事單位會協助填寫）',
+        '遺族請領順序系統表（列出有哪些家人、是什麼關係的表）',
+        '死亡證明書或除戶戶籍謄本',
+        '證明家人關係的戶籍謄本',
+        '退撫給與領受人員資料卡，附要撥款的金融機構存摺封面影本',
+        '選遺屬年金的人：遺族領受遺屬年金同意書',
+        '同一種家人有好幾個、推 1 個人代表申請：代表領受同意書；有人不領：拋棄同意書',
+        '身心障礙的配偶或子女要選遺屬年金：重度以上身心障礙手冊或證明（或法院監護宣告的文件），和前一年的所得申報資料',
+        '申請人未成年：由法定代理人代為申請，附法定代理人的身分證明'
+      ],
+      notes: (c) => {
+        const d = c.a.date;
+        // 新法 2018-07-01 施行（第 95 條） The current Act took effect on 2018-07-01
+        const before2018 = d && (d.y * 10000 + d.m * 100 + d.d) < 20180701;
+        return [
+          before2018 ? '這套規定是 2018 年 7 月 1 日開始施行；您的家人在這之前過世，請直接問人事單位要怎麼申請。' : null,
+          '過世以後多發的月退休金，會從遺屬金裡扣回來（施行細則第 95 條）。請盡早通知人事單位。',
+          '過世者如果用遺囑指定由誰領，照遺囑；但未成年子女能領的比例，不能比原本少（第 48 條）。',
+          '法律寫的是「領月退休金或兼領月退休金」的人。退休時一次領完退休金的，有沒有可以申請的，請問人事單位。'
+        ];
+      },
+      sources: ['csrAct', 'csrRule', 'tcSurvivor', 'apa131']
+    },
+    {
+      id: 'gov-mil', group: 'long', show: (c) => c.hasOrUnsure('ins', 'gov'),
+      confirm: (c) => c.unsureOnly('ins', 'gov'),
+      title: '公保、軍保：打電話問承辦單位',
+      deadline: { type: 'none', text: '依各保險規定' },
+      why: () => ['公保、軍保的死亡給付規定，這個工具沒有寫，請直接問承辦單位。'],
+      where: () => ['公保：打電話問臺灣銀行公教保險部現金給付科，並問清楚要不要透過過世者的服務機關送件。', '軍保：請打電話問國防部，要去哪裡申請、要帶什麼。'],
+      bring: () => null,
+      phones: ['bot'],
+      sources: ['botGei', 'mndIns']
+    }
+  ];
+
+  return { VERIFIED_ON, APP_VERSION, FEEDBACK, SRC, PHONES, QUESTIONS, GROUPS, DONTS, ITEMS, LATE_GENERAL };
+})();
+</script>
+
+<!-- =====================================================================
+     程式 APP
+     ===================================================================== -->
+<script>
+'use strict';
+(function () {
+  const C = window.CONTENT;
+  const STORE_KEY = 'shenhoushi-daohang-v1';
+  // 被放在別的網頁框架裡（例如 claude.ai 試用連結）時，瀏覽器不讓網頁開列印視窗，就不顯示列印按鈕
+  // Inside a sandboxed frame (e.g. a claude.ai artifact) printing is blocked, so hide the print button
+  const CAN_PRINT = (() => { try { return typeof window.print === 'function' && window.self === window.top; } catch (e) { return false; } })();
+  const SCALES = [1, 1.2, 1.4];
+  const STORES = ['711', 'fami']; // 超商代號 Store ids
+  const STORE_VERIFIED = '2026-10-11'; // 超商列印說明查證日期 Date the store instructions were checked
+  const errors = [];
+
+  // ===== 日期工具 Date utilities（只用年月日，避免時區問題 date-only, timezone-safe） =====
+  const D = {
+    toUTC: (o) => Date.UTC(o.y, o.m - 1, o.d),
+    fromUTC: (t) => { const x = new Date(t); return { y: x.getUTCFullYear(), m: x.getUTCMonth() + 1, d: x.getUTCDate() }; },
+    addDays: (o, n) => D.fromUTC(D.toUTC(o) + n * 86400000),
+    lastDay: (y, m) => new Date(Date.UTC(y, m, 0)).getUTCDate(),
+    norm: (y, m) => [y + Math.floor((m - 1) / 12), ((m - 1) % 12 + 12) % 12 + 1],
+    cmp: (a, b) => D.toUTC(a) - D.toUTC(b),
+    diff: (a, b) => Math.round((D.toUTC(b) - D.toUTC(a)) / 86400000),
+    today: () => { const n = new Date(); return { y: n.getFullYear(), m: n.getMonth() + 1, d: n.getDate() }; },
+    valid: (o) => !!o && [o.y, o.m, o.d].every(Number.isInteger) && o.m >= 1 && o.m <= 12 && o.d >= 1 && o.d <= D.lastDay(o.y, o.m),
+    // 以「月」定的期間：民法第 120、121 條／行政程序法第 48 條
+    // 始日不算入（從過世隔天起算）；不是從月初起算時，到最後一個月「相當日的前一天」；
+    // 最後一個月沒有相當日，用那個月的最後一天。不含假日順延（估算偏早、比較保險）。
+    // Month periods per Civil Code arts. 120-121 / Administrative Procedure Act art. 48 (no holiday extension).
+    addMonthsLegal: (death, months) => {
+      const s = D.addDays(death, 1);
+      if (s.d === 1) { const [y, m] = D.norm(s.y, s.m + months - 1); return { y, m, d: D.lastDay(y, m) }; }
+      const [y, m] = D.norm(s.y, s.m + months);
+      const last = D.lastDay(y, m);
+      if (s.d > last) return { y, m, d: last };
+      return D.addDays({ y, m, d: s.d }, -1);
+    },
+    // 以「日」定的期間：隔天算第 1 天，所以第 N 天＝過世日＋N 天
+    addDaysLegal: (death, days) => D.addDays(death, days),
+    week: (o) => '日一二三四五六'[new Date(D.toUTC(o)).getUTCDay()],
+    fmt: (o) => `${o.y}年${o.m}月${o.d}日 星期${D.week(o)}`,
+    fmtPlain: (o) => `${o.y}年${o.m}月${o.d}日`,
+    fmtShort: (o) => `${o.y}/${o.m}/${o.d}`
+  };
+
+  // ===== 狀態與儲存 State & storage（全部包 try/catch：無痕模式也不會壞） =====
+  let state = { answers: {}, done: {}, scale: 1 };
+  let storageOK = true;
+  const groupOpen = {}; // 這次使用中各組打開或收起（不存起來） Session-only group open state
+  let returnToRow = null; // 回到清單時要捲到哪一項 Row to scroll to when returning to the list
+  let lastRoute = '';
+
+  function probeStorage() {
+    try { const k = '__probe__'; localStorage.setItem(k, '1'); localStorage.removeItem(k); return true; } catch (e) { return false; }
+  }
+  function sanitize(raw) {
+    const out = { answers: {}, done: {}, scale: 1 };
+    if (!raw || typeof raw !== 'object') return out;
+    const a = raw.answers && typeof raw.answers === 'object' ? raw.answers : {};
+    for (const q of C.QUESTIONS) {
+      const v = a[q.id];
+      if (q.type === 'date') {
+        if (v && D.valid(v)) out.answers.date = { y: v.y, m: v.m, d: v.d };
+      } else if (q.type === 'single') {
+        if (q.options.some(([k]) => k === v)) out.answers[q.id] = v;
+      } else if (q.type === 'multi') {
+        if (Array.isArray(v)) {
+          const ok = v.filter((x) => q.options.some(([k]) => k === x));
+          let uniq = Array.from(new Set(ok));
+          if (uniq.includes('none') && uniq.length > 1) uniq = uniq.filter((x) => x !== 'none');
+          if (uniq.length) out.answers[q.id] = uniq;
+        }
+      }
+    }
+    const ids = new Set(C.ITEMS.map((i) => i.id));
+    if (raw.done && typeof raw.done === 'object') {
+      for (const [k, v] of Object.entries(raw.done)) if (ids.has(k) && v === true) out.done[k] = true;
+    }
+    if (SCALES.includes(raw.scale)) out.scale = raw.scale;
+    if (raw.pdfSaved === true) out.pdfSaved = true; // 存過 PDF，清單上顯示「再看超商列印步驟」
+    if (STORES.includes(raw.store)) out.store = raw.store; // 上次選的超商 Last store picked
+    return out;
+  }
+  function load() {
+    storageOK = probeStorage();
+    if (!storageOK) return;
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (raw) state = sanitize(JSON.parse(raw));
+    } catch (e) {
+      // 資料壞掉就重新開始 Corrupted data: start fresh
+      state = { answers: {}, done: {}, scale: 1 };
+      logError('讀取儲存資料失敗：' + e.message, false);
+    }
+  }
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); storageOK = true; } catch (e) { storageOK = false; }
+  }
+
+  // ===== 小工具 Helpers =====
+  function h(tag, props, ...kids) {
+    const el = document.createElement(tag);
+    if (props) {
+      for (const [k, v] of Object.entries(props)) {
+        if (v == null || v === false) continue;
+        if (k === 'class') el.className = v;
+        else if (k === 'text') el.textContent = v;
+        else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2), v);
+        else el.setAttribute(k, v === true ? '' : String(v));
+      }
+    }
+    for (const kid of kids.flat(Infinity)) {
+      if (kid == null || kid === false) continue;
+      el.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+    }
+    return el;
+  }
+  const val = (x, c) => (typeof x === 'function' ? x(c) : x);
+  // 日期、星期包成不換行的一段（兩段之間還是可以換行，字大時才不會超出畫面）
+  // Wrap dates and weekdays in no-wrap spans (a break between them is still allowed so large text never overflows)
+  const DATE_PARTS = /(\d{4}年\d{1,2}月\d{1,2}日|星期[日一二三四五六])/;
+  const noBreakDates = (text) => String(text).split(DATE_PARTS).map((p, i) => (i % 2 ? h('span', { class: 'nw' }, p) : p));
+  const clean = (arr) => (arr || []).filter((x) => x != null && x !== '');
+
+  // 情境：給內容表用的判斷函式 Context passed to CONTENT functions
+  function makeCtx(a) {
+    const ctx = {
+      a,
+      deathYear: a.date ? a.date.y : null,
+      has: (k, v) => Array.isArray(a[k]) && a[k].includes(v),
+      isUnsure: (k) => (Array.isArray(a[k]) ? a[k].includes('unsure') : a[k] === 'unsure'),
+      hasOrUnsure: (k, v) => ctx.has(k, v) || ctx.isUnsure(k),
+      // 只因為選了「不確定」才出現（沒有明確選這一項） Shown only because of "unsure"
+      unsureOnly: (k, v) => ctx.isUnsure(k) && !ctx.has(k, v),
+      // 今天是不是已經超過過世後 n 個月 Whether today is past n months after death
+      pastMonths: (n) => !!a.date && D.cmp(D.today(), D.addMonthsLegal(a.date, n)) > 0,
+      debtRisk: a.debt === 'maybe' || a.debt === 'unsure',
+      // 第 2 題選「不是因病」或「不確定」：可能是車禍或犯罪 Possibly an accident or a crime
+      notDisease: a.cause === 'notdisease' || a.cause === 'unsure',
+      // 有（或不確定有沒有）勞保、國保、農保：喪葬費收據要用來申請喪葬給付 Labor/NP/farmer funeral benefits possible
+      insFuneral: ['labor', 'np', 'farmer'].some((k) => Array.isArray(a.ins) && (a.ins.includes(k) || a.ins.includes('unsure'))),
+      shows: (id) => { const it = C.ITEMS.find((i) => i.id === id); return !!it && !!it.show(ctx); },
+      // 清單裡有幾項手續的文件列了死亡證明（參考份數） How many visible procedures list a death certificate
+      certCount: () => C.ITEMS.filter((it) => it.id !== 'death-cert' && it.show(ctx) && typeof it.bring === 'function')
+        .filter((it) => clean(it.bring(ctx)).some((b) => /死亡證明|相驗屍體證明書|死亡診斷書/.test(b) && !/可以不附/.test(b))).length
+    };
+    return ctx;
+  }
+
+  function visibleQuestions(a) { return C.QUESTIONS.filter((q) => !q.showIf || q.showIf(a)); }
+  function isAnswered(q, a) {
+    const v = a[q.id];
+    if (q.type === 'date') return D.valid(v) && D.cmp(v, D.today()) <= 0;
+    if (q.type === 'multi') return Array.isArray(v) && v.length > 0;
+    return v != null;
+  }
+  function answersComplete(a) { return visibleQuestions(a).every((q) => isAnswered(q, a)); }
+
+  // ===== 期限計算 Deadlines =====
+  function computeDue(item, ctx) {
+    const dl = val(item.deadline, ctx);
+    const death = ctx.a.date;
+    let date = null;
+    if (dl.type === 'days') date = D.addDaysLegal(death, dl.n);
+    else if (dl.type === 'months') date = D.addMonthsLegal(death, dl.n);
+    else if (dl.type === 'suggest') date = D.addMonthsLegal(death, dl.months);
+    const out = { dl, date, late: false, left: null, suggest: dl.type === 'suggest' };
+    if (date) {
+      out.left = D.diff(D.today(), date);
+      out.late = out.left < 0;
+    }
+    return out;
+  }
+  function dueLine(due, forExport) {
+    const { dl, date } = due;
+    if (!date) return { text: dl.text, late: false };
+    if (due.late) {
+      if (due.suggest) return { text: `建議日期 ${D.fmtPlain(date)} 已過，現在還是可以申請`, late: false };
+      // 匯出時接一句「現在怎麼辦」，不然家人只看到「已超過期限」可能就放棄了
+      // In exports add what to do now, so family members don't give up on seeing "overdue"
+      const what = forExport ? `：${dl.lateShort || '請盡快問辦理單位怎麼補辦'}` : '';
+      return { text: `已超過期限（估算 ${D.fmtPlain(date)}）${what}`, late: true };
+    }
+    const label = due.suggest ? '建議' : '截止';
+    let tail = '';
+    // 列印、PDF、分享的文字不寫「還有幾天」，因為可能幾天後才看到 Exports omit "days left"
+    if (!forExport) {
+      if (due.left === 0) tail = '，今天';
+      else if (due.left <= 60) tail = `，還有 ${due.left} 天`;
+    }
+    return { text: `${label} ${D.fmt(date)}（估算${tail}）`, late: false };
+  }
+  function tagText(r) {
+    return (r.important ? '（重要）' : '') + (r.confirm ? (r.it.confirmTagExport || '（可能不適用，需要再確認）') : '');
+  }
+
+  // 依答案整理出要顯示的項目 Build the visible list
+  function buildList(a) {
+    const ctx = makeCtx(a);
+    const items = C.ITEMS.filter((it) => it.show(ctx)).map((it, idx) => ({
+      it, idx, due: computeDue(it, ctx),
+      title: val(it.title, ctx),
+      important: it.important ? it.important(ctx) : false,
+      confirm: it.confirm ? it.confirm(ctx) : false
+    }));
+    const groups = C.GROUPS.map((g) => {
+      const rows = items.filter((x) => x.it.group === g.id).sort((p, q) => {
+        const pd = p.due.date ? D.toUTC(p.due.date) : Infinity;
+        const qd = q.due.date ? D.toUTC(q.due.date) : Infinity;
+        return pd - qd || p.idx - q.idx;
+      });
+      return { g, rows };
+    }).filter((x) => x.rows.length);
+    const donts = C.DONTS.filter((d) => d.show(ctx));
+    return { ctx, items, groups, donts };
+  }
+
+  // ===== 錯誤處理 Error handling =====
+  function logError(msg, show = true) {
+    errors.push(`${new Date().toISOString()}｜${location.hash || '#/'}｜${msg}`);
+    if (errors.length > 20) errors.shift();
+    if (show) showErrorBar();
+  }
+  // ===== 回報錯誤 Feedback link =====
+  // 只把「哪一頁或哪一項」和版本帶到 Google 表單，不帶使用者的回答、日期或打勾紀錄。
+  // Only the page/item name and version go to the form — never answers, dates or ticks.
+  // 全部包在 try 裡：內容表壞掉（C 不存在）時，錯誤列還是要能出現
+  // Everything inside try: the error bar must still work if CONTENT failed to load
+  function feedbackHref(where) {
+    try {
+      const f = (C && C.FEEDBACK) || {};
+      if (!f.url) return null;
+      const u = new URL(f.url);
+      // 只接受 Google 表單的填寫網址（不接受短網址、編輯網址） Only the long Google Forms viewform URL
+      if (u.protocol !== 'https:' || u.hostname !== 'docs.google.com' || !/^\/forms\/.+\/viewform$/.test(u.pathname)) return null;
+      // 先清掉網址裡原本的預先填入值（例如設定時填的「測試項目」） Drop pre-fill values already in the URL
+      [...u.searchParams.keys()].filter((k) => k === 'usp' || /^entry\./.test(k)).forEach((k) => u.searchParams.delete(k));
+      const pre = [[f.whereEntry, where], [f.versionEntry, C.APP_VERSION]].filter(([k, v]) => /^entry\.\d+$/.test(k || '') && v);
+      if (pre.length) { u.searchParams.set('usp', 'pp_url'); pre.forEach(([k, v]) => u.searchParams.set(k, v)); }
+      return u.href;
+    } catch (e) { return null; }
+  }
+  // 回報用的項目名稱：固定不變，不跟著回答變（標題會隨回答改變的項目，用 feedbackName）
+  // Fixed item name for feedback, never derived from answers (items with answer-dependent titles use feedbackName)
+  function feedbackName(it) {
+    return it.feedbackName || (typeof it.title === 'string' ? it.title : it.id);
+  }
+  function feedbackNode(where) {
+    const href = feedbackHref(where);
+    if (!href) return null;
+    // 有沒有真的幫忙填好「哪一頁」，說明文字跟著變 Wording depends on whether the page name is pre-filled
+    let filled = false;
+    try { const k = C.FEEDBACK.whereEntry; filled = /^entry\.\d+$/.test(k || '') && new URL(href).searchParams.has(k); } catch (e) { filled = false; }
+    return h('div', { class: 'feedback' },
+      h('a', { class: 'btn-text', href, target: '_blank', rel: 'noopener noreferrer' }, '回報錯誤或過時的資料'),
+      h('p', { class: 'small muted' }, filled
+        ? '會打開 Google 表單（另一個網站），已經先幫您填好是哪一頁，只要寫哪裡不對就好。您在這個工具裡的回答不會送出去。'
+        : '會打開 Google 表單（另一個網站），請寫是哪一頁、哪裡不對。您在這個工具裡的回答不會送出去。'));
+  }
+
+  function showErrorBar() {
+    const bar = document.getElementById('errorBar');
+    const fb = feedbackHref('畫面出錯'); // 回報表單（沒設定時是 null） feedback form, null if not set
+    bar.replaceChildren(h('div', { class: 'in' },
+      h('p', { style: 'margin:0;font-weight:700' }, '畫面出了問題。請按「重新整理」再試一次。'),
+      h('p', { class: 'small', style: 'margin:.2em 0 0' }, fb
+        ? '如果一直出現，可以按「複製錯誤資訊」，再打開下面的回報表單，在「哪裡不對」那一格貼上。您的回答不會包含在裡面。'
+        : '如果一直出現，可以按「複製錯誤資訊」，再傳給當初分享這個工具的人。您的回答不會包含在裡面。'),
+      h('div', { class: 'btn-row' },
+        h('button', { type: 'button', class: 'btn btn-primary', onclick: () => location.reload() }, '重新整理'),
+        h('button', { type: 'button', class: 'btn btn-secondary', onclick: () => copyText(errorReport(), '錯誤資訊已複製') }, '複製錯誤資訊')),
+      fb ? h('p', { style: 'margin:0' }, h('a', { class: 'btn-text', href: fb, target: '_blank', rel: 'noopener noreferrer' }, '打開回報表單')) : null
+    ));
+    bar.hidden = false;
+  }
+  function errorReport() {
+    return [['身後通', C && C.APP_VERSION, '錯誤資訊'].filter(Boolean).join(' '), `時間：${new Date().toString()}`, `瀏覽器：${navigator.userAgent}`, `可以儲存：${storageOK ? '是' : '否'}`, ...errors].join('\n');
+  }
+  window.addEventListener('error', (e) => logError(`${e.message || '未知錯誤'}（第 ${e.lineno || '?'} 行）`));
+  window.addEventListener('unhandledrejection', (e) => logError(String(e.reason && e.reason.message || e.reason)));
+
+  // ===== 字放大 Font size =====
+  function applyScale() {
+    document.documentElement.style.setProperty('--scale', String(state.scale));
+    const btn = document.getElementById('fontBtn');
+    const label = { 1: '標準', 1.2: '大', 1.4: '特大' }[state.scale];
+    btn.textContent = state.scale === 1.4 ? '字變回標準' : '字放大';
+    document.documentElement.setAttribute('data-scale', String(state.scale));
+    btn.setAttribute('aria-label', `字的大小：${label}。按一下${state.scale === 1.4 ? '恢復標準大小' : '把字放大'}`);
+  }
+  document.getElementById('fontBtn').addEventListener('click', () => {
+    const i = SCALES.indexOf(state.scale);
+    state.scale = SCALES[(i + 1) % SCALES.length];
+    save(); applyScale();
+  });
+
+  // ===== 路由 Routing（用網址的 # 部分，讓手機的「返回」也能用） =====
+  function go(hash, replace) {
+    if (replace) location.replace(hash); else location.hash = hash;
+  }
+  function route() {
+    try {
+      closeModal();
+      const hash = location.hash || '';
+      const parts = hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+      const a = state.answers;
+      if (parts.length === 0) {
+        if (answersComplete(a)) return go('#/list', true);
+        return render(viewWelcome());
+      }
+      if (parts[0] !== 'list' && parts[0] !== 'item') lastRoute = parts.join('/');
+      if (parts[0] === 'start') return render(viewWelcome(true));
+      if (parts[0] === 'q') {
+        const q = visibleQuestions(a).find((x) => x.id === parts[1]);
+        if (!q) return go('#/q/date', true);
+        return render(viewQuestion(q));
+      }
+      if (parts[0] === 'list') {
+        if (!answersComplete(a)) return go(firstUnanswered(), true);
+        // 從某一項回到清單時，捲回那一項 Coming back from an item: scroll to that row
+        const fromItem = lastRoute.startsWith('item/') ? lastRoute.slice(5) : null;
+        const target = returnToRow || fromItem;
+        returnToRow = null; lastRoute = 'list';
+        if (target) { const it = C.ITEMS.find((x) => x.id === target); if (it) groupOpen[it.group] = true; }
+        render(viewList(), false, target);
+        return;
+      }
+      if (parts[0] === 'item') {
+        if (!answersComplete(a)) return go(firstUnanswered(), true);
+        const built = buildList(a);
+        const row = built.items.find((x) => x.it.id === parts[1]);
+        if (!row) return go('#/list', true);
+        lastRoute = 'item/' + parts[1];
+        return render(viewItem(row, built));
+      }
+      go('#/', true);
+    } catch (e) {
+      logError('畫面產生失敗：' + e.message);
+    }
+  }
+  function firstUnanswered() {
+    const q = visibleQuestions(state.answers).find((x) => !isAnswered(x, state.answers));
+    return '#/q/' + (q ? q.id : 'date');
+  }
+  function render(node, keepPlace, scrollToRow) {
+    const main = document.getElementById('main');
+    const y = window.scrollY;
+    main.replaceChildren(node);
+    if (keepPlace) { window.scrollTo(0, y); return; }
+    if (scrollToRow) {
+      const link = main.querySelector(`a[href="#/item/${scrollToRow}"]`);
+      if (link) { link.scrollIntoView({ block: 'center' }); link.focus({ preventScroll: true }); return; }
+    }
+    window.scrollTo(0, 0);
+    // 換頁後把焦點移到標題，讀螢幕軟體才會從頭念 Move focus to the heading for screen readers
+    const h1 = main.querySelector('h1');
+    if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus({ preventScroll: true }); }
+  }
+
+  // ===== 畫面 1：開始頁 Welcome =====
+  // 開始頁的茶杯插圖（固定的線條圖，不含任何使用者資料） Static teacup drawing for the welcome page
+  const TEACUP_SVG = '<svg class="hero-art" viewBox="0 0 120 92" aria-hidden="true" focusable="false">'
+    + '<path d="M50 34c-5-6 5-9 0-16M62 34c-5-6 5-9 0-16M74 34c-5-6 5-9 0-16" fill="none" stroke="var(--hinoki)" stroke-width="2.4" stroke-linecap="round"/>'
+    + '<path d="M33 42h54l-5 28c-1 6-5 9-11 9H49c-6 0-10-3-11-9z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.4" stroke-linejoin="round"/>'
+    + '<path d="M38 52c14 3 30 3 45 0" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>'
+    + '<path d="M22 86h76" stroke="var(--hinoki)" stroke-width="2.4" stroke-linecap="round"/>'
+    + '<path d="M30 82h60" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>'
+    + '</svg>';
+  function teacup() { const t = document.createElement('template'); t.innerHTML = TEACUP_SVG; return t.content.firstChild; }
+
+  function viewWelcome(fromLink) {
+    const complete = answersComplete(state.answers);
+    return h('div', { class: 'wrap welcome stack' },
+      teacup(),
+      h('h1', null, '身後通'),
+      h('p', { class: 'comfort' }, '家人離開了，辛苦您了。'),
+      h('p', { class: 'lead' }, '回答幾個簡單的問題，就能看到接下來要辦的事：什麼時候以前要辦好、去哪裡辦、要帶什麼。'),
+      h('p', null, '不用一次辦完，慢慢來。'),
+      complete
+        ? h('div', { class: 'stack' },
+            h('a', { class: 'btn btn-primary', href: '#/list' }, '看我的待辦清單'),
+            h('a', { class: 'btn btn-secondary', href: '#/q/date' }, '修改回答'))
+        : h('a', { class: 'btn btn-primary', href: '#/q/date' }, '開始'),
+      h('div', { class: 'note-box stack' },
+        h('p', { style: 'margin:0' }, '僅供參考，以官方公告為準；不是法律意見。有問題請自行詢問律師、地政士（代書）或辦理單位。'),
+        h('p', { style: 'margin:0' }, '您的回答只存在這支手機的瀏覽器裡，不會上傳到任何地方。'),
+        h('p', { style: 'margin:0' }, '這個工具是依「家人在國內過世，過世者和家屬都有臺灣戶籍」的情況寫的。在國外過世的，請先問戶政事務所。')),
+      h('p', { class: 'small muted' }, `這是個人製作的參考工具，不是政府網站。內容查證日期：${C.VERIFIED_ON}。`),
+      feedbackNode('開始頁')
+    );
+  }
+
+  // ===== 畫面 2：問題 Question =====
+  function viewQuestion(q) {
+    const a = state.answers;
+    const qs = visibleQuestions(a);
+    const idx = qs.findIndex((x) => x.id === q.id);
+    const total = qs.length;
+    const prevHash = idx > 0 ? '#/q/' + qs[idx - 1].id : '#/start';
+    const errBox = h('p', { class: 'error', role: 'alert', hidden: true });
+    const showErr = (msg) => { errBox.textContent = msg; errBox.hidden = false; };
+    const canJump = answersComplete(a);
+
+    function next() {
+      const now = visibleQuestions(state.answers);
+      const i = now.findIndex((x) => x.id === q.id);
+      const nq = now[i + 1];
+      if (nq) go('#/q/' + nq.id);
+      else go('#/list');
+    }
+
+    const titleId = 'q-title';
+    let body;
+    if (q.type === 'date') body = dateField(q, showErr, errBox, next);
+    else body = optionList(q, titleId, showErr, next);
+
+    return h('div', { class: 'wrap' },
+      h('p', { class: 'progress-text' }, `第 ${idx + 1} 題，共 ${total} 題`),
+      h('div', { class: 'progress', 'aria-hidden': 'true' }, h('span', { style: `width:${Math.round(((idx + 1) / total) * 100)}%` })),
+      h('h1', { id: titleId }, q.title),
+      q.hint ? h('p', { class: 'q-hint' }, q.hint) : null,
+      body,
+      errBox,
+      h('div', { class: 'back-row' },
+        h('a', { class: 'btn-text', href: prevHash }, '‹ 上一步'),
+        canJump ? h('a', { class: 'btn-text', href: '#/list' }, '改好了，看清單') : null)
+    );
+  }
+
+  function optionList(q, titleId, showErr, next) {
+    const multi = q.type === 'multi';
+    // 「都沒有」不能和其他選項一起選；「不確定」可以和知道的選項一起選
+    // "None" is exclusive; "Unsure" can be combined with known options
+    const exclusive = ['none'];
+    const wrap = h('div', { class: 'opts', role: multi ? 'group' : 'radiogroup', 'aria-labelledby': titleId });
+    const current = () => state.answers[q.id];
+    const isOn = (k) => (multi ? (current() || []).includes(k) : current() === k);
+
+    const buttons = q.options.map(([k, label]) => {
+      const b = h('button', {
+        type: 'button', class: 'opt' + (multi ? ' multi' : ''),
+        role: multi ? 'checkbox' : 'radio', 'aria-checked': String(isOn(k)), 'data-value': k
+      }, h('span', { class: 'mark', 'aria-hidden': 'true' }), h('span', null, label));
+      b.addEventListener('click', () => {
+        if (multi) {
+          let cur = (current() || []).slice();
+          if (cur.includes(k)) cur = cur.filter((x) => x !== k);
+          else if (exclusive.includes(k)) cur = [k];
+          else cur = cur.filter((x) => !exclusive.includes(x)).concat(k);
+          if (cur.length) state.answers[q.id] = cur; else delete state.answers[q.id];
+          save();
+          buttons.forEach((bb) => bb.setAttribute('aria-checked', String(isOn(bb.dataset.value))));
+        } else {
+          state.answers[q.id] = k;
+          save();
+          buttons.forEach((bb) => bb.setAttribute('aria-checked', String(bb.dataset.value === k)));
+          // 單選：選了就自動到下一題（短暫停留讓人看到選了什麼）Auto-advance after a short pause
+          setTimeout(next, 260);
+        }
+      });
+      return b;
+    });
+    wrap.append(...buttons);
+    if (!multi) {
+      // 回到已經答過的題目時，給一個「下一步」，不用重選 Revisit: allow moving on without re-selecting
+      if (current() == null) return wrap;
+      return h('div', null, wrap, h('div', { class: 'q-actions' },
+        h('button', { type: 'button', class: 'btn btn-primary', onclick: next }, '下一步')));
+    }
+    return h('div', null, wrap,
+      h('div', { class: 'q-actions' },
+        h('button', { type: 'button', class: 'btn btn-primary', onclick: () => {
+          if (!(current() || []).length) return showErr('請至少選一個。不知道的話，可以選「不確定」。');
+          next();
+        } }, '下一步')));
+  }
+
+  function dateField(q, showErr, errBox, next) {
+    const t = D.today();
+    const cur = state.answers.date || {};
+    const mk = (id, label, opts, sel) => {
+      const s = h('select', { id, name: id },
+        h('option', { value: '' }, '請選擇'),
+        opts.map(([v, txt]) => h('option', { value: String(v), selected: String(v) === String(sel) ? true : null }, txt)));
+      return [h('div', { class: 'field' }, h('label', { for: id }, label), s), s];
+    };
+    const years = []; for (let y = t.y; y >= t.y - 20; y--) years.push([y, `${y}年（民國${y - 1911}年）`]);
+    const months = []; for (let m = 1; m <= 12; m++) months.push([m, `${m} 月`]);
+    const [fy, sy] = mk('sel-y', '年', years, cur.y || t.y);
+    const [fm, sm] = mk('sel-m', '月', months, cur.m);
+    const [fd, sd] = mk('sel-d', '日', [], null);
+
+    function fillDays() {
+      const y = +sy.value || t.y, m = +sm.value || 1;
+      const keep = sd.value || (cur.d ? String(cur.d) : '');
+      const last = D.lastDay(y, m);
+      sd.replaceChildren(h('option', { value: '' }, '請選擇'));
+      for (let d = 1; d <= last; d++) sd.append(h('option', { value: String(d) }, `${d} 日`));
+      if (keep && +keep <= last) sd.value = keep;
+    }
+    fillDays();
+    sy.addEventListener('change', () => { errBox.hidden = true; fillDays(); });
+    sm.addEventListener('change', () => { errBox.hidden = true; fillDays(); });
+    sd.addEventListener('change', () => { errBox.hidden = true; });
+
+    return h('div', null,
+      h('div', { class: 'date-grid', role: 'group', 'aria-label': '過世日期' }, fy, fm, fd),
+      h('div', { class: 'q-actions' },
+        h('button', { type: 'button', class: 'btn btn-primary', onclick: () => {
+          const o = { y: +sy.value, m: +sm.value, d: +sd.value };
+          if (!sy.value || !sm.value || !sd.value) return showErr('請選好年、月、日。');
+          if (!D.valid(o)) return showErr('這個日期不存在，請再確認一次。');
+          if (D.cmp(o, D.today()) > 0) return showErr('日期好像填錯了：這一天還沒到。請再確認一次。');
+          state.answers.date = o;
+          save();
+          next();
+        } }, '下一步')));
+  }
+
+  // ===== 畫面 3：待辦清單 List =====
+  function viewList() {
+    const built = buildList(state.answers);
+    const { groups, donts, items, ctx } = built;
+    const total = items.length;
+    const doneN = items.filter((x) => state.done[x.it.id]).length;
+
+    // 只展開前兩組還沒做完的；使用者自己打開或收起的，照使用者的
+    // Expand only the first two unfinished groups unless the user toggled a group this session
+    let opened = 0;
+    const groupNodes = groups.map(({ g, rows }) => {
+      const doneInGroup = rows.filter((r) => state.done[r.it.id]).length;
+      const allDone = doneInGroup === rows.length;
+      // 有超過期限、還沒做的項目，那一組也打開 Also open groups that have overdue, unfinished items
+      const hasLate = rows.some((r) => r.due.late && !r.due.suggest && !state.done[r.it.id]);
+      const firstTwo = !allDone && opened < 2; if (firstTwo) opened++;
+      const auto = firstTwo || hasLate;
+      const open = g.id in groupOpen ? groupOpen[g.id] : auto;
+      const panelId = 'panel-' + g.id;
+      const panel = h('div', { class: 'panel', id: panelId, hidden: !open }, rows.map((r) => rowNode(r)));
+      const head = h('button', { type: 'button', class: 'group-head', 'aria-expanded': String(open), 'aria-controls': panelId },
+        h('span', null, h('span', { class: 'group-title' }, g.title), g.sub ? h('span', { class: 'group-sub' }, g.sub) : null),
+        h('span', { class: 'group-count' }, `${rows.length} 件${doneInGroup ? `，完成 ${doneInGroup}` : ''} `, h('span', { class: 'chev', 'aria-hidden': 'true' }, '›')));
+      head.addEventListener('click', () => {
+        const isOpen = head.getAttribute('aria-expanded') === 'true';
+        head.setAttribute('aria-expanded', String(!isOpen));
+        panel.hidden = isOpen;
+        groupOpen[g.id] = !isOpen;
+      });
+      return h('section', { class: 'group' + (allDone ? ' all-done' : ''), 'aria-label': g.title, 'data-group': g.id }, head, panel);
+    });
+
+    const deathTxt = D.fmtPlain(ctx.a.date);
+    return h('div', { class: 'wrap' },
+      h('h1', null, '您的待辦清單'),
+      h('p', { class: 'summary muted' }, items.some((r) => r.due.late && !r.due.suggest && !state.done[r.it.id])
+        ? `依過世日期 ${deathTxt} 估算。有幾項已經超過估算的期限（紅字），請先看那幾項，打電話問怎麼補辦。不用一次辦完。`
+        : `依過世日期 ${deathTxt} 估算。不用一次辦完，先看「現在先做」就好。`),
+      h('div', { class: 'done-count' },
+        h('span', null, `已完成 ${doneN} 件，共 ${total} 件`),
+        h('span', { class: 'bar', 'aria-hidden': 'true' }, h('span', { style: `width:${total ? Math.round(doneN / total * 100) : 0}%` }))),
+      storageOK ? null : h('p', { class: 'storage-warn' }, '這支手機目前沒辦法保存打勾紀錄（可能是用了無痕模式）。關掉網頁後，打勾會不見；需要的話，可以先存成 PDF 或傳給家人。'),
+      dontsNode(donts),
+      h('div', { class: 'timeline' }, groupNodes),
+      h('div', { class: 'tools stack' },
+        (() => { const b = h('button', { type: 'button', class: 'btn btn-secondary', id: 'pdfBtn' }, '存成 PDF，拿去超商印'); b.addEventListener('click', () => doPdf(built, b)); return b; })(),
+        state.pdfSaved ? storeAgainBtn() : null,
+        CAN_PRINT
+          ? h('div', { class: 'btn-row' },
+              h('button', { type: 'button', class: 'btn btn-secondary', onclick: () => doShare(built) }, '傳給家人'),
+              h('button', { type: 'button', class: 'btn btn-secondary', onclick: () => doPrint(built) }, '用家裡的印表機印'))
+          : h('button', { type: 'button', class: 'btn btn-secondary', onclick: () => doShare(built) }, '傳給家人'),
+        h('a', { class: 'btn btn-secondary', href: '#/q/date' }, '修改回答')),
+      phonesNode(built),
+      h('div', { class: 'foot' },
+        h('p', null, '日期是依過世日期估算的；最後一天如果剛好是假日，這裡沒有往後延。有些期限的起算點可能比較晚。請不要等到最後一天。'),
+        h('p', { class: 'disclaim' }, '僅供參考，以官方公告為準；不是法律意見。有問題請自行詢問律師、地政士（代書）或辦理單位。'),
+        h('p', null, `內容查證日期：${C.VERIFIED_ON}。這是個人製作的參考工具，不是政府網站。您的回答只存在這支手機裡。`),
+        feedbackNode('待辦清單'),
+        h('p', null, h('button', { type: 'button', class: 'btn-text', onclick: confirmClear }, '清除這支手機上的所有紀錄')))
+    );
+  }
+
+  function rowNode(r) {
+    const id = r.it.id;
+    const done = !!state.done[id];
+    const line = dueLine(r.due);
+    const cbId = 'cb-' + id;
+    const cb = h('input', { type: 'checkbox', id: cbId, checked: done ? true : null, 'aria-label': `${r.title}：做完了` });
+    cb.addEventListener('change', () => {
+      if (cb.checked) state.done[id] = true; else delete state.done[id];
+      save();
+      groupOpen[r.it.group] = true; // 打勾的那一組維持打開 Keep this group open
+      // 重畫清單（不跳回最上面），更新計數 Re-render in place to update counts
+      render(viewList(), true);
+      const again = document.getElementById(cbId); if (again) again.focus({ preventScroll: true });
+    });
+    return h('div', { class: 'row' + (done ? ' done' : '') },
+      h('label', { class: 'check', for: cbId }, cb),
+      h('a', { class: 'body', href: '#/item/' + id },
+        h('span', { class: 'txt' },
+          h('span', { class: 't' }, r.title,
+            r.important ? h('span', { class: 'tag tag-imp' }, '重要') : null,
+            r.confirm ? h('span', { class: 'tag tag-chk' }, r.it.confirmTag || '需要再確認') : null),
+          h('span', { class: 'due' + (line.late ? ' late' : '') }, done ? '已完成' : noBreakDates(line.text))),
+        h('span', { class: 'go', 'aria-hidden': 'true' }, '›')));
+  }
+
+  function dontsNode(donts) {
+    if (!donts.length) return null;
+    return h('section', { class: 'caution', 'aria-labelledby': 'dont-title' },
+      h('h2', { id: 'dont-title' }, '先不要做'),
+      donts.map((d) => h('details', null,
+        h('summary', null, h('span', { class: 'dont-head' },
+          h('span', { class: 'dont-title' }, d.title),
+          h('span', { class: 'dont-why' }, '為什麼：' + d.why))),
+        h('div', { class: 'detail-body' },
+          d.body.map((p) => (typeof p === 'string' ? h('p', null, p) : h('ul', null, p.ul.map((li) => h('li', null, li))))),
+          h('p', { class: 'small' }, '來源：', clean(d.src).map((k, i) => [i ? '、' : '', srcLink(k)]))))));
+  }
+
+  // 來源日期的顯示文字 How to show a source's date
+  function srcDate(x) {
+    if (x === '頁面無日期') return '頁面沒有標日期';
+    if (x === '頁面無更新日期') return '頁面沒有標更新日期';
+    if (/^\d{4}-\d{2}/.test(x) && !/查閱|整編|引用|公布|生效|版|修正|函/.test(x)) return '頁面日期：' + x;
+    return x;
+  }
+  function srcLink(k) {
+    const s = C.SRC[k];
+    return h('a', { href: s[1], target: '_blank', rel: 'noopener noreferrer' }, s[0]);
+  }
+
+  function phoneList(keys) {
+    return h('ul', null, keys.map((k) => {
+      const p = C.PHONES[k];
+      return h('li', null, h('a', { class: 'tel-row', href: 'tel:' + p.tel },
+        h('span', { style: 'display:block' }, p.name),
+        h('span', { class: 'tel' }, p.show)));
+    }));
+  }
+  function printPhoneKeys(built) {
+    const keys = new Set();
+    built.items.forEach((r) => clean(val(r.it.phones, built.ctx)).forEach((k) => keys.add(k)));
+    return Array.from(keys);
+  }
+  function phonesNode(built) {
+    const keys = printPhoneKeys(built);
+    if (!keys.length) return null;
+    return h('details', { class: 'phones' },
+      h('summary', null, '不清楚的話，可以打這些電話問'),
+      phoneList(keys));
+  }
+
+  // ===== 畫面 4：一項的詳細說明 Item detail =====
+  function viewItem(row, built) {
+    const { it, due } = row;
+    const ctx = built.ctx;
+    const done = !!state.done[it.id];
+    const dl = due.dl;
+
+    const blocks = (arr) => clean(arr).map((x) => {
+      if (typeof x === 'string') return h('p', null, x);
+      const list = x.ol ? h('ol', null, clean(x.ol).map((li) => h('li', null, li))) : h('ul', null, clean(x.ul).map((li) => h('li', null, li)));
+      return h('div', null, h('p', { style: 'font-weight:700;margin-bottom:0' }, x.h), list);
+    });
+    const section = (title, content) => (content && (!Array.isArray(content) || content.length) ? [h('h2', null, title), content] : null);
+
+    // 期限 Deadline
+    // 超過期限要用文字說，不能只靠紅色 Say "overdue" in words, not only by color
+    let pill;
+    if (due.date) {
+      const text = due.late
+        ? (due.suggest ? `建議日期已過（${D.fmt(due.date)}）` : `已超過期限（估算 ${D.fmt(due.date)}）`)
+        : `${due.suggest ? '建議' : '截止'} ${D.fmt(due.date)}（估算）`;
+      pill = h('p', { class: 'due-pill' + (due.late && !due.suggest ? ' late' : '') }, noBreakDates(text));
+    } else {
+      pill = h('p', { class: 'due-pill' }, dl.text);
+    }
+    const lateNow = due.late ? h('p', { class: due.suggest ? '' : 'late-msg' }, dl.late || C.LATE_GENERAL) : null;
+    const deadlineBlock = [];
+    if (!due.late && due.date && due.left <= 60) deadlineBlock.push(h('p', null, due.left === 0 ? '今天是估算的最後一天。' : `還有 ${due.left} 天。`));
+    if (dl.law) deadlineBlock.push(h('p', { class: 'law' }, dl.law));
+    if (dl.start) deadlineBlock.push(h('p', { class: 'law' }, dl.start));
+    if (due.date) {
+      const basis = h('a', { href: C.SRC.period[1], target: '_blank', rel: 'noopener noreferrer' }, '法律依據');
+      deadlineBlock.push(h('p', { class: 'law small' }, '日期是照法律規定的算法估算的；最後一天如果剛好是假日，這裡沒有往後延（', basis, '）。'));
+    }
+
+    const bring = it.bring === false ? null : clean(val(it.bring, ctx));
+    const together = it.together ? it.together.ids.filter((id) => ctx.shows(id)) : [];
+    const phones = clean(val(it.phones, ctx));
+
+    const toggle = h('button', { type: 'button', class: 'btn ' + (done ? 'btn-secondary' : 'btn-primary') }, done ? '取消打勾' : '做完了，打勾');
+    toggle.addEventListener('click', () => {
+      if (done) { delete state.done[it.id]; save(); route(); }
+      else {
+        state.done[it.id] = true; save();
+        groupOpen[it.group] = true; returnToRow = it.id;
+        go('#/list', true); // 不多留一筆「返回」紀錄 don't add a history entry
+      }
+    });
+
+    return h('article', { class: 'wrap detail', 'data-item': it.id },
+      h('p', { class: 'top-back' }, h('a', { class: 'btn-text', href: '#/list' }, '‹ 回清單')),
+      h('h1', null, row.title),
+      done ? h('p', { class: 'muted' }, '✓ 已經打勾，做完了') : null,
+      pill,
+      lateNow,
+      (() => {
+        if (!row.important) return null;
+        const t = it.importantText ? it.importantText(ctx, due) : '這一項很重要。';
+        return t ? h('p', { class: 'late-msg' }, t) : null;
+      })(),
+      row.confirm ? h('p', { class: 'confirm-note' }, val(it.confirmText, ctx) || '您在問題裡選了「不確定」，所以先列出來。請先問問家人，或打電話問辦理的單位，確認有沒有這一項；有的話，就要在期限內辦。') : null,
+      section(it.whyTitle || '為什麼要做', blocks(val(it.why, ctx))),
+      section('去哪裡辦', blocks(val(it.where, ctx))),
+      bring === null ? null : section('要帶什麼', bring.length ? h('ul', null, bring.map((b) => h('li', null, b))) : h('p', null, '官方說明沒有列出。出發前可以先打電話問上面「去哪裡辦」寫的單位。')),
+      it.howMany ? section('要申請幾份', blocks(val(it.howMany, ctx))) : null,
+      section('期限', deadlineBlock),
+      section('辦的時候可以順便一起申請', it.also ? blocks(val(it.also, ctx)) : null),
+      section('要注意', it.notes ? blocks(val(it.notes, ctx)) : null),
+      together.length ? section(it.together.text, h('ul', null, together.map((id) => {
+        const r = built.items.find((x) => x.it.id === id);
+        return h('li', null, h('a', { href: '#/item/' + id }, r.title));
+      }))) : null,
+      phones.length ? section('不清楚的話，可以打電話問', phoneList(phones)) : null,
+      h('h2', null, '官方說明'),
+      h('ul', { class: 'sources' }, clean(it.sources).map((k) => h('li', null, srcLink(k), h('span', { class: 'date' }, srcDate(C.SRC[k][2]))))),
+      h('p', { class: 'small muted' }, `查證日期：${C.VERIFIED_ON}。僅供參考，以官方公告為準。`),
+      feedbackNode(feedbackName(it)),
+      h('div', { class: 'detail-actions' }, toggle, h('a', { class: 'btn btn-secondary', href: '#/list' }, '回清單'))
+    );
+  }
+
+  // 匯出（列印、PDF）時拿掉指向畫面連結的括號說明 Drop "see the link below" asides on paper
+  const forPaper = (t) => t.replace(/（下面「官方說明」[^）]*）/g, '');
+
+  // ===== 列印 Print =====
+  function buildPrint(built) {
+    const area = document.getElementById('printArea');
+    const { groups, donts, ctx } = built;
+    const t = D.today();
+    area.replaceChildren(h('div', null,
+      h('h1', null, '身後通：待辦清單'),
+      h('p', null, `依過世日期 ${D.fmtPlain(ctx.a.date)} 估算，製作日期 ${D.fmtPlain(t)}。僅供參考，以官方公告為準；最後一天遇到假日沒有往後延，請不要等到最後一天。`),
+      donts.length ? [h('h2', null, '先不要做'), h('ul', null, donts.map((d) => h('li', null, d.title, h('br'), '為什麼：' + d.why)))] : null,
+      groups.map(({ g, rows }) => [
+        h('h2', null, g.title),
+        rows.map((r) => {
+          // 已完成的只留標題 Done items: title only
+          if (state.done[r.it.id]) return h('div', { class: 'p-item' }, h('div', { class: 'p-title' }, h('span', { class: 'p-box' }, '✓'), '（已完成）' + r.title));
+          const line = dueLine(r.due, true);
+          const bring = r.it.bring === false ? [] : clean(val(r.it.bring, ctx));
+          const where = clean(val(r.it.where, ctx)).filter((x) => typeof x === 'string').map(forPaper);
+          return h('div', { class: 'p-item' },
+            h('div', { class: 'p-title' }, h('span', { class: 'p-box' }, ''), r.title + tagText(r)),
+            h('div', { class: 'p-meta' },
+              h('div', null, line.text),
+              where.length ? h('div', null, '去哪裡辦：' + where.join(' ')) : null,
+              bring.length ? [h('div', null, '要帶：'), h('ul', null, bring.map((b) => h('li', null, b)))] : null));
+        })
+      ]),
+      h('h2', null, '電話'),
+      h('ul', null, printPhoneKeys(built).map((k) => h('li', null, `${C.PHONES[k].name}：${C.PHONES[k].show}`))),
+      h('p', null, `內容查證日期：${C.VERIFIED_ON}。這是個人製作的參考工具，不是政府網站，也不是法律意見；有問題請自行詢問律師、地政士（代書）或辦理單位。`)
+    ));
+  }
+  function doPrint(built) {
+    buildPrint(built);
+    if (typeof window.print === 'function') {
+      try { window.print(); } catch (e) { logError('列印失敗：' + e.message); }
+    }
+  }
+  window.addEventListener('beforeprint', () => {
+    if (answersComplete(state.answers)) buildPrint(buildList(state.answers));
+  });
+
+  // ===== 存成 PDF，拿去超商印 Save as PDF for convenience-store printing =====
+  // PDF 在手機裡直接產生（把清單畫成 A4 圖片再包成 PDF），不會上傳到任何地方。
+  // The PDF is generated on the device (list drawn as A4 images, wrapped into a PDF); nothing is uploaded.
+  const PDF_FILENAME = '身後通_待辦清單.pdf';
+  const A4 = { w: 1240, h: 1754, margin: 96 }; // A4，每英吋 150 點 A4 at 150 dpi
+  const PDF_FONT = '"PingFang TC","Noto Sans TC","Noto Sans CJK TC","Microsoft JhengHei",system-ui,sans-serif';
+
+  // 依寬度換行（中文一個字一個字量） Wrap text by measured width, character by character
+  // 不可以從中間切開的片段：電話、日期、數字（連同後面的一個字）、英文 Pieces that must not be split
+  const WRAP_UNITS = /\(\d{2,4}\) ?[\d-]+|\d{4}年\d{1,2}月\d{1,2}日|\d[\d,.:\/-]*(?: [\u3400-\u9fff])?|[A-Za-z@][0-9A-Za-z@.,:\/%_-]*|[\s\S]/gu;
+  function wrapText(ctx, text, maxW) {
+    const out = []; let line = '';
+    // 一段比一整行還長（很少見）：只好一個字一個字切 A piece longer than a whole line: split by character
+    const pushLong = (tok) => {
+      for (const ch of Array.from(tok)) {
+        const t = line + ch;
+        if (ctx.measureText(t).width > maxW && line) { out.push(line); line = ch; } else line = t;
+      }
+    };
+    for (const tok of String(text).match(WRAP_UNITS) || []) {
+      if (tok === '\n') { out.push(line); line = ''; continue; }
+      const test = line + tok;
+      if (ctx.measureText(test).width > maxW && line) {
+        // 標點不要放在行首 Keep closing punctuation off the start of a line
+        if ('，。、；：）」』！？'.includes(tok)) { out.push(test); line = ''; continue; }
+        if (ctx.measureText(tok).width > maxW) { pushLong(tok); continue; }
+        out.push(line.replace(/ +$/, '')); line = tok === ' ' ? '' : tok;
+      } else line = test;
+    }
+    if (line) out.push(line);
+    return out;
+  }
+
+  function buildPdfCanvases(built) {
+    const { groups, donts, ctx: c } = built;
+    const pages = [];
+    let cv, g, y;
+    const W = A4.w - A4.margin * 2, bottom = A4.h - A4.margin - 40;
+    const newPage = () => {
+      cv = document.createElement('canvas'); cv.width = A4.w; cv.height = A4.h;
+      g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, A4.w, A4.h);
+      g.textBaseline = 'top'; y = A4.margin; pages.push(cv);
+    };
+    const font = (size, bold) => { g.font = `${bold ? '700 ' : ''}${size}px ${PDF_FONT}`; };
+    // 先量高度，放不下就換頁 Measure first; start a new page if it doesn't fit
+    const block = (parts, gapAfter) => {
+      let hgt = 0;
+      const laid = parts.map((p) => {
+        font(p.size, p.bold);
+        const lines = wrapText(g, p.text, W - (p.indent || 0));
+        const lh = Math.round(p.size * 1.5);
+        hgt += lines.length * lh + (p.after || 0);
+        return { ...p, lines, lh };
+      });
+      if (y + hgt > bottom && y > A4.margin) newPage();
+      for (const p of laid) {
+        font(p.size, p.bold); g.fillStyle = p.color || '#111';
+        if (p.box) {
+          const bx = A4.margin, by = y + p.size * 0.2, bs = p.size * 0.95;
+          g.strokeStyle = '#111'; g.lineWidth = 3; g.strokeRect(bx, by, bs, bs);
+          if (p.checked) { g.beginPath(); g.moveTo(bx + bs * 0.2, by + bs * 0.55); g.lineTo(bx + bs * 0.42, by + bs * 0.78); g.lineTo(bx + bs * 0.82, by + bs * 0.25); g.lineWidth = 4; g.stroke(); }
+        }
+        p.lines.forEach((ln, i) => { g.fillText(ln, A4.margin + (p.indent || 0), y + i * p.lh); });
+        y += p.lines.length * p.lh + (p.after || 0);
+      }
+      y += gapAfter || 0;
+    };
+    const rule = () => { g.strokeStyle = '#999'; g.lineWidth = 2; g.beginPath(); g.moveTo(A4.margin, y); g.lineTo(A4.w - A4.margin, y); g.stroke(); y += 18; };
+
+    newPage();
+    block([
+      { text: '身後通：待辦清單', size: 52, bold: true, after: 12 },
+      { text: `依過世日期 ${D.fmtPlain(c.a.date)} 估算，製作日期 ${D.fmtPlain(D.today())}。`, size: 28, color: '#333' },
+      { text: '僅供參考，以官方公告為準；最後一天遇到假日沒有往後延，請不要等到最後一天。', size: 28, color: '#333' }
+    ], 20);
+    rule();
+    if (donts.length) {
+      block([{ text: '先不要做', size: 38, bold: true }], 6);
+      donts.forEach((d) => block([
+        { text: '・' + d.title, size: 30, bold: true },
+        { text: '為什麼：' + d.why, size: 27, color: '#333', indent: 34 }
+      ], 12));
+      rule();
+    }
+    groups.forEach(({ g: grp, rows }) => {
+      // 組名和第一項放在同一頁 Keep the group heading with its first item
+      const heading = { text: grp.title + (grp.sub ? `（${grp.sub}）` : ''), size: 38, bold: true, after: 12 };
+      rows.forEach((r, ri) => {
+        const line = dueLine(r.due, true); // 不寫「還有幾天」 no "days left" in exports
+        const done = !!state.done[r.it.id];
+        const where = done ? [] : clean(val(r.it.where, c)).filter((x) => typeof x === 'string').map(forPaper);
+        const bring = (done || r.it.bring === false) ? [] : clean(val(r.it.bring, c));
+        const parts = [
+          { text: (done ? '（已完成）' : '') + r.title + tagText(r), size: 32, bold: true, indent: 50, box: true, checked: done, after: 2 }
+        ];
+        // 已完成的只留標題 Done items: title only
+        if (!done) parts.push({ text: line.text, size: 27, color: '#222', indent: 50 });
+        if (ri === 0) parts.unshift(heading);
+        if (where.length) parts.push({ text: '去哪裡辦：' + where.join(''), size: 27, color: '#222', indent: 50 });
+        // 要帶的東西一行一項 One item per line
+        if (bring.length) {
+          parts.push({ text: '要帶：', size: 27, color: '#222', indent: 50 });
+          bring.forEach((b) => parts.push({ text: '・' + b, size: 27, color: '#222', indent: 80 }));
+        }
+        block(parts, 22);
+      });
+      rule();
+    });
+    const phoneKeys = printPhoneKeys(built);
+    if (phoneKeys.length) {
+      block([{ text: '不清楚的話，可以打這些電話問', size: 34, bold: true }], 4);
+      phoneKeys.forEach((k) => block([{ text: `${C.PHONES[k].name}：${C.PHONES[k].show}`, size: 28 }], 2));
+    }
+    block([{ text: `內容查證日期：${C.VERIFIED_ON}。這是個人製作的參考工具，不是政府網站，也不是法律意見；有問題請自行詢問律師、地政士（代書）或辦理單位。`, size: 24, color: '#444' }], 0);
+
+    // 頁尾頁碼 Page numbers
+    pages.forEach((p, i) => {
+      const gg = p.getContext('2d');
+      gg.font = `24px ${PDF_FONT}`; gg.fillStyle = '#555'; gg.textBaseline = 'top';
+      const t = `身後通　第 ${i + 1} 頁，共 ${pages.length} 頁`;
+      gg.fillText(t, A4.w - A4.margin - gg.measureText(t).width, A4.h - A4.margin + 8);
+    });
+    return pages;
+  }
+
+  function jpegBytes(canvas) {
+    const b64 = canvas.toDataURL('image/jpeg', 0.88).split(',')[1];
+    const bin = atob(b64); const u = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    return u;
+  }
+
+  // 最簡單的 PDF：每頁一張 JPEG 圖 Minimal PDF writer: one JPEG image per A4 page
+  function makePdf(imgs) {
+    const enc = new TextEncoder(); const chunks = []; let len = 0; const offs = [];
+    const push = (x) => { const b = typeof x === 'string' ? enc.encode(x) : x; chunks.push(b); len += b.length; };
+    const obj = (num, write) => { offs[num] = len; push(`${num} 0 obj\n`); write(); push('\nendobj\n'); };
+    push('%PDF-1.4\n'); push(new Uint8Array([0x25, 0xE2, 0xE3, 0xCF, 0xD3, 0x0A]));
+    const n = imgs.length;
+    obj(1, () => push('<< /Type /Catalog /Pages 2 0 R >>'));
+    obj(2, () => push(`<< /Type /Pages /Kids [${imgs.map((_, i) => `${3 + 3 * i} 0 R`).join(' ')}] /Count ${n} >>`));
+    imgs.forEach((im, i) => {
+      const p = 3 + 3 * i, x = 4 + 3 * i, ct = 5 + 3 * i;
+      obj(p, () => push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im${i} ${x} 0 R >> >> /Contents ${ct} 0 R >>`));
+      obj(x, () => { push(`<< /Type /XObject /Subtype /Image /Width ${im.w} /Height ${im.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${im.bytes.length} >>\nstream\n`); push(im.bytes); push('\nendstream'); });
+      const content = `q 595.28 0 0 841.89 0 0 cm /Im${i} Do Q`;
+      obj(ct, () => push(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`));
+    });
+    const xref = len, total = 3 + 3 * n;
+    push(`xref\n0 ${total}\n0000000000 65535 f \n`);
+    for (let k = 1; k < total; k++) push(String(offs[k]).padStart(10, '0') + ' 00000 n \n');
+    push(`trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+    const out = new Uint8Array(len); let o = 0;
+    for (const ch of chunks) { out.set(ch, o); o += ch.length; }
+    return out;
+  }
+
+  function buildListPdf(built) {
+    const pages = buildPdfCanvases(built);
+    return { bytes: makePdf(pages.map((cv) => ({ bytes: jpegBytes(cv), w: cv.width, h: cv.height }))), pages: pages.length };
+  }
+
+  // 存檔：試用連結用平台的下載功能；自己的檔案用一般下載
+  // Save: inside a claude.ai artifact use the downloads capability; otherwise a normal download link
+  async function saveFile(filename, bytes, mime) {
+    const blob = new Blob([bytes], { type: mime });
+    if (window.claude && typeof window.claude.use === 'function') {
+      let dl = null;
+      try { dl = await window.claude.use('downloads'); } catch (e) { dl = null; }
+      if (dl) {
+        try { await dl.save({ filename, data: blob }); return 'saved'; }
+        catch (e) { return e && (e.code === 'declined' || e.code === 'rate_limited') ? 'declined' : 'failed'; } // 使用者按了不要，或視窗還開著 viewer said no, or a prompt is already open
+      }
+      if (window.self !== window.top) return 'unavailable'; // 試用連結沒有開下載權限 artifact without downloads
+    }
+    try {
+      const url = URL.createObjectURL(blob);
+      const a = h('a', { href: url, download: filename, style: 'display:none' });
+      document.body.append(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      return 'saved';
+    } catch (e) { return 'failed'; }
+  }
+
+  // 在 LINE 內建瀏覽器裡（下載常常存不下來）In LINE's in-app browser downloads often fail silently
+  const IN_LINE = /\bLine\//i.test(navigator.userAgent || '');
+
+  async function doPdf(built, btn) {
+    const label = btn.textContent;
+    btn.disabled = true; btn.textContent = '正在做 PDF…';
+    let status = 'failed', pages = 0;
+    try {
+      await new Promise((r) => setTimeout(r, 30)); // 先讓按鈕文字更新 let the label repaint
+      const out = buildListPdf(built); pages = out.pages;
+      status = await saveFile(PDF_FILENAME, out.bytes, 'application/pdf');
+    } catch (e) { logError('PDF 產生失敗：' + e.message, false); status = 'failed'; }
+    btn.disabled = false; btn.textContent = label;
+    // 按鈕停用時會失去焦點；先放回去，對話框關掉後才回得來
+    // A disabled button loses focus; restore it so closing the dialog returns here
+    if (btn.isConnected) btn.focus({ preventScroll: true });
+    if (status === 'saved') {
+      state.pdfSaved = true; save();
+      // 不重畫整個清單（對話框關掉後焦點要回到按鈕），直接把按鈕插在後面
+      // Insert the button without re-rendering, so focus can return to the PDF button
+      if (!document.getElementById('storeAgainBtn') && btn.isConnected) btn.after(storeAgainBtn());
+    }
+    openStoreDialog(status, pages, built, btn);
+  }
+
+  // 「再看超商列印步驟」：只看步驟，不重新存檔 Re-open the store steps without saving again
+  function storeAgainBtn() {
+    return h('button', { type: 'button', class: 'btn btn-secondary', id: 'storeAgainBtn', onclick: () => openStoreDialog('info', 0, null, null) }, '再看超商列印步驟');
+  }
+
+  function openStoreDialog(status, pages, built, btn) {
+    const ext = (url, text) => h('a', { href: url, target: '_blank', rel: 'noopener noreferrer' }, text);
+    // 開頭：存檔結果 Top: what happened with the save
+    let head;
+    if (status === 'saved') head = [
+      h('p', null, `PDF 已經做好了（${pages} 頁，檔名「${PDF_FILENAME}」）。手機如果問要不要下載，請按「下載」。`),
+      IN_LINE ? h('p', { class: 'confirm-note small' }, '您現在是在 LINE 裡面打開這個網頁，PDF 可能存不下來。找不到 PDF 的話，請改用 Safari 或 Chrome 打開這個網頁，再存一次。') : null
+    ];
+    else if (status === 'unavailable') head = h('p', { class: 'error', role: 'alert' }, '這個試用連結沒辦法存檔。可以先用清單下面的「傳給家人」，把文字複製起來。');
+    else if (status === 'info') head = [h('p', null, '照下面的步驟，把存好的 PDF 拿去超商印。'),
+      h('p', { class: 'small muted' }, '之後如果有打勾或改過回答，請再按一次「存成 PDF，拿去超商印」，印出來才是最新的。')];
+    else head = h('p', { class: 'error', role: 'alert' }, status === 'declined'
+      ? '剛剛沒有存檔。需要的話，可以按「再存一次」。'
+      : '這個瀏覽器沒辦法存檔。可以改用 Safari 或 Chrome 打開這個網頁，再試一次。');
+    const retry = (status === 'declined' || status === 'failed') && built && btn
+      ? h('div', { class: 'q-actions' }, h('button', { type: 'button', class: 'btn btn-primary', onclick: () => { closeModal(); doPdf(built, btn); } }, '再存一次'))
+      : null;
+    // PDF 存在哪裡 Where the PDF went
+    const where = status === 'failed' || status === 'declined' || status === 'unavailable' ? null : h('div', { class: 'where-box small' },
+      h('p', null, h('strong', null, 'PDF 存在哪裡？'), '通常在手機的「檔案」App，或「下載」資料夾裡。'),
+      // 在 LINE 裡時上面已經提醒過，這裡不重複 Already warned above when inside LINE
+      IN_LINE ? null : h('p', null, '如果是在 LINE 裡面打開這個網頁、找不到存好的 PDF，請改用 Safari 或 Chrome 打開這個網頁，再存一次。'));
+
+    // 各家超商的步驟 Steps per store（只寫查得到官方說明的 only stores with official instructions）
+    const STEPS = {
+      '711': () => [
+        h('h3', { class: 'store', tabindex: '-1' }, '7-ELEVEN（ibon）的步驟'),
+        h('ol', { class: 'steps' },
+          h('li', null, '打開', ext('https://print.ibon.com.tw/ibonprinter', '「ibon 雲端列印網」'), '，上傳剛剛存的 PDF。'),
+          h('li', null, '上傳後會拿到一組「取件編號」，請記下來或截圖。'),
+          h('li', null, '到 7-ELEVEN 的 ibon 機台，選「列印掃描」→「ibon文件下載列印」，輸入取件編號就能印。')),
+        h('p', { class: 'small muted' }, '也可以把 PDF 用電子郵件寄到 ibon@ibon.com.tw，回信裡會有取件編號；用電子郵件寄的，取件編號從上傳起 3 天（72 小時）內有效。用網站上傳的有效時間，以上傳後畫面顯示為準。費用以機台顯示為準。'),
+        h('p', { class: 'small muted' }, '資料來源：', ext('https://www.ibon.com.tw/printscan_ie.aspx', 'ibon 列印掃描說明'), `（${STORE_VERIFIED} 查證）`)
+      ],
+      fami: () => [
+        h('h3', { class: 'store', tabindex: '-1' }, '全家（My FamiPort）的步驟'),
+        h('ol', { class: 'steps' },
+          h('li', null, '打開全家的「My FamiPort」App，用「雲端列印」上傳剛剛存的 PDF。'),
+          h('li', null, '再照 App 的說明，在全家門市印出來。')),
+        h('p', { class: 'small muted' }, '費用和有效時間，以 App 和門市機台顯示為準。'),
+        h('p', { class: 'small muted' }, '資料來源：', ext('https://apps.apple.com/us/app/my-famiport/id926152183', 'My FamiPort App 說明'), `（${STORE_VERIFIED} 查證）`)
+      ]
+    };
+    const stepsBox = h('div', { class: 'store-steps', id: 'storeSteps' });
+    const pickBtns = {};
+    const pick = (id, moveFocus) => {
+      state.store = id; save();
+      for (const [k, b] of Object.entries(pickBtns)) b.setAttribute('aria-pressed', String(k === id));
+      stepsBox.replaceChildren(...STEPS[id]());
+      if (moveFocus) {
+        const h3 = stepsBox.querySelector('h3');
+        h3.focus({ preventScroll: true });
+        h3.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      }
+    };
+    const mk = (id, name, sub) => {
+      const b = h('button', { type: 'button', class: 'btn btn-store', 'data-store': id, 'aria-pressed': 'false', 'aria-controls': 'storeSteps' },
+        h('span', { class: 'picked', 'aria-hidden': 'true' }, '✓ 已選'), h('span', null, name), h('span', { class: 'sub' }, sub));
+      b.addEventListener('click', () => pick(id, true));
+      pickBtns[id] = b;
+      return b;
+    };
+
+    openModal('拿去超商印',
+      head, retry, where,
+      h('h3', { class: 'pick' }, '要去哪一家超商印？'),
+      h('div', { class: 'store-pick' }, mk('711', '7-ELEVEN', 'ibon'), mk('fami', '全家', 'My FamiPort App')),
+      stepsBox,
+      h('p', { class: 'small' }, '萊爾富、OK：沒有查到官方的雲端列印說明，所以這裡沒有列出步驟。這份 PDF 在任何能印 PDF 的地方都可以印。'),
+      h('p', { class: 'confirm-note small' }, '提醒：上傳以後，檔案會存在超商的列印系統裡。檔案裡有過世日期和待辦清單，取件編號不要給不相關的人。'),
+      h('div', { class: 'q-actions' }, h('button', { type: 'button', class: 'btn btn-secondary', onclick: closeModal }, '關閉')));
+    // 上次選過的超商直接顯示 Show the store picked last time
+    if (state.store) pick(state.store, false);
+  }
+
+  // ===== 分享 Share =====
+  function shareText(built) {
+    const { groups, donts, ctx } = built;
+    const lines = ['身後通：待辦清單', `（依過世日期 ${D.fmtPlain(ctx.a.date)} 估算，製作日期 ${D.fmtPlain(D.today())}。僅供參考，以官方公告為準）`, ''];
+    if (donts.length) { lines.push('【先不要做】'); donts.forEach((d) => lines.push('・' + d.title)); lines.push(''); }
+    groups.forEach(({ g, rows }) => {
+      lines.push(`【${g.title}】`);
+      rows.forEach((r) => {
+        // 已完成的只留標題 Done items: title only
+        if (state.done[r.it.id]) { lines.push(`☑ （已完成）${r.title}`); return; }
+        const line = dueLine(r.due, true); // 不寫「還有幾天」 no "days left"
+        lines.push(`□ ${r.title}${tagText(r)}｜${line.text}`);
+      });
+      lines.push('');
+    });
+    lines.push('不是法律意見。有問題請自行詢問律師、地政士（代書）或辦理單位。');
+    return lines.join('\n').trim();
+  }
+  async function doShare(built) {
+    const text = shareText(built);
+    if (navigator.share) {
+      try { await navigator.share({ title: '身後通：待辦清單', text }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; /* 其他錯誤改用複製 fallback to copy */ }
+    }
+    openShareDialog(text);
+  }
+  function openShareDialog(text) {
+    const ta = h('textarea', { readonly: true, 'aria-label': '清單文字' }, text);
+    const status = h('p', { role: 'status', class: 'small muted' }, '');
+    openModal('把清單傳給家人',
+      h('p', null, '按「複製文字」，再到 LINE 或簡訊裡「貼上」就可以了。'),
+      ta, status,
+      h('div', { class: 'btn-row', style: 'margin-top:.8em' },
+        h('button', { type: 'button', class: 'btn btn-primary', onclick: async () => {
+          const ok = await copyText(text);
+          if (!ok) { ta.focus(); ta.select(); }
+          status.textContent = ok ? '已複製，可以去貼上了。' : '沒辦法自動複製，文字已經選好，請長按後選「拷貝」或「複製」。';
+        } }, '複製文字'),
+        h('button', { type: 'button', class: 'btn btn-secondary', onclick: closeModal }, '關閉')));
+  }
+  async function copyText(text, toast) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); if (toast) alertInline(toast); return true; }
+    } catch (e) { /* 改用舊方法 fall back */ }
+    try {
+      const ta = h('textarea', { style: 'position:fixed;top:-1000px;opacity:0' }, text);
+      document.body.append(ta); ta.select();
+      const ok = document.execCommand('copy'); ta.remove();
+      if (ok && toast) alertInline(toast);
+      return ok;
+    } catch (e) { return false; }
+  }
+  function alertInline(msg) {
+    const bar = document.getElementById('errorBar');
+    if (!bar.hidden) { const p = h('p', { class: 'small', style: 'margin:.4em 0 0;font-weight:700' }, msg); bar.querySelector('.in').append(p); }
+  }
+
+  // ===== 對話框 Dialog（不用瀏覽器的 alert／confirm） =====
+  let lastFocus = null;
+  function openModal(title, ...content) {
+    lastFocus = document.activeElement;
+    const root = document.getElementById('modalRoot');
+    const box = h('div', { class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'modal-title' },
+      h('h2', { id: 'modal-title', tabindex: '-1' }, title), content);
+    const bg = h('div', { class: 'modal-bg' }, box);
+    bg.addEventListener('click', (e) => { if (e.target === bg) closeModal(); });
+    root.replaceChildren(bg);
+    // 對話框打開時，後面的畫面不能操作 Make the page behind inert while the dialog is open
+    for (const id of ['main', 'errorBar']) { const el = document.getElementById(id); if (el) el.setAttribute('inert', ''); }
+    const tb = document.querySelector('.topbar'); if (tb) tb.setAttribute('inert', '');
+    box.querySelector('h2').focus();
+  }
+  function closeModal() {
+    const root = document.getElementById('modalRoot');
+    if (!root.firstChild) return;
+    root.replaceChildren();
+    for (const id of ['main', 'errorBar']) { const el = document.getElementById(id); if (el) el.removeAttribute('inert'); }
+    const tb = document.querySelector('.topbar'); if (tb) tb.removeAttribute('inert');
+    if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeModal(); return; }
+    // 鍵盤 Tab 只在對話框裡面循環 Keep Tab focus inside the dialog
+    if (e.key === 'Tab') {
+      const box = document.querySelector('#modalRoot .modal');
+      if (!box) return;
+      const f = Array.from(box.querySelectorAll('a[href],button:not([disabled]),textarea,input,select,[tabindex]:not([tabindex="-1"])'));
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && (document.activeElement === first || !box.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  function confirmClear() {
+    openModal('要清除所有紀錄嗎？',
+      h('p', null, '會清除這支手機上的回答和打勾紀錄，清除後沒辦法復原。'),
+      h('div', { class: 'btn-row', style: 'margin-top:.8em' },
+        h('button', { type: 'button', class: 'btn btn-secondary', onclick: closeModal }, '不要清除'),
+        h('button', { type: 'button', class: 'btn btn-danger', onclick: () => {
+          state = { answers: {}, done: {}, scale: state.scale };
+          save(); closeModal(); go('#/start');
+        } }, '確定清除')));
+  }
+
+  // ===== 啟動 Start =====
+  if (!document.documentElement.lang) document.documentElement.lang = 'zh-Hant-TW';
+  load();
+  applyScale();
+  window.addEventListener('hashchange', route);
+  route();
+
+  // 給自動測試用的唯讀介面 Read-only hooks for automated tests
+  window.__SHD__ = { D, buildList, shareText, makeCtx, buildListPdf, wrapText };
+})();
+</script>
+</body>
+</html>
