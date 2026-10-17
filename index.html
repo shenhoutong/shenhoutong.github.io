@@ -30,7 +30,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <title>身後通</title>
 <!--
-  身後通 v3.8.1（2026-10-17）
+  身後通 v3.8.2（2026-10-17）
+  v3.8.2：減少複雜：第 6 題選「不確定」才出現的保險和年金，在清單上收成一個框，先查有沒有；「現在先做這一件」過世 7 天後
+  跳過沒有期限的項目；截止日下面「日期是用過世日期估算的…」那一句，剩 14 天以內或已超過才放上面。事實沒有刪。
   v3.8.1：第 6 題分成「保險」「退休金」兩組；全部文字檢查用字、語法、邏輯；修 4 個邏輯問題（只選一種死因時匯出的說法、
   第 2 題不確定時死亡證明書要帶什麼、超過期限時「期限怎麼算」那一行、健保過世超過 30 天時不再寫「上網辦死亡登記時一起退保」）。
   v3.8（2026-10-16，沒有公開過）：25 項詳細頁都改成新版：要做什麼＋截止日 → 怎麼辦（最多 3 步）→ 為什麼（一句）
@@ -327,6 +329,21 @@ select {
 .nw { white-space: nowrap; } /* 日期不從中間換行 keep dates on one line */
 .row .go { color: var(--ink-2); font-size: 1.3em; flex: none; }
 .row.done .t { color: var(--ink-2); text-decoration: line-through; text-decoration-thickness: 1px; }
+/* v3.8.2：「還不確定有沒有的保險和年金」框 The unsure-insurance box */
+.unsure-box { border-top: 1px solid var(--line); background: var(--paper); }
+.unsure-box > summary { display: flex; align-items: center; gap: .5em; padding: .75em .9em .75em 1em; cursor: pointer; list-style: none; min-height: 3.6em; }
+.unsure-box > summary::-webkit-details-marker { display: none; }
+.unsure-box .ub-txt { flex: 1; min-width: 0; }
+.unsure-box .ub-t { display: block; font-weight: 700; line-height: 1.5; }
+.unsure-box .ub-c { display: block; color: var(--ink-2); font-size: .92em; line-height: 1.5; margin-top: .15em; }
+.unsure-box > summary .chev { color: var(--ink-2); font-size: 1.3em; flex: none; }
+.unsure-box[open] > summary .chev { transform: rotate(90deg); }
+.unsure-box .ub-body { padding: 0 .9em .9em 1em; }
+.unsure-box .ub-body > p, .unsure-box .ub-body > ul { margin: 0 0 .6em; }
+.unsure-box .ub-body > ul { padding-left: 1.2em; }
+.ub-phones ul { list-style: none; margin: 0 0 .6em; padding: 0; }
+.ub-phones li { border-top: 1px solid var(--line); }
+.unsure-box .ub-rows { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .tag { display: inline-block; font-size: .78em; font-weight: 700; padding: 0 .6em; border-radius: 999px; margin: 0 0 0 .35em; vertical-align: .12em; white-space: nowrap; }
 .tag-imp { background: var(--late-bg); color: var(--late); }
 .tag-chk { background: var(--caution-bg); color: var(--caution-ink); }
@@ -561,7 +578,7 @@ html[data-scale="1.2"] .row .body, html[data-scale="1.4"] .row .body { padding-r
 window.CONTENT = (function () {
   const VERIFIED_ON = '2026-10-11 至 2026-10-15';
   // 工具版本（回報錯誤時自動帶入） Tool version, pre-filled in feedback reports
-  const APP_VERSION = 'v3.8.1';
+  const APP_VERSION = 'v3.8.2';
 
   // ---- 回報錯誤的 Google 表單 Feedback Google Form ----
   // url：表單網址（docs.google.com/forms/.../viewform）。空的就不顯示回報連結。
@@ -2915,9 +2932,23 @@ window.CONTENT = (function () {
   // 「現在先做這一件」：先選已經超過期限的；沒有的話，選 14 天內就到期的（最早到期的那一項）；都沒有的話，選清單上最前面、還沒打勾的。
   // "Do this one first": an overdue item first; otherwise the item due soonest within 14 days; otherwise the first unticked row.
   const NEXT_SOON_DAYS = 14;
+  const CERT_FIRST_DAYS = 7; // v3.8.2：過世幾天內，卡片先放死亡證明書 days after the death when the card still shows the death certificate first
+  // v3.8.2：截止日下面那一句一直放在上面的項目（所得稅的配偶例外，決定要不要自己報）Items whose note under the date always stays on top
+  const START_ALWAYS = new Set(['income-tax']);
+  // v3.8.2：第 6 題只因為選了「不確定」才出現的保險、年金項目（清單上收成一個框，先查有沒有）
+  // v3.8.2: insurance/pension rows shown only because Q6 was "unsure" (grouped in one box on the list)
+  const UNSURE_INS = { 'labor-self': 'labor', pension: 'pension', np: 'np', farmer: 'farmer', 'gov-pension': 'govpension', 'gov-mil': 'gov', 'commercial-ins': 'commercial' };
+  function inUnsureBox(r, c) {
+    const k = UNSURE_INS[r.it.id];
+    // 農保那一項也可能因為第 8 題的老農津貼出現；那樣就不放進框裡 The farmer row may come from Q8 instead
+    return !!k && c.unsureOnly('ins', k) && !(r.it.id === 'farmer' && c.has('flags', 'oldfarmer'));
+  }
   function pickNext(built) {
-    const rows = built.groups.flatMap((x) => x.rows).filter((r) => !state.done[r.it.id]);
-    if (!rows.length) return null;
+    const all = built.groups.flatMap((x) => x.rows).filter((r) => !state.done[r.it.id]);
+    if (!all.length) return null;
+    // 框裡「還不確定有沒有」的保險和年金不當第一件 Rows in the unsure box are never picked first
+    const rows = all.filter((r) => !inUnsureBox(r, built.ctx));
+    if (!rows.length) return all[0];
     const late = rows.find((r) => r.due.late && !r.due.suggest);
     if (late) return late;
     const soon = rows.filter((r) => r.due.date && !r.due.late && r.due.left <= NEXT_SOON_DAYS);
@@ -2926,6 +2957,14 @@ window.CONTENT = (function () {
       if (a.due.suggest !== b.due.suggest) return a.due.suggest ? b : a;
       return b.due.left < a.due.left ? b : a;
     });
+    // v3.8.2：過世 7 天內先拿死亡證明書（辦死亡登記要用到）；之後跳過沒有期限的項目，選最早到期的（同一天的話，法定期限優先）
+    // v3.8.2: the death certificate first in the first 7 days; after that skip undated rows and pick the earliest date
+    const cert = rows.find((r) => r.it.id === 'death-cert');
+    if (cert && !built.ctx.pastDays(CERT_FIRST_DAYS)) return cert;
+    const dated = rows.filter((r) => r.due.date && !r.due.late);
+    const sure = dated.filter((r) => !r.confirm);
+    const pool = sure.length ? sure : dated;
+    if (pool.length) return pool.reduce((a, b) => (b.due.left < a.due.left || (b.due.left === a.due.left && a.due.suggest && !b.due.suggest) ? b : a));
     return rows[0];
   }
   function nextCard(r) {
@@ -2959,7 +2998,12 @@ window.CONTENT = (function () {
       const auto = firstTwo || hasLate;
       const open = g.id in groupOpen ? groupOpen[g.id] : auto;
       const panelId = 'panel-' + g.id;
-      const panel = h('div', { class: 'panel', id: panelId, hidden: !open }, rows.map((r) => rowNode(r)));
+      // v3.8.2：第 6 題選「不確定」才出現的保險和年金，2 項以上就收成一個框，放在這一組最後 Unsure-only insurance rows (2+) go into one box at the end
+      const boxRows = rows.filter((r) => inUnsureBox(r, ctx));
+      const inBox = boxRows.length >= 2;
+      const panel = h('div', { class: 'panel', id: panelId, hidden: !open },
+        (inBox ? rows.filter((r) => !boxRows.includes(r)) : rows).map((r) => rowNode(r)),
+        inBox ? unsureBox(boxRows, built) : null);
       const head = h('button', { type: 'button', class: 'group-head', 'aria-expanded': String(open), 'aria-controls': panelId },
         h('span', null, h('span', { class: 'group-title' }, g.title), g.sub ? h('span', { class: 'group-sub' }, g.sub) : null),
         h('span', { class: 'group-count' }, `${rows.length} 件${doneInGroup ? `，完成 ${doneInGroup} 件` : ''} `, h('span', { class: 'chev', 'aria-hidden': 'true' }, '›')));
@@ -3006,6 +3050,38 @@ window.CONTENT = (function () {
     );
   }
 
+  // v3.8.2：「還不確定有沒有的保險和年金」框（只寫已經查證過的辦理單位和電話）The "not sure yet" insurance box
+  const UNSURE_INS_BLI = { 'labor-self': '勞保', pension: '勞工退休金', np: '國民年金', farmer: '農保' };
+  function unsureBox(rows, built) {
+    const ids = new Set(rows.map((r) => r.it.id));
+    const doneN = rows.filter((r) => state.done[r.it.id]).length;
+    const bli = Object.keys(UNSURE_INS_BLI).filter((id) => ids.has(id));
+    const life = built.items.find((x) => x.it.id === 'life-ins');
+    const how = [
+      bli.length ? bli.map((id) => UNSURE_INS_BLI[id]).join('、') + '：都是勞保局辦的，打下面的勞保局電話問。' : null,
+      ids.has('gov-mil') ? '公保：打下面的臺灣銀行公教保險部電話問；軍保：打電話問國防部。' : null,
+      ids.has('gov-pension') ? '公務人員的月退休金：問過世者退休前服務的機關的人事單位。' : null,
+      ids.has('commercial-ins') && life ? ['人壽保險等商業保險：先看「', h('a', { href: '#/item/life-ins' }, life.title), '」那一項。'] : null
+    ].filter(Boolean);
+    const keys = [bli.length ? 'bli' : null, ids.has('np') ? 'bliNp' : null, ids.has('farmer') ? 'bliFarm' : null, ids.has('gov-mil') ? 'bot' : null].filter(Boolean);
+    // 預設收起來；有超過期限、還沒做的就打開；使用者自己打開或收起的，照使用者的 Closed by default unless something inside is overdue
+    const hasLate = rows.some((r) => r.due.late && !r.due.suggest && !state.done[r.it.id]);
+    const open = 'unsure-ins' in groupOpen ? groupOpen['unsure-ins'] : hasLate;
+    const box = h('details', { class: 'unsure-box', open: open ? true : null },
+      h('summary', null,
+        h('span', { class: 'ub-txt' },
+          h('span', { class: 'ub-t' }, '還不確定有沒有的保險和年金'),
+          h('span', { class: 'ub-c' }, `${rows.length} 項${doneN ? `，完成 ${doneN} 項` : ''}；先打電話查有沒有，有的再辦`)),
+        h('span', { class: 'chev', 'aria-hidden': 'true' }, '›')),
+      h('div', { class: 'ub-body' },
+        h('p', null, '這幾項要家人生前有那一種保險或年金，才需要辦。不知道有沒有的話，先問：'),
+        h('ul', null, how.map((t) => h('li', null, t))),
+        keys.length ? h('div', { class: 'ub-phones' }, phoneList(keys)) : null,
+        h('p', { class: 'small muted' }, '查到有的，可以回去修改第 6 題，清單就只會留下有的；確定沒有的，直接打勾。'),
+        h('div', { class: 'ub-rows' }, rows.map((r) => rowNode(r)))));
+    box.addEventListener('toggle', () => { groupOpen['unsure-ins'] = box.open; });
+    return box;
+  }
   function rowNode(r) {
     const id = r.it.id;
     const done = !!state.done[id];
@@ -3017,6 +3093,7 @@ window.CONTENT = (function () {
       if (cb.checked) state.done[id] = true; else delete state.done[id];
       save();
       groupOpen[r.it.group] = true; // 打勾的那一組維持打開 Keep this group open
+      if (cb.closest('.unsure-box')) groupOpen['unsure-ins'] = true; // v3.8.2：框也維持打開 keep the box open too
       // 重畫清單（不跳回最上面），更新計數 Re-render in place to update counts
       render(viewList(), true);
       const again = document.getElementById(cbId);
@@ -3218,10 +3295,16 @@ window.CONTENT = (function () {
     });
     const sec = (title, content) => (content && (!Array.isArray(content) || content.length)
       ? h('section', { class: 'more-sec' }, h('h3', null, title), content) : null);
+    // 截止日下面那一句（v3.8.1：超過法定期限時，有的項目改用 brief.startLate，null＝不顯示，免得「已超過期限」後面又接「請盡早申請」）
+    // v3.8.2：剩 14 天以內、已超過，或所得稅的配偶例外，才放在上面；其他時候收進「看詳細說明」的期限那一段（事實不刪，只換位置）
+    // The note under the date: on top only within 14 days, when overdue, or for income tax; otherwise in the fold's deadline section
+    const startTxt = (due.late && !due.suggest && B.startLate !== undefined) ? B.startLate : dl.start;
+    const startTop = !!startTxt && (START_ALWAYS.has(it.id) || due.late || (!!due.date && due.left <= NEXT_SOON_DAYS));
     const deadlineSec = () => {
       const out = [];
       if (dl.law) out.push(h('p', null, dl.law));
-      // 期限從什麼時候開始算（dl.start）放在上面截止日下面，這裡不重複 dl.start is shown under the date on top
+      // 期限從什麼時候開始算（startTxt）：沒有放在上面的話，放在這裡 The start note goes here when it is not on top
+      if (startTxt && !startTop) out.push(h('p', null, startTxt));
       clean(val(B.deadlineMore, ctx)).forEach((t) => out.push(h('p', null, t)));
       if (due.date) {
         const basis = h('a', { href: C.SRC.period[1], target: '_blank', rel: 'noopener noreferrer' }, '法律依據');
@@ -3258,9 +3341,6 @@ window.CONTENT = (function () {
           : '（會打開 Google 表單，是另一個網站；您在這個工具裡的回答不會送出去）') : null);
 
     const why = val(B.why, ctx);
-    // v3.8.1：超過法定期限時，有的項目改用 brief.startLate（null＝不顯示），免得「已超過期限」後面又接「請盡早申請」
-    // v3.8.1: when a legal deadline has passed, some items use brief.startLate instead (null = hide)
-    const startTxt = (due.late && !due.suggest && B.startLate !== undefined) ? B.startLate : dl.start;
     return h('article', { class: 'wrap detail brief', 'data-item': it.id },
       h('p', { class: 'top-back' }, h('a', { class: 'btn-text', href: '#/list' }, '‹ 回清單')),
       h('h1', null, row.title),
@@ -3270,7 +3350,7 @@ window.CONTENT = (function () {
       lateNow,
       // 期限從什麼時候開始算、有沒有例外（例如從知道自己是繼承人那天起算），放在截止日（和紅字）下面
       // When the period starts and its exceptions, right under the date (and the overdue message)
-      startTxt ? h('p', { class: 'start-note' }, startTxt) : null,
+      startTop ? h('p', { class: 'start-note' }, startTxt) : null, // v3.8.2：條件見上面 startTop see startTop above
       importantNode, confirmNode,
       h('section', { class: 'how', 'aria-labelledby': 'how-h' },
         h('h2', { id: 'how-h' }, '怎麼辦'),
