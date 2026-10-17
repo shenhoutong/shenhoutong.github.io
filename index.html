@@ -30,6 +30,13 @@
 <meta name="twitter:card" content="summary_large_image">
 <title>身後通</title>
 <!--
+  身後通 v3.8.1（2026-10-17）
+  v3.8.1：第 6 題分成「保險」「退休金」兩組；全部文字檢查用字、語法、邏輯；修 4 個邏輯問題（只選一種死因時匯出的說法、
+  第 2 題不確定時死亡證明書要帶什麼、超過期限時「期限怎麼算」那一行、健保過世超過 30 天時不再寫「上網辦死亡登記時一起退保」）。
+  v3.8（2026-10-16，沒有公開過）：25 項詳細頁都改成新版：要做什麼＋截止日 → 怎麼辦（最多 3 步）→ 為什麼（一句）
+  → 要注意（最多 3 點）→「看詳細說明」收起來；「做完了，打勾」固定在畫面下方。清單最上面加「現在先做這一件」。
+  第 2 題選項寫清楚「年老自然過世」和因病過世的手續一樣，跌倒、噎到、車禍等意外要選第 3 個。
+  存 PDF、列印、傳給家人還是用原本的欄位（長版文字）。
   身後通 v3.7（2026-10-15；舊名「身後事導航」）
   v3.7：公開網站版（GitHub Pages）。程式和內容都和 v3.6.1 一樣，只改版本號；
   公開網站要用的設定（分享預覽、主畫面圖示、禁止連外的安全設定）由 make_site.py 在做網站時加上，這個檔案本身不變。
@@ -53,6 +60,8 @@
   更多查證過的電話、存成 PDF 拿去超商印（先選 7-ELEVEN／全家）、匯出不寫「還有幾天」、字大時精簡排版。
   一個檔案就是整個工具：上面是樣式（style），下面兩段程式：
   1. 內容表（CONTENT）：每一項待辦的文字、期限、官方來源。法規改了只要改這一段。
+     每一項有兩份文字：原本的欄位（why、where、bring…）給存 PDF、列印、傳給家人和份數計算用；
+     brief 是畫面上的詳細頁（v3.8 起）。改法規時兩份都要改；自動測試會檢查兩份的數字、期限、條件一致。
   2. 程式（APP）：問答流程、期限計算、打勾、列印、分享。
   Single-file app: styles, then CONTENT (data, edit when rules change), then APP (logic).
   不連任何外部網站、不上傳資料；打勾進度只存在使用者自己的瀏覽器（localStorage）。
@@ -148,6 +157,7 @@ body {
   font-size: calc(1.125rem * var(--scale));
   line-height: 1.75;
   overflow-wrap: anywhere;
+  text-spacing-trim: space-all; /* v3.8：全形標點不縮，行尾括號才不會凸出畫面 no punctuation trimming, so line-end brackets never stick out */
 }
 a { color: var(--accent); text-underline-offset: .2em; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: .3em; }
@@ -298,7 +308,7 @@ select {
 .group-title { font-family: var(--serif); font-size: 1.2em; font-weight: 700; letter-spacing: .04em; }
 .group-sub { color: var(--ink-2); font-size: .9em; font-weight: 400; display: block; }
 .group-count { color: var(--ink-2); font-size: .9em; white-space: nowrap; }
-.chev { display: inline-block; transition: transform .15s; }
+.chev { display: inline-block; line-height: 1; transition: transform .15s; } /* v3.8：轉 90 度時不撐寬 no widening when rotated */
 .group-head[aria-expanded="true"] .chev { transform: rotate(90deg); }
 
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); }
@@ -352,6 +362,100 @@ select {
 .sources .date { display: block; color: var(--ink-2); font-size: .88em; }
 .detail-actions { margin-top: 2em; display: grid; gap: .7em; }
 .top-back { margin-bottom: .3em; }
+
+/* ===== 詳細頁新版（v3.8） New detail layout ===== */
+.detail.brief { padding-top: .5em; padding-bottom: calc(6.5em + env(safe-area-inset-bottom)); }
+.detail.brief .top-back { margin: 0; }
+.detail.brief h1 { margin-bottom: .3em; }
+.due-line { display: flex; flex-wrap: wrap; align-items: center; gap: .2em .7em; margin: 0 0 .6em; }
+.due-line .due-pill { margin: 0; }
+.days-left { font-weight: 700; color: var(--ink); }
+.how {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+  padding: .4em 1em .7em; margin: .7em 0 1em;
+}
+.how h2, .watch h2 { margin: .45em 0 .3em; font-size: 1.1em; }
+.steps { list-style: none; counter-reset: step; margin: 0; padding: 0 !important; }
+.steps > li { counter-increment: step; position: relative; padding-left: 2.4em; margin: .55em 0 .7em !important; }
+.steps > li::before {
+  content: counter(step); position: absolute; left: 0; top: .1em;
+  width: 1.7em; height: 1.7em; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: .95em; line-height: 1;
+}
+.step-h { font-weight: 700; margin: 0 0 .15em; }
+.step-p { margin: .2em 0 0; color: var(--ink-2); font-size: .95em; }
+.steps ul { list-style: disc; margin: .2em 0 0 !important; padding-left: 1.15em !important; }
+.steps ul li { margin: .15em 0 !important; }
+.step-more { margin-top: .45em; padding-top: .35em; border-top: 1px dashed var(--line); }
+.step-more-h { margin: 0; font-size: .95em; color: var(--ink-2); font-weight: 700; }
+/* 步驟裡的電話：一按就能打 Tap-to-call rows inside a step */
+.steps .step-tel ul { list-style: none; padding-left: 0 !important; }
+.steps .step-tel li { margin: 0 !important; }
+.step-tel .tel-row { padding: .35em 0; min-height: 2.75em; }
+.start-note { margin: -.25em 0 .7em; color: var(--ink-2); font-size: .92em; }
+.late-msg + .start-note, p + .start-note { margin-top: 0; }
+.why-line { margin: 0 0 1em; }
+.why-line b { color: var(--accent); margin-right: .2em; }
+.watch {
+  background: var(--caution-bg); color: var(--caution-ink);
+  border: 1px solid var(--caution-line); border-left-width: .35em; border-radius: 14px;
+  padding: .3em 1em .5em; margin: 0 0 1em;
+}
+.watch h2 { color: var(--caution-ink); }
+.watch ul { margin: .2em 0 .2em !important; padding-left: 1.15em !important; }
+.watch li { margin: .35em 0 !important; }
+details.more {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+  padding: 0 1em; margin: 0 0 1em;
+}
+details.more > summary {
+  cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: .6em;
+  min-height: 3.2em; padding: .55em 0; font-weight: 700;
+}
+details.more > summary::-webkit-details-marker { display: none; }
+details.more > summary .more-hint { display: block; font-weight: 400; font-size: .88em; color: var(--ink-2); }
+details.more > summary .plus { flex: none; font-size: 1.3em; color: var(--accent); }
+details.more[open] > summary .plus { transform: rotate(45deg); }
+.more-sec { border-top: 1px solid var(--line); padding: .3em 0 .5em; }
+.more-sec h3 { font-family: var(--serif); font-size: 1.04em; margin: .5em 0 .2em; }
+.more-sec .phones-in ul { list-style: none; padding-left: 0 !important; }
+.brief-foot { margin: .4em 0 0; }
+.brief-foot a { color: var(--accent); }
+.done-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  background: var(--paper); border-top: 1px solid var(--line);
+  box-shadow: 0 -8px 18px -14px rgba(70, 66, 40, .5);
+  padding: .55em 16px calc(.55em + env(safe-area-inset-bottom));
+}
+.done-bar .in { max-width: 38em; margin: 0 auto; }
+/* 打勾列和上方列一樣，不跟著工具的「字放大」變大，字特大時才不會佔掉太多畫面（手機系統的大字還是會跟著）
+   Like the top bar, the done bar ignores the in-app text size so it never covers too much of the screen */
+.done-bar { font-size: 1.125rem; }
+.done-bar .btn { white-space: nowrap; }
+/* 用鍵盤或讀螢幕軟體移動時，焦點不要停在打勾列後面 Keep keyboard focus from hiding behind the done bar */
+html:has(.done-bar) { scroll-padding-bottom: calc(7em + env(safe-area-inset-bottom)); }
+@media print { .done-bar { display: none !important; } }
+/* 第 6 題的選項分組（v3.8.1）Option groups on Q6 */
+.opt-group { display: grid; gap: .7em; }
+.opt-group + .opt-group { margin-top: .6em; }
+.opt-group-title { margin: 0; font-family: var(--serif); font-weight: 700; font-size: 1.08em; }
+.opt-group-note { margin: -.45em 0 0; color: var(--ink-2); font-size: .92em; }
+.opt-group-plain { border-top: 1px solid var(--line); padding-top: .9em; }
+/* 字放大時縮小左邊縮排，讓文字有足夠寬度 Narrower indents at large text */
+html[data-scale="1.2"] .how, html[data-scale="1.4"] .how { padding-left: .75em; padding-right: .75em; }
+html[data-scale="1.2"] .steps > li, html[data-scale="1.4"] .steps > li { padding-left: 2em; }
+html[data-scale="1.2"] .steps ul, html[data-scale="1.4"] .steps ul { padding-left: 1em !important; }
+html[data-scale="1.2"] .steps .step-tel ul, html[data-scale="1.4"] .steps .step-tel ul { padding-left: 0 !important; }
+
+/* ===== 清單最上面「現在先做這一件」（v3.8） "Do this one first" card ===== */
+.next-card {
+  background: var(--surface); border: 2px solid var(--accent); border-radius: 16px; box-shadow: var(--shadow);
+  padding: .4em 1em 1em; margin: .2em 0 1em;
+}
+.next-card h2 { margin: .35em 0 .15em; font-size: 1em; color: var(--accent); letter-spacing: .08em; }
+.next-card .next-t { font-weight: 700; font-size: 1.15em; line-height: 1.5; margin: .1em 0 .15em; }
+.next-card .next-due { color: var(--ink-2); margin: 0 0 .8em; }
+.next-card .next-due.late { color: var(--late); font-weight: 700; }
 
 /* ===== 對話框（Dialog） ===== */
 .modal-bg {
@@ -457,7 +561,7 @@ html[data-scale="1.2"] .row .body, html[data-scale="1.4"] .row .body { padding-r
 window.CONTENT = (function () {
   const VERIFIED_ON = '2026-10-11 至 2026-10-15';
   // 工具版本（回報錯誤時自動帶入） Tool version, pre-filled in feedback reports
-  const APP_VERSION = 'v3.7';
+  const APP_VERSION = 'v3.8.1';
 
   // ---- 回報錯誤的 Google 表單 Feedback Google Form ----
   // url：表單網址（docs.google.com/forms/.../viewform）。空的就不顯示回報連結。
@@ -582,10 +686,16 @@ window.CONTENT = (function () {
   // 第 1 題（日期）和第 3 題（關係）不放「不確定」：日期是算期限的基礎；關係是您自己的身分。
   const QUESTIONS = [
     { id: 'date', type: 'date', title: '家人是哪一天過世的？', hint: '記不清楚的話，可以看死亡證明書上的日期。' },
-    { id: 'cause', type: 'single', title: '家人是在什麼情況下過世的？', hint: '在其他地方過世、不知道選哪一個的話，選「不確定」，清單會把幾種情況都列出來。', options: [
-      ['hospital', '在醫院因病過世'],
-      ['home', '在家因病過世'],
-      ['notdisease', '不是因病過世，或懷疑不是因病'],
+    // 年老自然過世和因病過世的手續一樣（臺南市衛生局：「因病死亡或老邁在家中死亡」可申請行政相驗；
+    // 臺中市東區衛生所：「自然死亡(老化)、病死者」可申請，自殺、他殺、意外死亡（車禍、跌倒、噎到、溺水等）要司法相驗）
+    // 在醫院：醫師法第 16 條只有「非病死或可疑為非病死」才要報請檢察機關相驗；臺中市政府衛生局《臺中市醫療機構相驗流程參考指引》
+    // （106-05-16）寫醫師親自檢驗大體、經醫療專業判斷為病死的，由醫師開立死亡證明書（2026-10-16 查證）
+    // Natural death from old age follows the same steps as death from illness; falls, choking, traffic accidents are accidents.
+    // In hospital: only "non-natural or suspected non-natural" deaths must be reported for a prosecutor's inquest (Physicians Act art. 16)
+    { id: 'cause', type: 'single', title: '家人是在什麼情況下過世的？', hint: '年紀大自然過世（壽終正寢），手續和因病一樣。跌倒、噎到、車禍等意外，選第 3 個。在其他地方過世，或不知道選哪一個，選「不確定」。', options: [
+      ['hospital', '在醫院因病或年老自然過世'],
+      ['home', '在家因病或年老自然過世'],
+      ['notdisease', '不是因病或年老自然過世（例如意外），或懷疑不是'],
       ['unsure', '不確定']
     ] },
     { id: 'rel', type: 'single', title: '您是過世家人的什麼人？', options: [
@@ -601,7 +711,13 @@ window.CONTENT = (function () {
     { id: 'debt', type: 'single', title: '過世的家人可能有欠款嗎？', hint: '例如貸款、卡債、幫別人作保。', options: [
       ['maybe', '可能有'], ['no', '應該沒有'], ['unsure', '不確定']
     ] },
-    { id: 'ins', type: 'multi', title: '過世的家人生前有這些保險或退休金嗎？', hint: '可以選好幾個。只知道一部分的話，選知道的，再加選「不確定」。清單會把其他可能的也列出來。公保和月退休金要分開選，兩樣都有就都選。', options: [
+    // v3.8.1：分成「保險」「退休金」兩組，比較好找；公保和月退休金排在兩組的交界，一前一後（groups 只決定畫面上的排法）
+    // v3.8.1: two groups (insurance / pensions); "gov" and "govpension" stay next to each other. groups only affect the layout
+    { id: 'ins', type: 'multi', title: '過世的家人生前有這些保險或退休金嗎？', hint: '可以選好幾個。只知道一部分的話，選知道的，再加選「不確定」，清單會把其他可能的也列出來。', groups: [
+      { title: '保險', keys: ['labor', 'np', 'farmer', 'commercial', 'gov'] },
+      { title: '退休金', note: '在領勞保年金的，請選上面的「勞保」。公保和月退休金要分開選，兩樣都有就都選。', keys: ['govpension', 'pension'] },
+      { keys: ['none', 'unsure'] }
+    ], options: [
       ['labor', '勞保（包括在領勞保年金）'], ['np', '國民年金'], ['farmer', '農保'], ['gov', '公保或軍保'],
       ['govpension', '公務人員的月退休金（月退）'], ['pension', '勞工退休金（新制）'], ['commercial', '人壽保險等商業保險'], ['none', '都沒有'], ['unsure', '不確定']
     ] },
@@ -616,7 +732,7 @@ window.CONTENT = (function () {
 
   // ---- 分組（依期限） Groups by deadline ----
   const GROUPS = [
-    { id: 'now', title: '現在先做', sub: '過世後幾天內' },
+    { id: 'now', title: '過世後幾天內' }, // v3.8.1：不叫「現在先做」，免得和上面的「現在先做這一件」搞混
     { id: 'd30', title: '30 天內' },
     { id: 'm3', title: '3 個月內' },
     { id: 'm6', title: '6 個月內' },
@@ -626,13 +742,13 @@ window.CONTENT = (function () {
 
   const LATE_GENERAL = '依過世日期估算，已經超過期限。請盡快詢問辦理單位要怎麼補辦。';
   // 有請求權時效的給付：過了就不能領 Claims that lapse after the period
-  const lateClaim = (years, who) => `依過世日期估算，可能已經超過 ${years} 年的請領期限；超過就不能請領。請盡快${who}，問還能不能申請。`;
+  const lateClaim = (years, who) => `依過世日期估算，可能已經超過 ${years} 年的請領期限；超過就不能請領。請盡快${who}，確認還能不能申請。`;
   const LATE_BLI = (y) => lateClaim(y, '打勞保局電話 (02) 2396-1266');
   const LATE_COURT = '這個期限從「知道自己是繼承人」的那天開始算，是不是還來得及，要看您是什麼時候知道的。請馬上打電話問過世者住所地的地方法院，或請教律師，不要再等。';
   // 匯出（傳給家人、列印、PDF）時接在「已超過期限」後面的簡短說明 Short remedy shown after "overdue" in exports
   const LATE_COURT_SHORT = '期限是從知道自己是繼承人時開始算，可能還來得及，請馬上打電話問法院';
   const LATE_CLAIM_SHORT = '超過期限可能就不能領了，請盡快問還能不能申請';
-  const START_COURT = '工具用過世日期估算。如果您比較晚才知道自己是繼承人（例如前面順位的家人都拋棄了），期限會從您知道的時候開始算。';
+  const START_COURT = '上面的日期是用過世日期估算的。如果您比較晚才知道自己是繼承人（例如前面順位的家人都拋棄了），期限會從您知道的時候開始算。';
 
   // ---- 先不要做 Don'ts ----
   // c = 情境（由程式提供） context from APP
@@ -651,10 +767,10 @@ window.CONTENT = (function () {
       src: ['estateLaw', 'ntbtQA'] },
     { id: 'no-hide', show: (c) => c.debtRisk,
       title: '可能有欠款時：不要隱瞞或賣掉遺產，也不要先挑一位債主還錢',
-      why: '隱瞞遺產（情況嚴重時），或為了躲債把遺產賣掉、送人，可能要拿自己的錢還債。沒有陳報遺產清冊的話，要按每位債主的金額比例用遺產還；先還了其中一位，其他債主沒拿到的部分，可以向您要。',
+      why: '隱瞞遺產（情況嚴重時），或為了躲債把遺產賣掉、送人，可能要拿自己的錢還債。欠款要按每位債主的金額比例用遺產還；沒有陳報遺產清冊又先還了其中一位，其他債主沒拿到的部分，可以向您要。',
       // 民法第 1163 條原文：一、隱匿遺產情節重大；二、在遺產清冊為虛偽之記載情節重大；三、意圖詐害被繼承人之債權人之權利而為遺產之處分
       body: [
-        '民法第 1163 條規定，有下面任何一種情形，就不能再主張這個保護：',
+        '民法第 1163 條規定，有下面任何一種情形，就不能再主張「只用繼承到的遺產還債」的保護，可能要拿自己的錢還：',
         { ul: [
           '把遺產藏起來、隱瞞不報，而且情況嚴重',
           '在交給法院的遺產清冊上寫不實的內容，而且情況嚴重',
@@ -679,7 +795,7 @@ window.CONTENT = (function () {
       }[c.a.cause] || '拿到「死亡證明書」或「相驗屍體證明書」'),
       deadline: { type: 'none', text: '官方沒有寫期限；辦死亡登記要用到' },
       why: () => [
-        '到戶政事務所櫃檯辦死亡登記（除戶），要交這份證明的正本，戶政事務所會留下、不退還；後面很多手續也會用到。'
+        '到戶政事務所櫃檯辦死亡登記（除戶），要交這份證明的正本，戶政事務所會收走、不退還；後面很多手續也會用到。'
       ],
       // 「要申請幾份」自己一段，放在「要帶什麼」後面 Own section after "what to bring"
       howMany: (c) => {
@@ -688,7 +804,7 @@ window.CONTENT = (function () {
         const homeFee = '費用各地不同。例如臺中市東區衛生所：行政相驗 1,000 元，含 10 份，加開每份 10 元。';
         const policeTips = [
           '相驗的時候，可以當場向檢察官說需要幾份（臺南地檢署說明）。',
-          '建議自己留 1 份正本不要交出去：之後份數不夠要補發時，地檢署要看相驗當天拿到的正本（這是工具依南投地檢署說明給的建議）。'
+          '建議自己留 1 份正本不要交出去，因為之後份數不夠要補發時，地檢署要看相驗當天拿到的正本（這是工具依南投地檢署說明給的建議）。'
         ];
         const insAny = c.hasOrUnsure('ins', 'labor') || c.hasOrUnsure('ins', 'np') || c.hasOrUnsure('ins', 'farmer');
         return [
@@ -701,34 +817,129 @@ window.CONTENT = (function () {
           ...(c.a.cause === 'hospital' ? [hospitalFee]
             : c.a.cause === 'home' ? [homeFee]
               : c.a.cause === 'notdisease' ? policeTips
-                : ['在醫院過世：' + hospitalFee, '在家過世：' + homeFee, '不是因病過世：' + policeTips[0], policeTips[1]])
+                : ['在醫院因病或年老自然過世：' + hospitalFee, '在家因病或年老自然過世：' + homeFee, '不是因病或年老自然過世的：' + policeTips[0], '不是因病或年老自然過世的：' + policeTips[1]])
         ];
       },
       where: (c) => {
-        const hospital = '在醫院因病過世：向醫院申請，由醫師開立「死亡證明書」。';
+        const hospital = '在醫院因病或年老自然過世：向醫院申請，由醫師開立「死亡證明書」。';
         const home = [
-          '在家因病過世：向遺體所在地的衛生所申請「行政相驗」（由衛生所醫師確認死因），醫師會開立「死亡證明書」。',
+          '在家因病或年老自然過世：向遺體所在地的衛生所申請「行政相驗」（由衛生所醫師確認死因），醫師會開立「死亡證明書」。',
           '請先打電話給遺體所在地的衛生所，問申請方式、費用和要帶的文件。',
-          '如果是意外、自殺、他殺或身分不明，衛生所不受理，要改向警察機關申請司法相驗（臺南市衛生局說明）。'
+          '如果是意外、自殺、他殺或身分不明，衛生所不受理，要改向警察機關申請司法相驗（由檢察官和法醫相驗；臺南市衛生局說明）。'
         ];
         const police = [
-          '不是因為生病過世（或懷疑不是）：向遺體所在地的警察分局報案。在醫院或衛生所的，醫院、衛生所也可能幫忙通報。之後由檢察官和法醫到遺體所在地相驗（檢查遺體、確認死因）。',
+          '不是因病或年老自然過世（例如意外），或懷疑不是：向遺體所在地的警察分局報案。如果是在醫院，或已經請衛生所來處理，醫院、衛生所也可能幫忙通報警察分局。之後由檢察官和法醫到遺體所在地相驗（檢查遺體、確認死因）。',
           '死因確定後，由地方檢察署開立「相驗屍體證明書」。要不要收費、怎麼領，可以問承辦的地檢署。'
         ];
         const policeMore = [
           '如果要解剖或再檢驗，鑑定報告大約要一到兩個月（以工作天算）；這段期間可能先開立「暫時的相驗屍體證明書」。',
-          '份數不夠時：帶相驗當天拿到的正本 1 份、您的身分證、印章、過世者和您的戶口名簿，到地檢署的服務中心申請補發；也可以到您住家附近的地檢署跨區申請，或在法務部網站線上申請（南投地檢署說明）。'
+          '份數不夠時：帶相驗當天拿到的正本 1 份、您的身分證、印章、過世者和您的戶口名簿，到承辦的地檢署服務中心申請補發；也可以到您住家附近的地檢署跨區申請，或在法務部網站線上申請（南投地檢署說明）。'
         ];
         if (c.a.cause === 'hospital') return [hospital];
         if (c.a.cause === 'home') return home;
         if (c.a.cause === 'notdisease') return [...police, ...policeMore];
-        return [hospital, home[0], police[0], police[1]];
+        // 第 2 題選「不確定」：每種情況的說法和第 2 題的選項一樣 Same wording as the Q2 options
+        return [
+          '在醫院因病或年老自然過世：向醫院申請，由醫師開立「死亡證明書」。',
+          '在家因病或年老自然過世：向遺體所在地的衛生所申請「行政相驗」（由衛生所醫師確認死因），醫師會開立「死亡證明書」。',
+          '不是因病或年老自然過世（例如意外），或懷疑不是：向遺體所在地的警察分局報案。如果是在醫院，或已經請衛生所來處理，醫院、衛生所也可能幫忙通報警察分局。之後由檢察官和法醫到遺體所在地相驗（檢查遺體、確認死因）。',
+          police[1]
+        ];
       },
       bring: (c) => (c.a.cause === 'home'
-        ? ['過世者的疾病診斷證明書，或生前就診的病歷摘要（臺南市衛生局列的；各縣市可能不同）', '申請人和過世者的身分證明文件']
+        ? ['過世者的疾病診斷證明書，或生前就診的病歷摘要（臺南市衛生局列的；臺中市東區衛生所寫的是生前有送醫就診的才要附；各縣市可能不同）', '申請人和過世者的身分證明文件']
         : c.a.cause === 'hospital'
           ? ['各醫院規定不同，請先問醫院。例如國軍桃園總醫院新竹分院的收費表列了「身分證」和「領取人的身分證」，領取人只限配偶、直系親屬（例如父母、子女）。']
-          : null),
+          // v3.8.1：第 2 題選「不確定」時，三種情況分開寫 Q2 unsure: one line per case
+          : c.a.cause === 'unsure'
+            ? ['在醫院因病或年老自然過世：各醫院規定不同，請先問醫院。',
+              '在家因病或年老自然過世：過世者的疾病診斷證明書，或生前就診的病歷摘要（臺南市衛生局列的；臺中市東區衛生所寫的是生前有送醫就診的才要附；各縣市可能不同）；還有申請人和過世者的身分證明文件。',
+              '不是因病或年老自然過世（例如意外），或懷疑不是：官方說明沒有列出；出發前可以先打電話問警察分局或承辦的地檢署。']
+            : null),
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: (c) => {
+          const n = c.certCount();
+          const many = (extra) => ({ h: `要申請幾份（參考：約 ${n} 份）`, p: [extra, `依您的清單，有 ${n} 項手續要附死亡證明書（或相驗屍體證明書），還沒算辦喪事要用的。這是工具算的，不是官方建議。`] });
+          if (c.a.cause === 'hospital') return [
+            { h: '先問醫院要帶什麼（各醫院規定不同）', p: '例如國軍桃園總醫院新竹分院的收費表列了「身分證」和「領取人的身分證」，領取人只限配偶、直系親屬（例如父母、子女）。' },
+            { h: '向醫院申請，由醫師開立「死亡證明書」' },
+            many(null)
+          ];
+          if (c.a.cause === 'home') return [
+            { h: '先打電話給遺體所在地的衛生所', p: '申請「行政相驗」（由衛生所醫師確認死因），醫師會開立「死亡證明書」。電話裡先問申請方式、費用和要帶的文件。' },
+            { h: '帶這些東西', ul: [
+              '過世者的疾病診斷證明書，或生前就診的病歷摘要（臺南市衛生局列的；臺中市東區衛生所寫的是生前有送醫就診的才要附；各縣市可能不同）',
+              '申請人和過世者的身分證明文件'
+            ] },
+            many(null)
+          ];
+          if (c.a.cause === 'notdisease') return [
+            { h: '向遺體所在地的警察分局報案', p: [
+              '如果是在醫院，或已經請衛生所來處理，醫院、衛生所也可能幫忙通報警察分局。之後由檢察官和法醫到遺體所在地相驗（檢查遺體、確認死因）。',
+              '要帶什麼，官方說明沒有列出；出發前可以先打電話問警察分局或承辦的地檢署。'
+            ] },
+            // 相驗的時候就要說要幾份，所以放在「開立證明書」前面 Copies are requested during the inspection, so this comes first
+            many('相驗的時候，可以當場向檢察官說需要幾份（臺南地檢署說明）。'),
+            { h: '死因確定後，由地方檢察署開立「相驗屍體證明書」', p: '要不要收費、怎麼領，可以問承辦的地檢署。' }
+          ];
+          return [
+            { h: '依過世的情況，向不同的地方申請', ul: [
+              // 和第 2 題的選項同一種說法 Same wording as the Q2 options
+              '在醫院因病或年老自然過世：向醫院申請，由醫師開立「死亡證明書」。',
+              '在家因病或年老自然過世：向遺體所在地的衛生所申請「行政相驗」（由衛生所醫師確認死因），醫師會開立「死亡證明書」。',
+              '不是因病或年老自然過世（例如意外），或懷疑不是：向遺體所在地的警察分局報案，由檢察官和法醫到遺體所在地相驗（檢查遺體、確認死因）。死因確定後，由地方檢察署開立「相驗屍體證明書」。'
+            ], moreH: '要帶什麼：', more: [
+              // v3.8.1：三種情況分開寫（在家過世其實有列要帶的文件）One line per case (home deaths do have a list)
+              '在醫院因病或年老自然過世：各醫院規定不同，請先問醫院。',
+              '在家因病或年老自然過世：過世者的疾病診斷證明書，或生前就診的病歷摘要（臺南市衛生局列的；臺中市東區衛生所寫的是生前有送醫就診的才要附；各縣市可能不同）；還有申請人和過世者的身分證明文件。',
+              '不是因病或年老自然過世（例如意外），或懷疑不是：官方說明沒有列出；出發前可以先打電話問警察分局或承辦的地檢署。'
+            ] },
+            many(null)
+          ];
+        },
+        why: '到戶政事務所櫃檯辦死亡登記（除戶），要交這份證明的正本，戶政事務所會收走、不退還；後面很多手續也會用到。',
+        watch: (c) => {
+          const keep = '建議自己留 1 份正本不要交出去，因為之後份數不夠要補發時，地檢署要看相驗當天拿到的正本（這是工具依南投地檢署說明給的建議）。';
+          if (c.a.cause === 'home') return ['如果是意外、自殺、他殺或身分不明，衛生所不受理，要改向警察機關申請司法相驗（由檢察官和法醫相驗；臺南市衛生局說明）。'];
+          if (c.a.cause === 'notdisease') return [
+            keep,
+            '如果要解剖或再檢驗，鑑定報告大約要一到兩個月（以工作天算）；這段期間可能先開立「暫時的相驗屍體證明書」。'
+          ];
+          if (c.a.cause === 'unsure') return [
+            '不是因病或年老自然過世的：相驗的時候，可以當場向檢察官說需要幾份（臺南地檢署說明）。',
+            '不是因病或年老自然過世的：' + keep
+          ];
+          return [];
+        },
+        moreHint: (c) => (c.a.cause === 'notdisease' ? '其他手續要用幾份、份數不夠怎麼補發、官方說明' : '其他手續要用幾份、費用例子、官方說明'),
+        more: (c) => {
+          const hospitalFee = '費用和份數各醫院不同。例如國軍桃園總醫院新竹分院：死亡證明書前 3 張免費，第 4 張起每張 50 元。';
+          const homeFee = '費用各地不同。例如臺中市東區衛生所：行政相驗 1,000 元，含 10 份，加開每份 10 元。';
+          const insAny = c.hasOrUnsure('ins', 'labor') || c.hasOrUnsure('ins', 'np') || c.hasOrUnsure('ins', 'farmer');
+          const fees = c.a.cause === 'hospital' ? [hospitalFee]
+            : c.a.cause === 'home' ? [homeFee]
+              : c.a.cause === 'notdisease' ? []
+                : ['在醫院因病或年老自然過世：' + hospitalFee, '在家因病或年老自然過世：' + homeFee];
+          return [
+            { h: '要申請幾份', body: [
+              '辦喪事也會用到：例如臺北市規定，申請火化、使用市立殯儀館，都要附死亡證明書或相驗屍體證明書（沒寫份數和要不要正本）。要幾份，請問禮儀公司或殯葬管理單位。',
+              '申報遺產稅：可以改用「載有死亡日期的戶口名簿影本」或除戶資料（例如除戶謄本）。',
+              '向國稅局查財產：已經辦好死亡登記的，可以不附死亡證明書。',
+              insAny ? '勞保、國民年金、農保的申請文件都列了死亡證明書，但沒有寫要正本還是影本；送件前可以先打勞保局電話問。' : null,
+              ...fees
+            ] },
+            c.a.cause === 'notdisease' ? { h: '份數不夠怎麼補發', body: [
+              '份數不夠時：帶相驗當天拿到的正本 1 份、您的身分證、印章、過世者和您的戶口名簿，到承辦的地檢署服務中心申請補發；也可以到您住家附近的地檢署跨區申請，或在法務部網站線上申請（南投地檢署說明）。'
+            ] } : null,
+            c.a.cause === 'unsure' ? { h: '不是因病或年老自然過世的', body: [
+              '如果是在醫院，或已經請衛生所來處理，醫院、衛生所也可能幫忙通報警察分局。',
+              '「相驗屍體證明書」要不要收費、怎麼領，可以問承辦的地檢署。'
+            ] } : null
+          ];
+        }
+      },
       sources: ['tncFlow', 'tnHealth', 'tcEastPhc', 'hsHosp', 'tncVictim', 'ntcCert', 'tpFuneralRule', 'risDeath', 'etaxFlow']
     },
     {
@@ -738,19 +949,36 @@ window.CONTENT = (function () {
       // 收據先留著不會有損失，所以不說「確定有的話再辦」 Keeping a receipt costs nothing
       confirmText: (c) => (c.insFuneral
         ? '還不確定會不會用到。收據先收好不會有損失，建議先留著。'
-        : '如果是車禍或犯罪過世，向對方要求賠償殯葬費時會用到。收據先收好不會有損失，建議先留著。'),
+        : '如果是因為車禍或別人的犯罪行為過世，向肇事者或加害人要求賠償殯葬費時會用到。收據先收好不會有損失，建議先留著。'),
       confirmTag: '先留著',
-      confirmTagExport: '（先留著，還不確定能不能申請）',
+      confirmTagExport: '（先留著，還不確定會不會用到）',
       title: '保留喪葬費用的收據正本',
       deadline: { type: 'none', text: '付喪葬費的時候就要開始保留' },
       why: (c) => [
         c.insFuneral ? '申請過世者本人勞保的喪葬津貼、國民年金的喪葬給付，都要附「付喪葬費的證明」正本；農保的喪葬津貼也要附付喪葬費的證明（官方沒有寫要不要正本）。所以正本請自己收好。' : null,
         c.hasOrUnsure('ins', 'farmer') ? '農保還規定：收據上要有過世者的姓名，抬頭要寫申請人的姓名。所以請收款的單位開收據時，寫上過世者的姓名，抬頭寫將來要去申請農保喪葬津貼那個人的姓名。' : null,
-        c.notDisease ? '如果是車禍或犯罪過世，可以向對方要求賠償殯葬費；法律規定是賠給實際付殯葬費的人（民法第 192 條），收據就是付了多少錢、由誰付的證明。' : null
+        c.notDisease ? '如果是因為車禍或別人的犯罪行為過世，可以向肇事者或加害人要求賠償殯葬費；法律規定是賠給實際付殯葬費的人（民法第 192 條），收據就是付了多少錢、由誰付的證明。' : null
       ],
       where: () => ['向禮儀公司、殯葬場所等收款的單位索取收據，正本自己收好。'],
       bring: false,
       phones: (c) => (c.insFuneral ? ['bli'] : []),
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: (c) => [
+          { h: '付喪葬費的時候，向收款的單位要收據', p: '例如禮儀公司、殯葬場所等收款的單位。' },
+          c.hasOrUnsure('ins', 'farmer') ? { h: '開收據時，請收款的單位寫上過世者的姓名，抬頭寫將來要去申請農保喪葬津貼那個人的姓名', p: '農保規定：收據上要有過世者的姓名，抬頭要寫申請人的姓名。' } : null,
+          { h: '正本自己收好' }
+        ],
+        why: (c) => (c.insFuneral
+          ? '申請過世者本人勞保的喪葬津貼、國民年金的喪葬給付，都要附「付喪葬費的證明」正本；農保的喪葬津貼也要附付喪葬費的證明（官方沒有寫要不要正本）。'
+          : '如果是因為車禍或別人的犯罪行為過世，可以向肇事者或加害人要求賠償殯葬費；法律規定是賠給實際付殯葬費的人（民法第 192 條），收據就是付了多少錢、由誰付的證明。'),
+        watch: (c) => [
+          c.insFuneral && c.notDisease ? '如果是因為車禍或別人的犯罪行為過世，可以向肇事者或加害人要求賠償殯葬費；法律規定是賠給實際付殯葬費的人（民法第 192 條），收據就是付了多少錢、由誰付的證明。' : null
+        ],
+        moreHint: (c) => (c.insFuneral ? '勞保局電話、官方說明' : '官方說明'),
+        more: () => []
+      },
       sources: ['bliSelfDocs', 'bliNpFuneral', 'bliFarmer', 'civil197']
     },
     {
@@ -759,12 +987,12 @@ window.CONTENT = (function () {
       deadline: { type: 'days', n: 30, law: '死亡事件發生或死亡事實確定後 30 天內（戶籍法第 48 條）。沒有正當理由逾期，可能被罰 300 到 900 元；戶政事務所催告後還不辦，罰 900 元（戶籍法第 79 條）。', late: '依過世日期估算，已經超過 30 天。逾期還是可以辦，請盡快到任何一間戶政事務所補辦，或先打 1996 內政服務熱線問。', lateShort: '請盡快到戶政事務所補辦' },
       why: () => [
         '「除戶」就是在戶籍資料上登記過世。',
-        '就算醫院已經通報死亡，家屬還是要自己去辦。沒去辦，戶政事務所會寄通知催您辦；沒有正當理由逾期，可能被罰 300 到 900 元（戶籍法第 79 條）。',
+        '就算醫院已經通報死亡，家屬還是要去辦，不會自動辦好。沒去辦，戶政事務所會寄通知催您辦；沒有正當理由逾期，可能被罰 300 到 900 元（戶籍法第 79 條）。',
         '很多後面的手續要先辦好死亡登記，例如勞保家屬死亡給付；拋棄繼承、房地繼承登記也要附除戶謄本，辦好死亡登記才申請得到。'
       ],
       where: () => [
         '全國任何一間戶政事務所都可以辦。',
-        '家屬、戶長、同住的人或辦喪事的人都可以申請，也可以委託別人。',
+        '配偶、親屬、戶長、同住的人或辦喪事的人都可以申請，也可以委託別人。',
         '一般直接到櫃檯辦就好。',
         { h: '想上網辦的話，要全部符合：', ul: [
           '申請人是成年人，有自然人憑證（上網辦政府業務用的電子憑證卡）',
@@ -778,10 +1006,10 @@ window.CONTENT = (function () {
         '申請人的身分證、印章（或簽名）',
         '過世者的身分證、戶口名簿',
         '過世者有配偶時：配偶的身分證和最近 2 年內的相片（要換發配偶的身分證）',
-        '請別人代辦時：委託書'
+        '請別人代辦時：委託書、被委託的人的身分證和印章（或簽名）'
       ],
       also: (c) => [
-        '在戶政事務所櫃檯：過世者的子女、配偶或父母，如果過世那天自己有勞保，可以一起申請「勞保家屬死亡給付」。'
+        '在戶政事務所櫃檯：過世者的子女、配偶或父母，如果在家人過世那天自己有勞保，可以一起申請「勞保家屬死亡給付」。'
           + (c.shows('labor-self') ? '但過世者自己也有勞保的話，「本人死亡給付」和「家屬死亡給付」只能選一種；請先打勞保局電話問哪一種比較適合，再決定要不要在這裡一起申請。' : ''),
         '要帶申請人自己在國內金融機構（銀行、郵局等）的存摺影本；沒辦法自己去，要寫委託書。',
         '上網辦死亡登記時，可以勾選一起申請：健保退保（大約 3 到 5 個工作天完成）、「死亡者人身保單清查及通知」、勞保家屬死亡給付。',
@@ -791,9 +1019,68 @@ window.CONTENT = (function () {
       notes: (c) => [
         '換發戶口名簿或配偶的身分證時，過世者的身分證要繳回戶政事務所。',
         '上網申請如果「不受理」，就沒有完成死亡登記，也不會幫您通報其他機關，要改到櫃檯辦。',
-        c.a.cause === 'notdisease' ? '如果還在等相驗屍體證明書，可以先打電話問戶政事務所。' : null
+        c.a.cause === 'notdisease' ? '如果還在等相驗屍體證明書，可以先打電話問戶政事務所要怎麼辦。' : null
       ],
       phones: ['moi1996'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '到任何一間戶政事務所的櫃檯辦', p: '配偶、親屬、戶長、同住的人或辦喪事的人都可以申請，也可以委託別人。' },
+          { h: '帶這些東西去', ul: [
+            '死亡證明書或相驗屍體證明書的正本（會被收走、不退還）',
+            '申請人的身分證、印章（或簽名）',
+            '過世者的身分證、戶口名簿（換發戶口名簿或配偶的身分證時，過世者的身分證要繳回）'
+          ], more: [
+            '過世者有配偶：配偶的身分證、配偶最近 2 年內的相片（要換發配偶的身分證）',
+            '請別人代辦：委託書、被委託的人的身分證和印章（或簽名）'
+          ] }
+        ],
+        why: '後面很多手續要先辦好這一件，例如勞保家屬死亡給付、拋棄繼承、房地繼承登記。',
+        watch: (c) => {
+          // 「只能選一種」：和原本的欄位同一個條件（過世者有勞保或不確定）Same condition as the original field
+          const pickOne = c.shows('labor-self')
+            ? '但過世者自己也有勞保的話，「本人死亡給付」和「家屬死亡給付」只能選一種；請先打勞保局電話問哪一種比較適合，再決定要不要在櫃檯一起申請。' : '';
+          return [
+            '就算醫院已經通報死亡，家屬還是要去辦，不會自動辦好。沒有正當理由逾期，可能被罰 300 到 900 元。',
+            c.shows('labor-family')
+              // 使用者自己可能可以申請 The user may apply
+              ? '您（過世者的子女、配偶或父母）如果在家人過世那天自己有勞保，可以在櫃檯順便申請「勞保家屬死亡給付」，要多帶您自己在國內金融機構（銀行、郵局等）的存摺影本。' + pickOne
+              // 使用者不能申請，但其他家人可能可以 Other family members may apply
+              : c.shows('labor-self') ? '過世者的子女、配偶或父母，如果在家人過世那天自己有勞保，可以在櫃檯順便申請「勞保家屬死亡給付」，要帶申請人自己在國內金融機構（銀行、郵局等）的存摺影本；申請人沒辦法自己去，要寫委託書。' + pickOne : null,
+            c.a.cause === 'notdisease' ? '如果還在等相驗屍體證明書，可以先打電話問戶政事務所要怎麼辦。' : null
+          ];
+        },
+        moreHint: '上網辦、順便申請、期限和罰款、電話、官方說明',
+        more: (c) => [
+          { h: '想上網辦（要有自然人憑證）', body: [
+            { h: '要全部符合：', ul: [
+              '申請人是成年人，有自然人憑證（上網辦政府業務用的電子憑證卡）',
+              '申請人是過世者的配偶、親屬或同戶的人',
+              '過世者在國內過世，已經有機關通報死亡',
+              '在過世後 30 天內申請'
+            ] },
+            '上網辦的時候，可以勾選一起申請：健保退保（大約 3 到 5 個工作天完成）、「死亡者人身保單清查及通知」、勞保家屬死亡給付。'
+              + (c.shows('labor-self') ? '（過世者自己也有勞保的話，「本人死亡給付」和「家屬死亡給付」只能選一種，請先打勞保局電話問哪一種比較適合。）' : ''),
+            '保單清查的結果不會回覆給您（戶政司說明）。想自己知道過世者有哪些保單，請看「查過世家人有沒有買人壽保險」那一項。',
+            '上網申請如果「不受理」，就沒有完成死亡登記，也不會幫您通報其他機關，要改到櫃檯辦。'
+          ] },
+          { h: '在櫃檯可以順便申請', body: [
+            '過世者的子女、配偶或父母，如果在家人過世那天自己有勞保，可以一起申請「勞保家屬死亡給付」。'
+              + (c.shows('labor-self') ? '但過世者自己也有勞保的話，「本人死亡給付」和「家屬死亡給付」只能選一種；請先打勞保局電話問哪一種比較適合，再決定要不要在這裡一起申請。' : ''),
+            '要帶申請人自己在國內金融機構（銀行、郵局等）的存摺影本；沒辦法自己去，要寫委託書。',
+            '在櫃檯能不能也一起辦健保退保和保單清查，官方說明沒有寫，可以在櫃檯問。'
+          ] },
+          'deadline',
+          { h: '其他', body: [
+            '全國任何一間戶政事務所都可以辦。',
+            '「除戶」就是在戶籍資料上登記過世。',
+            '拋棄繼承、房地繼承登記都要附除戶謄本，辦好死亡登記才申請得到。'
+          ] }
+        ],
+        deadlineTitle: '期限和罰款',
+        deadlineMore: ['沒去辦，戶政事務所會寄通知催您辦。']
+      },
       sources: ['risDeath', 'risOnline', 'molOneStop', 'householdAct', 'moi1996']
     },
     {
@@ -805,20 +1092,42 @@ window.CONTENT = (function () {
         '過世者的健保，在過世當天晚上 12 點停止。',
         '原本掛在過世者名下的眷屬，健保也要跟著退保，所以要盡快改到別的地方投保。沒有這種家人的話，這一項可以直接打勾。'
       ],
-      where: () => [
+      where: (c) => [
         '到新的投保單位辦理投保。',
         '沒有工作、也不能當其他家人眷屬的人：到戶籍所在地的鄉（鎮、市、區）公所投保。',
-        '過世者本人的健保退保：上網辦死亡登記時可以一起申請。'
+        // v3.8.1：超過 30 天不能上網辦死亡登記 No online death registration after 30 days
+        c.pastDays(30) ? null : '過世者本人的健保退保：上網辦死亡登記時可以一起申請。'
       ],
       bring: () => ['到公所投保時：身分證、戶口名簿等'],
-      notes: () => ['只在櫃檯辦死亡登記時，健保會不會自動退保，官方說明沒有寫清楚，可以打健保署諮詢專線問。'],
+      notes: () => ['過世者本人的健保退保：在櫃檯辦死亡登記時，健保會不會自動退保，官方說明沒有寫清楚，可以打健保署諮詢專線問。'],
       phones: ['nhiMobile', 'nhiLand'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '先確認：有沒有家人的健保掛在過世者名下', p: '沒有這種家人的話，這一項可以直接打勾。' },
+          { h: '有的話，這位家人要盡快改到別的地方投保（看自己的情況，選一個）', ul: [
+            '到新的投保單位辦理投保',
+            '沒有工作、也不能當其他家人眷屬的人：到戶籍所在地的鄉（鎮、市、區）公所投保，要帶身分證、戶口名簿等'
+          ] },
+          { h: '不清楚的話，可以打健保署諮詢專線問', tel: ['nhiMobile', 'nhiLand'] }
+        ],
+        why: '過世者的健保，在過世當天晚上 12 點停止；原本掛在過世者名下的眷屬，健保也要跟著退保。',
+        watch: (c) => [
+          // v3.8.1：上網辦死亡登記要在過世後 30 天內，超過就只寫櫃檯 Online death registration only within 30 days
+          c.pastDays(30)
+            ? '過世者本人的健保退保：在櫃檯辦死亡登記時，健保會不會自動退保，官方說明沒有寫清楚，可以打健保署諮詢專線問。'
+            : '過世者本人的健保退保：上網辦死亡登記時可以一起申請；在櫃檯辦死亡登記時，健保會不會自動退保，官方說明沒有寫清楚，可以打健保署諮詢專線問。'
+        ],
+        moreHint: '官方說明',
+        more: () => []
+      },
       sources: ['nhiForm', 'risOnline', 'nhiSite']
     },
     {
       id: 'fin-search', group: 'd30', show: () => true,
       title: '查清楚過世家人有哪些財產和欠款',
-      deadline: { type: 'suggest', months: 1, text: '建議在這天前申請', law: '查詢本身沒有期限。但查詢結果要等申請後第 30 天起才能上網下載（也可以選擇由國稅局掛號寄給您）；要不要拋棄繼承，要在 3 個月內決定，所以建議過世後 1 個月內就申請。如果要同時申請「遺產稅稅額試算」，要在過世後 6 個月內申請。', late: '建議的時間已經過了，但查詢本身沒有期限，現在還是可以申請，請盡快申請。' },
+      deadline: { type: 'suggest', months: 1, text: '建議在這天前申請', law: '查詢本身沒有期限。但查詢結果要等申請後第 30 天起才能上網下載（也可以選擇由國稅局掛號寄給您）；要不要拋棄繼承，要在 3 個月內決定，所以建議過世後 1 個月內就申請。如果要同時申請「遺產稅稅額試算」，要在過世後 6 個月內申請。', late: '建議的時間已經過了，但查詢本身沒有期限，現在還是可以申請，請盡快辦。' },
       why: () => [
         '用「金融遺產查詢」，一次查 12 類：存款、基金、股票等有價證券、短期票券、人身保險、期貨、保管箱、貸款和信用卡債務、電子支付帳戶、記名式儲值卡、投資理財帳戶、信用合作社社員股金。',
         '知道有多少財產和欠款，才好決定要不要拋棄繼承。'
@@ -832,7 +1141,7 @@ window.CONTENT = (function () {
       bring: () => [
         '申請人的身分證正本',
         '過世者的死亡證明書或除戶資料（已經辦好死亡登記的，可以不附）',
-        '關係證明：配偶或子女等第一順位繼承人，帶身分證或相關證明；其他繼承人，帶自己簽章的繼承系統表（列出有哪些繼承人、彼此是什麼關係的表）',
+        '關係證明：配偶，或子女等第一順位繼承人，帶身分證或相關證明；其他繼承人，帶自己簽章的繼承系統表（列出有哪些繼承人、彼此是什麼關係的表）',
         '請別人代辦：代理人的身分證正本和委任書（委託書）'
       ],
       notes: () => [
@@ -841,6 +1150,34 @@ window.CONTENT = (function () {
       ],
       together: { ids: ['income-tax', 'estate-tax'], text: '一樣是國稅局的事' },
       phones: ['tax'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '到國稅局的櫃檯申請「金融遺產查詢」', p: '國稅局的分局、稽徵所、服務處，或直轄市稅捐處的櫃檯都可以。不是在戶政事務所辦。' },
+          { h: '帶這些東西去', ul: [
+            '申請人的身分證正本',
+            '關係證明：配偶，或子女等第一順位繼承人，帶身分證或相關證明；其他繼承人，帶自己簽章的繼承系統表（列出有哪些繼承人、彼此是什麼關係的表）'
+          ], more: [
+            '過世者的死亡證明書或除戶資料（已經辦好死亡登記的，可以不附）',
+            '請別人代辦：代理人的身分證正本和委任書（委託書）'
+          ] },
+          { h: '等結果', p: '結果可以選擇由國稅局掛號寄給您，或在申請後第 30 天到第 90 天之間上網下載；用「遺產稅電子申辦程式」可以下載到過世後 9 個月。' }
+        ],
+        why: '知道有多少財產和欠款，才好決定要不要拋棄繼承；要不要拋棄繼承，要在 3 個月內決定，查詢結果又要等申請後第 30 天起才能下載，所以建議過世後 1 個月內就申請（查詢本身沒有期限）。',
+        watch: () => [
+          '拋棄繼承以後就不能申請了（可以申請的是：還沒拋棄繼承的繼承人、遺囑執行人或遺產管理人）。想拋棄繼承的人，請在拋棄之前先申請。',
+          '如果要同時申請「遺產稅稅額試算」（請國稅局幫您試算遺產稅），要在過世後 6 個月內申請。',
+          '查到的結果只供申報遺產稅參考；過世者如果還有其他財產，也要申報。'
+        ],
+        moreHint: '一次查哪些、上網申請、建議的時間、電話、官方說明',
+        more: () => [
+          { h: '一次查哪些', body: ['用「金融遺產查詢」，一次查 12 類：存款、基金、股票等有價證券、短期票券、人身保險、期貨、保管箱、貸款和信用卡債務、電子支付帳戶、記名式儲值卡、投資理財帳戶、信用合作社社員股金。'] },
+          { h: '上網申請', body: ['也可以用自然人憑證上網申請（沒有或不會用的話，到櫃檯辦就好）。'] },
+          'deadline'
+        ],
+        deadlineTitle: '建議的時間'
+      },
       sources: ['finSearch', 'taxTrial', 'etaxFlow']
     },
     {
@@ -857,11 +1194,38 @@ window.CONTENT = (function () {
         '申請表',
         '申請人身分證正反面影本',
         '過世者的除戶謄本正本（上面有死亡紀錄的戶籍謄本）',
-        '如果您不是過世者的子女：另附前面順位繼承人的除戶謄本正本，或拋棄繼承文件影本',
+        '如果您不是過世者的子女：另附前面順位所有繼承人的除戶謄本正本，或拋棄繼承文件影本',
         '查詢費的劃撥收據影本（金額以公會最新表單為準；低收入戶附證明可以免費）'
       ],
-      notes: () => ['沒附劃撥收據影本，公會不受理，文件也不退還。', '查到保單後，打電話給那家保險公司，問保單是否有效、理賠要帶什麼。保險理賠有時效（保險法第 65 條，一般是 2 年），查到後請盡快申請。'],
+      notes: () => ['沒附劃撥收據影本，公會不受理，文件也不退還。', '查到保單後，打電話給查到的保險公司，問保單是否有效、理賠要帶什麼。保險理賠有時效（保險法第 65 條，一般是 2 年），超過就不能請求，查到後請盡快申請。'],
       phones: ['lia'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '下載申請表填好，用劃撥繳查詢費', p: [
+            '上網辦死亡登記時，如果有勾選「死亡者人身保單清查及通知」，查到的結果不會回覆給您（戶政司說明）；想自己知道過世者有哪些保單，還是要用這份申請表查。',
+            '申請表在壽險公會網站，這裡可以直接打開：'
+          ], src: 'liaForm' },
+          { h: '備齊下面的文件，用掛號寄到「中華民國人壽保險商業同業公會」（壽險公會）', p: '地址以公會最新表單為準。', ul: [
+            '申請表',
+            '申請人身分證正反面影本',
+            '過世者的除戶謄本正本（上面有死亡紀錄的戶籍謄本）',
+            '查詢費的劃撥收據影本（金額以公會最新表單為準；低收入戶附證明可以免費）'
+          ], more: [
+            '如果您不是過世者的子女：另附前面順位所有繼承人的除戶謄本正本，或拋棄繼承文件影本'
+          ], moreH: '看情況再附：' },
+          { h: '查到保單後，打電話給查到的保險公司', p: '問保單是否有效、理賠要帶什麼。' }
+        ],
+        why: '可以知道過世者有哪些人壽保單，再去那些保險公司申請理賠。不確定家人有沒有保險時，特別有用。',
+        watch: () => [
+          '沒附劃撥收據影本，公會不受理，文件也不退還。',
+          '最近順位的法定繼承人等可以申請；要自己申請，壽險公會不接受請別人代辦。',
+          '保險理賠有時效（保險法第 65 條，一般是 2 年），超過就不能請求，查到後請盡快申請。'
+        ],
+        moreHint: '電話、官方說明',
+        more: () => []
+      },
       sources: ['liaForm', 'risOnline', 'liaPhone', 'ins65']
     },
     {
@@ -881,8 +1245,8 @@ window.CONTENT = (function () {
         ] },
         { h: '不拋棄會怎樣', ul: [
           '依法，繼承人對過世者的欠款，只要用「繼承到的遺產」來還，不用拿自己的錢還，也不用另外申請（民法第 1148 條）。',
-          '但有這些情形，就不能主張這個保護，可能要拿自己的錢還（民法第 1163 條）：把遺產藏起來，或在交給法院的遺產清冊上寫不實的內容，而且情況嚴重；為了讓債主拿不到錢，故意把遺產賣掉、送人。',
-          '沒有陳報遺產清冊的話，要按每位債主的金額比例用遺產還，不能先挑一位還；先還了其中一位，其他債主沒拿到的部分，可以向繼承人要（民法第 1162 條之 1、之 2）。'
+          '但有這些情形，就不能主張這個保護，可能要拿自己的錢還（民法第 1163 條）：把遺產藏起來，或在交給法院的遺產清冊上寫不實的內容，而且情況嚴重；或是為了讓債主拿不到錢，故意把遺產賣掉、送人。',
+          '不管有沒有陳報遺產清冊，欠款都要按每位債主的金額比例用遺產還，不能先挑一位還（民法第 1159 條、第 1162 條之 1）；沒陳報又先還了其中一位，其他債主沒拿到的部分，可以向繼承人要（第 1162 條之 2）。'
         ] },
         { h: '會影響到誰', ul: [
           '配偶一定是繼承人。配偶以外，依序是：子女（再來是孫子女）、父母、兄弟姊妹、祖父母；前面順位有人繼承，後面順位的人就不是繼承人。',
@@ -890,15 +1254,15 @@ window.CONTENT = (function () {
           '拋棄的人，要用書面通知因為他拋棄而變成繼承人的人（沒辦法通知的除外）。送件時就要附通知的證明，所以請照下面的步驟先通知。'
         ] },
         { h: '怎麼辦（依序）', ol: [
-          '先申請「金融遺產查詢」，查清楚財產和欠款。拋棄繼承以後就不能申請了，所以一定要先查。',
+          '先申請「金融遺產查詢」，查清楚財產和欠款。拋棄繼承以後就不能申請了，所以一定要在拋棄之前先查。',
           '準備下面「要帶什麼」的文件，寫好聲請狀。',
           '用書面（例如郵局的存證信函，可以證明寄過、寄了什麼）通知因為您拋棄而會變成繼承人的人，留下通知的證明。司法院列的送件文件包含這份證明；如果還沒辦法通知，請先打電話問法院怎麼處理。',
           '在期限內，把聲請狀和文件送到過世者住所地的地方法院，並繳聲請費。',
-          '法院准予備查（審查後同意登記）以後，申報遺產稅時要附上這份文件。'
+          '法院准予備查（審查後同意登記）以後，申報遺產稅時要附上法院准予備查的文件。'
         ] }
       ],
       where: () => [
-        '過世者住所地的地方法院（住所地一般看戶籍地，不確定就打電話問法院）。在高雄，是「臺灣高雄少年及家事法院」。',
+        '過世者住所地的地方法院（住所地一般看戶籍地，不確定就打電話問法院）。過世者住在高雄的話，是送到「臺灣高雄少年及家事法院」。',
         '法院的轄區不一定和縣市一樣。例如過世者住在新北市新店區，拋棄繼承是由臺灣臺北地方法院管轄（新北地院 114 年度司繼字第 626 號裁定）。不確定的話，先打電話到附近的地方法院問。',
         '聲請狀可以從司法院網站或各法院拿到。'
       ],
@@ -906,12 +1270,56 @@ window.CONTENT = (function () {
         '聲請狀',
         '過世者的除戶謄本（上面有死亡紀錄的戶籍謄本）、死亡證明書',
         '戶籍謄本（每一位要拋棄繼承的人都要附）',
-        '繼承系統表',
+        '繼承系統表（列出有哪些繼承人、彼此是什麼關係的表）',
         '已經通知「因為您拋棄而變成繼承人的人」的證明（例如通知書、存證信函、收據）',
         '其他法院要求的文件'
       ],
       notes: () => ['聲請費：1,500 元（2025 年 1 月 1 日起，原本的 1,000 元依規定加收一半，司法院公告）。有些舊資料還寫 1,000 元，送件前可以先打電話問法院確認。', '法院如果寄通知，要您補繳費用或補文件，一定要在通知寫的期限內補好；沒補好，聲請會被駁回。', '不確定要不要拋棄，建議先請教律師，或打電話問過世者住所地的地方法院。'],
       together: { ids: ['inventory', 'fin-search'], text: '相關的事' },
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '先查清楚財產和欠款', p: [
+            '先申請「金融遺產查詢」。拋棄繼承以後就不能申請了，所以一定要在拋棄之前先查。',
+            '查完還不確定要不要拋棄，建議先請教律師，或打電話問過世者住所地的地方法院。'
+          ] },
+          { h: '決定要拋棄的話：用書面通知因為您拋棄而會變成繼承人的人', p: [
+            '例如：子女當中有人拋棄，他的份歸給其他一起繼承的人；子女全部拋棄時，孫子女會變成繼承人（誰是下一個順位，見「看詳細說明」）。',
+            '可以用郵局的存證信函（可以證明寄過、寄了什麼）。留下通知的證明，送件時要附。如果還沒辦法通知，請先打電話問法院怎麼處理。'
+          ] },
+          { h: '在期限內，把聲請狀和文件送到過世者住所地的地方法院，並繳聲請費 1,500 元', p: [
+            '期限：從知道自己是繼承人的那天起 3 個月內（民法第 1174 條）。',
+            '住所地一般看戶籍地。過世者住在高雄的話，是送到「臺灣高雄少年及家事法院」。法院的轄區不一定和縣市一樣，不確定的話，先打電話到附近的地方法院問。',
+            '有些舊資料還寫 1,000 元，送件前可以先打電話問法院確認。'
+          ], ul: [
+            '聲請狀（可以從司法院網站或各法院拿到）',
+            '過世者的除戶謄本（上面有死亡紀錄的戶籍謄本）、死亡證明書',
+            '戶籍謄本（每一位要拋棄繼承的人都要附）',
+            '繼承系統表（列出有哪些繼承人、彼此是什麼關係的表）',
+            '已經通知「因為您拋棄而變成繼承人的人」的證明（例如通知書、存證信函、收據）',
+            '其他法院要求的文件'
+          ], more: [
+            '法院准予備查（審查後同意登記）以後，申報遺產稅時要附上法院准予備查的文件。'
+          ], moreH: '送件以後：' }
+        ],
+        why: '拋棄繼承以後，過世者的財產和欠款都不接；就算還完債還有剩，也一樣不能拿。',
+        watch: () => [
+          '不拋棄的話，依法只要用繼承到的遺產還過世者的欠款，不用拿自己的錢還，也不用另外申請（民法第 1148 條）。但有這些情形，就不能主張這個保護，可能要拿自己的錢還（民法第 1163 條）：把遺產藏起來，或在交給法院的遺產清冊上寫不實的內容，而且情況嚴重；或是為了讓債主拿不到錢，故意把遺產賣掉、送人。',
+          '不拋棄的話，不管有沒有陳報遺產清冊，欠款都要按每位債主的金額比例用遺產還，不能先挑一位還（民法第 1159 條、第 1162 條之 1）；沒陳報又先還了其中一位，其他債主沒拿到的部分，可以向繼承人要（第 1162 條之 2）。',
+          '法院如果寄通知，要您補繳費用或補文件，一定要在通知寫的期限內補好；沒補好，聲請會被駁回。'
+        ],
+        moreHint: '誰是繼承人、法院轄區的例子、聲請費、期限、官方說明',
+        more: () => [
+          { h: '會影響到誰', body: [
+            '配偶一定是繼承人。配偶以外，依序是：子女（再來是孫子女）、父母、兄弟姊妹、祖父母；前面順位有人繼承，後面順位的人就不是繼承人。',
+            '拋棄的人，要用書面通知因為他拋棄而變成繼承人的人（沒辦法通知的除外）。司法院列的送件文件包含這份通知的證明。'
+          ] },
+          { h: '法院轄區的例子', body: ['例如過世者住在新北市新店區，拋棄繼承是由臺灣臺北地方法院管轄（新北地院 114 年度司繼字第 626 號裁定）。'] },
+          { h: '聲請費', body: ['聲請費：1,500 元（2025 年 1 月 1 日起，原本的 1,000 元依規定加收一半，司法院公告）。'] },
+          'deadline'
+        ]
+      },
       sources: ['judRenounce', 'civil1174', 'gazette', 'clevRuling', 'pcdvRuling', 'judFee', 'feeTydv', 'finSearch', 'ntbcaFile']
     },
     {
@@ -923,7 +1331,7 @@ window.CONTENT = (function () {
       deadline: { type: 'months', n: 3, law: '從知道自己是繼承人的那天起 3 個月內；可以向法院聲請延長（民法第 1156 條）', start: START_COURT, late: LATE_COURT, lateShort: LATE_COURT_SHORT },
       why: () => [
         '把遺產和欠款列成清單交給法院。這不是一定要做。',
-        '沒陳報的話，債主也可以請法院要求繼承人陳報。而且沒陳報的繼承人，要按每位債主的金額比例用遺產還，不能先挑一位還（民法第 1162 條之 1、之 2）。',
+        '沒陳報的話，債主可以請法院要求繼承人陳報。不管有沒有陳報，欠款都要按每位債主的金額比例用遺產還（民法第 1159 條、第 1162 條之 1）；沒陳報又先挑一位還，其他債主沒拿到的部分，可以向繼承人要（第 1162 條之 2）。',
         '有好幾位繼承人時，一個人陳報，就等於全部繼承人都陳報了（民法第 1156 條）。'
       ],
       where: () => ['過世者住所地的地方法院（住所地一般看戶籍地，不確定就打電話問法院）。聲請狀怎麼寫，可以問法院的訴訟輔導科。'],
@@ -931,12 +1339,42 @@ window.CONTENT = (function () {
         '聲請狀',
         '過世者的除戶謄本（上面有死亡紀錄的戶籍謄本）',
         '全體繼承人的戶籍謄本',
-        '繼承系統表和繼承人名冊',
+        '繼承系統表（列出有哪些繼承人、彼此是什麼關係的表）和繼承人名冊',
         '遺產清冊（列出已知的債權、債務，並附土地、建物登記簿謄本）',
         '其他法院要求的文件'
       ],
       notes: () => ['陳報後，在法院定的債主申報期間內（不是遺產稅的申報期間），不能先還錢給任何一位債主。', '聲請費：1,500 元（2025 年 1 月 1 日起，原本的 1,000 元依規定加收一半，司法院公告）。有些舊資料還寫 1,000 元，送件前可以先打電話問法院確認。', '法院如果寄通知，要您補繳費用或補文件，一定要在通知寫的期限內補好；沒補好，聲請會被駁回。'],
       together: { ids: ['renounce'], text: '一樣在地方法院辦' },
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '把遺產和欠款列成清單（遺產清冊）', p: '列出已知的債權（例如別人欠過世者的錢）、債務，並附土地、建物登記簿謄本。' },
+          { h: '帶下面這些文件，送到過世者住所地的地方法院', p: [
+            '住所地一般看戶籍地，不確定就打電話問法院。聲請狀怎麼寫，可以問法院的訴訟輔導科。',
+            '要在期限內送到：從知道自己是繼承人的那天起 3 個月內；可以向法院聲請延長（民法第 1156 條）。'
+          ], ul: [
+            '聲請狀',
+            '過世者的除戶謄本（上面有死亡紀錄的戶籍謄本）',
+            '全體繼承人的戶籍謄本',
+            '繼承系統表（列出有哪些繼承人、彼此是什麼關係的表）和繼承人名冊',
+            '遺產清冊',
+            '其他法院要求的文件'
+          ] },
+          { h: '繳聲請費 1,500 元', p: '2025 年 1 月 1 日起，原本的 1,000 元依規定加收一半（司法院公告）。有些舊資料還寫 1,000 元，送件前可以先打電話問法院確認。' }
+        ],
+        why: '陳報不是一定要做。不管有沒有陳報，欠款都要按每位債主的金額比例用遺產還（民法第 1159 條、第 1162 條之 1）；沒陳報又先挑一位還，其他債主沒拿到的部分，可以向繼承人要（第 1162 條之 2）。',
+        watch: () => [
+          '陳報後，在法院定的債主申報期間內（不是遺產稅的申報期間），不能先還錢給任何一位債主。',
+          '有好幾位繼承人時，一個人陳報，就等於全部繼承人都陳報了（民法第 1156 條）。',
+          '法院如果寄通知，要您補繳費用或補文件，一定要在通知寫的期限內補好；沒補好，聲請會被駁回。'
+        ],
+        moreHint: '沒陳報會怎樣、期限、官方說明',
+        more: () => [
+          { h: '沒陳報會怎樣', body: ['沒陳報的話，債主可以請法院要求繼承人陳報。'] },
+          'deadline'
+        ]
+      },
       sources: ['judInventory', 'civil1156', 'gazette', 'clevRuling', 'judFee', 'feeNtdv']
     },
     {
@@ -945,26 +1383,52 @@ window.CONTENT = (function () {
       // 所得稅法第 71 條之 1：配偶是境內居住者時，由配偶依第 71 條合併申報，不適用 3 個月
       // Art. 71-1: a resident spouse files jointly under the normal filing (art. 71); the 3-month rule does not apply
       deadline: (c) => c.a.rel === 'spouse'
-        ? { type: 'none', text: '由配偶合併申報，跟著一般的結算申報期限（不適用 3 個月期限）', law: '過世者的配偶是臺灣居住者時，由配偶依一般的結算申報合併申報（所得稅法第 71 條之 1 但書）。' }
+        ? { type: 'none', text: '由配偶合併申報，跟著每年報綜合所得稅的期限（不適用 3 個月期限）', law: '過世者的配偶是臺灣居住者時，由配偶在每年報綜合所得稅的時候合併申報（所得稅法第 71 條之 1 但書）。' }
         : { type: 'months', n: 3,
             law: '死亡之日起 3 個月內（所得稅法第 71 條之 1）；有特殊情形可以在期限前申請延期，但不能超過遺產稅的申報期限。',
-            start: '但過世者的配偶如果還在、而且是臺灣居住者，就由配偶依一般的結算申報合併申報，不適用這個 3 個月期限。',
+            start: '但過世者的配偶如果還在、而且是臺灣居住者，就由配偶在每年報綜合所得稅的時候合併申報，不適用上面的截止日（3 個月期限）。',
             late: '依過世日期估算，已經超過 3 個月。如果是由配偶合併申報，就不適用這個期限；不是的話，請盡快詢問國稅局要怎麼補辦。',
             lateShort: '如果由配偶合併申報就不適用；不是的話，請盡快問國稅局怎麼補辦' },
       why: (c) => c.a.rel === 'spouse'
         ? [
-            '您是配偶：過世家人那一年的所得，在您每年報綜合所得稅的時候，和您自己的所得一起報（前提是您是臺灣居住者；不確定可以問國稅局）。',
+            '您是配偶：過世家人那一年的所得，在您每年報綜合所得稅的時候，和您自己的所得一起報（前提是您是臺灣居住者；不是或不確定的話，請先問國稅局）。',
             '全年所得沒有超過當年的免稅額加標準扣除額，可以不用申報；不確定就打國稅局電話問。'
           ]
         : [
             '過世那一年的所得（以前還沒報的年度也一樣），要由繼承人、遺囑執行人或遺產管理人幫忙申報；要繳的稅，用遺產來繳（以遺產為限）。',
-            '過世者的配偶如果還在、而且是臺灣居住者，就改由配偶合併申報，期限跟著一般的結算申報。',
+            '過世者的配偶如果還在、而且是臺灣居住者，就改由配偶合併申報，期限跟著每年報綜合所得稅的期限。',
             '全年所得沒有超過當年的免稅額加標準扣除額，可以不用申報；不確定就打國稅局電話問。'
           ],
-      where: () => ['國稅局。要帶的文件和申報方式，可以先打國稅局免付費電話 0800-000-321 問。'],
+      where: (c) => ['國稅局。要帶的文件和申報方式，可以先打國稅局免付費電話 0800-000-321 問。'
+        + (c.a.rel === 'spouse' ? '' : '過世者的配偶如果還在、而且是臺灣居住者，就由配偶合併申報，不適用上面的截止日（3 個月期限）。')],
       bring: () => null,
       together: { ids: ['fin-search', 'estate-tax'], text: '一樣是國稅局的事' },
       phones: ['tax'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        // v3.8.1：超過期限時，紅字後面不再用「但」接這一句 When overdue, no leading 「但」 after the red text
+        startLate: '過世者的配偶如果還在、而且是臺灣居住者，就由配偶在每年報綜合所得稅的時候合併申報，不適用 3 個月期限。',
+        steps: (c) => (c.a.rel === 'spouse'
+          ? [
+              { h: '在您每年報綜合所得稅的時候，把過世家人那一年的所得，和您自己的所得一起報', p: '前提是您是臺灣居住者；不是或不確定的話，請先問國稅局。' },
+              { h: '報稅前，不知道要帶什麼、怎麼報：可以先打國稅局免付費電話問', p: '辦理的單位是國稅局。要帶什麼，官方說明沒有列出。', tel: ['tax'] }
+            ]
+          : [
+              { h: '先打國稅局免付費電話，問要帶的文件和申報方式', p: '要帶什麼，官方說明沒有列出。', tel: ['tax'] },
+              { h: '到國稅局申報過世那一年的所得', p: '以前還沒報的年度，也要報。' }
+            ]),
+        why: (c) => (c.a.rel === 'spouse'
+          ? '您是配偶，所以過世家人那一年的所得，由您合併申報（前提是您是臺灣居住者）。'
+          : '過世那一年的所得，要由繼承人、遺囑執行人或遺產管理人幫忙申報；要繳的稅，用遺產來繳（以遺產為限）。'),
+        watch: (c) => [
+          '全年所得沒有超過當年的免稅額加標準扣除額，可以不用申報；不確定就打國稅局電話問。',
+          // 不是配偶、還沒超過 3 個月：可以申請延期 Non-spouses before the deadline: an extension is possible
+          c.a.rel === 'spouse' || c.pastMonths(3) ? null : '有特殊情形的話，可以在期限前申請延期，但不能超過遺產稅的申報期限。'
+        ],
+        moreHint: '期限、官方說明',
+        more: () => ['deadline']
+      },
       sources: ['tax71_1', 'ntbtLife']
     },
     {
@@ -974,17 +1438,36 @@ window.CONTENT = (function () {
       deadline: { type: 'local', text: '多數縣市是過世後 3 個月內，部分縣市 2 個月內（以各縣市規定為準）' },
       why: (c) => [
         c.pastMonths(3) ? '過世已經超過 3 個月，可能已經過了申請期限；還是可以打電話問問看。' : null,
-        '過世者如果是低收入戶或中低收入戶，家屬可能可以申請喪葬補助。只有部分縣市有這項補助；中低收入戶的喪葬補助更少，只有少數縣市有。',
+        '過世者如果是低收入戶或中低收入戶，家屬可能可以申請喪葬補助。只有部分縣市有這項補助；有中低收入戶喪葬補助的縣市更少，只有少數縣市有。',
         '這項補助由各縣市政府自己決定要不要辦、怎麼辦（社會救助法第 16 條），所以有沒有、條件、金額，請直接問。'
       ],
       where: () => [
         '過世者戶籍地的鄉（鎮、市、區）公所；臺北市是向社會局所屬的社會福利服務中心申請（我的E政府說明）。',
-        '不知道怎麼問：打公所或縣市政府總機，說要問「低收入戶、中低收入戶的喪葬補助」，請他們轉給負責的單位；或打衛福部 1957 福利諮詢專線。',
+        '不知道該找誰問：打公所或縣市政府總機，說要問「低收入戶、中低收入戶的喪葬補助」，請他們轉給負責的單位；或打衛福部 1957 福利諮詢專線。',
         '問的時候，請一起問：要帶什麼、期限多久。'
       ],
       bring: () => null,
       together: { ids: ['emergency-aid'], text: '打電話時可以一起問' },
       phones: ['mohw1957'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: (c) => [
+          { h: '打電話問過世者戶籍地的鄉（鎮、市、區）公所', p: [
+            c.pastMonths(3) ? '過世已經超過 3 個月，可能已經過了申請期限；還是可以打電話問問看。' : null,
+            '說要問「低收入戶、中低收入戶的喪葬補助」，請他們轉給負責的單位。申請也是在這個公所辦；臺北市是向社會局所屬的社會福利服務中心申請（我的E政府說明）。'
+          ] },
+          { h: '不知道該找誰問：打衛福部 1957 福利諮詢專線', p: '也可以打縣市政府總機問。', tel: ['mohw1957'] },
+          { h: '問的時候，請一起問：要帶什麼、期限多久', p: '要帶什麼，官方說明沒有列出。家裡付不出喪葬費的話，打電話時也可以一起問「急難救助」。' }
+        ],
+        why: '過世者如果是低收入戶或中低收入戶，家屬可能可以申請喪葬補助。',
+        watch: () => [
+          '只有部分縣市有這項補助；有中低收入戶喪葬補助的縣市更少，只有少數縣市有。',
+          '這項補助由各縣市政府自己決定要不要辦、怎麼辦（社會救助法第 16 條），所以有沒有、條件、金額，請直接問。'
+        ],
+        moreHint: '相關的事、官方說明',
+        more: () => []
+      },
       sources: ['socialAssist', 'govFuneralAid', 'mohw1957']
     },
     {
@@ -1000,24 +1483,43 @@ window.CONTENT = (function () {
         '能領多少、要符合什麼條件，各縣市規定不同，請直接問。家裡負擔得起的話，這一項可以直接打勾。'
       ],
       where: () => [
-        '戶籍地的鄉（鎮、市、區）公所（我的E政府說明）。過世者和您的戶籍不在同一個地方時，要去哪裡申請，打電話問就好。',
-        '不知道怎麼問：打公所或縣市政府總機，說要問「急難救助」；或打衛福部 1957 福利諮詢專線。',
-        '也可以一起問「急難紓困」（關懷救助金）：一樣是過世後 3 個月內，向戶籍地公所申請。',
+        '戶籍地的鄉（鎮、市、區）公所（我的E政府說明）。過世者和您的戶籍不在同一個地方時，要去哪裡申請，打電話問公所就好。',
+        '不知道該找誰問：打公所或縣市政府總機，說要問「急難救助」；或打衛福部 1957 福利諮詢專線。',
+        '也可以一起問「急難紓困」（關懷救助金）：申請期限是過世後 3 個月內，向戶籍地公所申請。',
         '問的時候，請一起問：要帶什麼、能領多少、期限多久。'
       ],
       bring: () => null,
       together: { ids: ['low-income'], text: '打電話時可以一起問' },
       phones: ['mohw1957'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: (c) => [
+          { h: '打電話問戶籍地的鄉（鎮、市、區）公所', p: [
+            c.pastMonths(3) ? '過世已經超過 3 個月，可能已經過了申請期限；還是可以打電話問問看。' : null,
+            '說要問「急難救助」。一般是到戶籍地的公所申請（我的E政府說明）；過世者和您的戶籍不在同一個地方時，要去哪裡申請，打電話問公所就好。'
+          ] },
+          { h: '不知道該找誰問：打衛福部 1957 福利諮詢專線', p: '也可以打縣市政府總機問。', tel: ['mohw1957'] },
+          { h: '問的時候，請一起問：要帶什麼、能領多少、期限多久', p: '要帶什麼，官方說明沒有列出。也可以一起問「急難紓困」（關懷救助金）：申請期限是過世後 3 個月內，向戶籍地公所申請。' }
+        ],
+        why: '家裡有人過世、沒有錢辦喪事的，可以申請「急難救助」（社會救助法第 21 條）。不是低收入戶也可以申請。',
+        watch: () => [
+          '能領多少、要符合什麼條件，各縣市規定不同，請直接問。',
+          '家裡負擔得起的話，這一項可以直接打勾。'
+        ],
+        moreHint: (c) => (c.shows('low-income') ? '相關的事、官方說明' : '官方說明'),
+        more: () => []
+      },
       sources: ['socialAssist', 'govFuneralAid', 'mohw1957']
     },
     {
       id: 'estate-tax', group: 'm6', show: () => true,
       title: '申報遺產稅',
-      deadline: { type: 'months', n: 6, law: '死亡次日起算 6 個月內（遺產及贈與稅法第 23 條）；有正當理由，可以在期限前用書面申請延長，原則上最多 3 個月；遇到不可抗力等特殊情形，由國稅局核定（第 26 條）。', late: '依過世日期估算，已經超過 6 個月的申報期限，可能會被罰。請盡快打國稅局免付費電話 0800-000-321，問要怎麼補辦。', lateShort: '可能會被罰，請盡快打國稅局電話問怎麼補辦' },
+      deadline: { type: 'months', n: 6, law: '死亡次日起算 6 個月內（遺產及贈與稅法第 23 條）；有正當理由，可以在期限前用書面申請延長，原則上最多 3 個月；遇到不可抗力等特殊情形，可以延長多久由國稅局核定（第 26 條）。', late: '依過世日期估算，已經超過 6 個月的申報期限，可能會被罰。請盡快打國稅局免付費電話 0800-000-321，問要怎麼補辦。', lateShort: '可能會被罰，請盡快打國稅局電話問怎麼補辦' },
       why: (c) => {
         const out = [
           '遺產再少、不用繳稅也要申報。',
-          '申報後拿到「遺產稅繳清證明書」或「免稅證明書」，才能辦房子、土地、車子、存款和股票的過戶。'
+          '申報後，要繳稅的繳完稅，才拿得到「遺產稅繳清證明書」；不用繳稅的，拿「免稅證明書」。有了證明書，才能辦房子、土地、車子、存款和股票的過戶。'
         ];
         if (c.deathYear === 2026) {
           out.push({ h: '2026 年過世適用的金額', ul: [
@@ -1037,33 +1539,71 @@ window.CONTENT = (function () {
       },
       where: () => [
         '過世者戶籍地的國稅局；符合規定的，也可以就近到任一分局、稽徵所或服務處辦（跨局臨櫃）。',
-        '也可以下載「遺產稅電子申辦程式」上網申報；上傳後 10 天內，要把文件送到過世者戶籍地的國稅局。'
+        '也可以下載「遺產稅電子申辦程式」上網申報；申報資料上傳後 10 天內，要把文件送到過世者戶籍地的國稅局。'
       ],
       bring: () => [
         '遺產稅申報書',
         '過世者的除戶資料、各繼承人現在的戶籍資料、繼承系統表',
-        '有人拋棄繼承：法院准予備查的文件',
-        '財產證明、扣除額證明等'
+        '財產證明、扣除額證明等',
+        '有人拋棄繼承：法院准予備查的文件'
       ],
       notes: () => [
-        '國稅局核定後，收到繳稅通知的隔天起 2 個月內要繳清；必要時可以申請延 2 個月。',
-        '繳完稅以後，拿繳款收據申請「遺產稅繳清證明書」；不用繳稅的，申請「免稅證明書」。後面房地、存款、車子過戶都要用（財政部說明）。',
-        '一次繳不出現金，可以在繳稅期限內向國稅局申請分 18 期以內繳納（要加計利息；能不能分期，以國稅局核准為準）。',
+        '國稅局核定後，收到繳稅通知的隔天起 2 個月內要繳清；必要時可以在期限內申請，再延 2 個月。',
+        '繳完稅以後，拿繳款收據申請「遺產稅繳清證明書」；不用繳稅的，申請「免稅證明書」。後面房子、土地、存款、車子過戶都要用（財政部說明）。',
+        '要繳的稅在 30 萬元以上、一次繳不出現金的，可以在繳稅期限內向國稅局申請分 18 期以內繳納（要加計利息；能不能分期，以國稅局核准為準）。',
         '沒有按時申報，最多罰應納稅額的 2 倍。'
       ],
       together: { ids: ['fin-search', 'income-tax'], text: '一樣是國稅局的事' },
       phones: ['tax'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '到過世者戶籍地的國稅局申報', p: '符合規定的，也可以就近到任一分局、稽徵所或服務處辦（跨局臨櫃）。' },
+          { h: '帶這些東西去', ul: [
+            '遺產稅申報書',
+            '過世者的除戶資料、各繼承人現在的戶籍資料、繼承系統表',
+            '財產證明、扣除額證明等'
+          ], more: [
+            '有人拋棄繼承：法院准予備查的文件'
+          ] },
+          { h: '繳完稅以後，拿繳款收據申請「遺產稅繳清證明書」；不用繳稅的，申請「免稅證明書」', p: '後面房子、土地、存款、車子過戶都要用（財政部說明）。' }
+        ],
+        why: '遺產再少、不用繳稅也要申報。申報後，要繳稅的繳完稅，才拿得到「遺產稅繳清證明書」；不用繳稅的，拿「免稅證明書」。有了證明書，才能辦房子、土地、車子、存款和股票的過戶。',
+        watch: (c) => [
+          // 還沒超過 6 個月，才提醒可以申請延長 Mention the extension only before the 6-month deadline
+          '沒有按時申報，最多罰應納稅額的 2 倍。' + (c.pastMonths(6) ? '' : '有正當理由的話，可以在期限前用書面申請延長，原則上最多 3 個月。'),
+          '國稅局核定後，收到繳稅通知的隔天起 2 個月內要繳清；必要時可以在期限內申請，再延 2 個月。要繳的稅在 30 萬元以上、一次繳不出現金的，可以在繳稅期限內向國稅局申請分 18 期以內繳納（要加計利息；能不能分期，以國稅局核准為準）。',
+          '這個工具不幫您算稅額。可以向國稅局申請「遺產稅稅額試算」（過世後 6 個月內，和金融遺產查詢一起申請）。'
+        ],
+        moreHint: (c) => (c.deathYear === 2026 ? '2026 年的免稅額和扣除額、上網申報、期限、電話、官方說明' : '免稅額和扣除額、上網申報、期限、電話、官方說明'),
+        more: (c) => [
+          c.deathYear === 2026
+            ? { h: '2026 年過世適用的金額', body: [{ ul: [
+                '免稅額：1,333 萬元',
+                '喪葬費扣除額：138 萬元',
+                '配偶扣除額：553 萬元',
+                '子女等直系血親卑親屬：每人 56 萬元；未成年的，按距離成年還有幾年，每年再加扣 56 萬元',
+                '父母：每人 138 萬元',
+                '重度以上身心障礙特別扣除額：每人 693 萬元',
+                '受過世者扶養的兄弟姊妹、祖父母：每人 56 萬元；兄弟姊妹未成年的，按距離成年還有幾年，每年再加扣 56 萬元'
+              ] }] }
+            : { h: '免稅額和扣除額', body: ['過世的年份不是 2026 年：免稅額和扣除額可能不同，請看財政部當年度的公告，或打國稅局免付費電話 0800-000-321 問。'] },
+          { h: '上網申報', body: ['也可以下載「遺產稅電子申辦程式」上網申報；申報資料上傳後 10 天內，要把文件送到過世者戶籍地的國稅局。'] },
+          'deadline'
+        ]
+      },
       sources: ['estateLaw', 'ntbtQA', 'ntbcaFile', 'mof2026', 'govEstate', 'taxTrial']
     },
     {
       id: 'land', group: 'm6', show: (c) => c.hasOrUnsure('assets', 'land'),
       confirm: (c) => c.unsureOnly('assets', 'land'),
       title: '房子、土地辦繼承登記',
-      deadline: { type: 'months', n: 6, law: '繼承開始之日起 6 個月內（土地法第 73 條）', late: '依過世日期估算，已經超過 6 個月，可能要繳罰鍰。請盡快打電話問地政事務所，或打 1996 內政服務熱線，問要怎麼辦。', lateShort: '可能要繳罰鍰，請盡快問地政事務所' },
+      deadline: { type: 'months', n: 6, law: '繼承開始（過世）之日起 6 個月內（土地法第 73 條）', late: '依過世日期估算，已經超過 6 個月，可能要繳罰鍰。請盡快打電話問地政事務所，或打 1996 內政服務熱線，問要怎麼辦。', lateShort: '可能要繳罰鍰，請盡快問地政事務所' },
       why: () => [
-        '要先拿到遺產稅繳清證明書或免稅證明書，才能辦。遺產稅的期限也是 6 個月，記得預留時間。',
+        '要先拿到遺產稅繳清證明書或免稅證明書，才能辦。申報遺產稅的期限也是 6 個月，所以遺產稅要早點辦，才來得及辦這一項。',
         '逾期的話，每超過 1 個月，可能被罰登記費 1 倍，最多 20 倍。',
-        '超過 1 年沒辦，地政機關會公告；之後還沒辦，可能被「列冊管理」（列入名單管理）；列冊管理 15 年後還沒辦，會交給國有財產署標售（公開賣掉）。'
+        '過世超過 1 年還沒辦，地政機關會公告；之後還沒辦，房子、土地可能被「列冊管理」（列入名單管理）；列冊管理 15 年後還沒辦，會交給國有財產署標售（公開賣掉）。'
       ],
       where: () => ['地政事務所。要去哪一間、能不能就近送件，可以打 1996 內政服務熱線問（服務範圍包含土地業務）。'],
       bring: () => [
@@ -1071,16 +1611,48 @@ window.CONTENT = (function () {
         '繼承系統表',
         '過世者的除戶謄本（上面有死亡紀錄的戶籍謄本）、繼承人的現戶謄本',
         '遺產稅繳清證明書或免稅證明書',
-        '權利書狀',
+        '權利書狀（權狀）',
         '有人拋棄繼承：拋棄繼承文件或法院准予備查的文件',
         '分割繼承時：分割協議書和印鑑證明'
       ],
       notes: () => [
         '登記費：土地按申報地價的千分之一；建物（房屋）按國稅局核定的遺產稅價值的千分之一。',
         '書狀費：每張 80 元。',
-        '沒有權狀的房子（沒辦保存登記）：要到房屋所在地的稅捐稽徵機關，辦「房屋稅納稅義務人名義變更」，帶遺產稅繳清（免稅）證明書、繼承系統表、繼承人身分證明等；沒辦的話，房屋稅的納稅人名義會一直是過世者，或是全體繼承人共有。'
+        '沒有權狀的房子（沒辦保存登記）：要到房屋所在地的稅捐稽徵機關，辦「房屋稅納稅義務人名義變更」，帶遺產稅繳清證明書或免稅證明書、繼承系統表、繼承人身分證明等；沒辦的話，房屋稅的資料會一直留在過世者名下，或一直寫成所有繼承人共有。'
       ],
       phones: ['moi1996'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '先拿到遺產稅繳清證明書或免稅證明書', p: '要先拿到才能辦。申報遺產稅的期限和這一項一樣，都是 6 個月，所以遺產稅要早點辦，才來得及辦這一項。' },
+          { h: '到地政事務所辦', p: '要去哪一間、能不能就近送件，可以打 1996 內政服務熱線問（服務範圍包含土地業務）。', tel: ['moi1996'] },
+          { h: '帶這些東西去', ul: [
+            '登記申請書',
+            '繼承系統表',
+            '過世者的除戶謄本（上面有死亡紀錄的戶籍謄本）、繼承人的現戶謄本',
+            '遺產稅繳清證明書或免稅證明書',
+            '權利書狀（權狀）'
+          ], more: [
+            '有人拋棄繼承：拋棄繼承文件或法院准予備查的文件',
+            '分割繼承時：分割協議書和印鑑證明'
+          ] }
+        ],
+        why: '逾期的話，每超過 1 個月，可能被罰登記費 1 倍，最多 20 倍。',
+        watch: () => [
+          '過世超過 1 年還沒辦，地政機關會公告；之後還沒辦，房子、土地可能被「列冊管理」（列入名單管理）；列冊管理 15 年後還沒辦，會交給國有財產署標售（公開賣掉）。',
+          '沒有權狀的房子（沒辦保存登記）：要另外到房屋所在地的稅捐稽徵機關，辦「房屋稅納稅義務人名義變更」（要帶的東西在「看詳細說明」裡）。'
+        ],
+        moreHint: '費用、沒有權狀的房子、期限、官方說明',
+        more: () => [
+          { h: '費用', body: [
+            '登記費：土地按申報地價的千分之一；建物（房屋）按國稅局核定的遺產稅價值的千分之一。',
+            '書狀費：每張 80 元。'
+          ] },
+          { h: '沒有權狀的房子（沒辦保存登記）', body: ['要到房屋所在地的稅捐稽徵機關，辦「房屋稅納稅義務人名義變更」，帶遺產稅繳清證明書或免稅證明書、繼承系統表、繼承人身分證明等；沒辦的話，房屋稅的資料會一直留在過世者名下，或一直寫成所有繼承人共有。'] },
+          'deadline'
+        ]
+      },
       sources: ['ssla', 'hlLand', 'tpLandList', 'tnLandFee', 'etaxHouseTax', 'moi1996']
     },
     {
@@ -1089,11 +1661,11 @@ window.CONTENT = (function () {
       title: '汽車、機車過戶或報廢',
       deadline: { type: 'months', n: 12, law: '過世後 1 年內要辦（道路交通安全規則第 33 條）；繼承人沒有在 1 年內辦，監理機關會直接註銷車牌。', late: '依過世日期估算，已經超過 1 年，車牌可能已經被註銷（不會另外通知）。請盡快到監理站、監理所問要怎麼辦。', lateShort: '車牌可能已經被註銷，請盡快問監理站' },
       why: () => [
-        '沒有拋棄繼承的話，就算還沒過戶，繼承人也要繳使用牌照稅。車子不要了，也要在 1 年內辦過戶或報廢。',
-        '車牌被註銷以後還開上路，駕駛人可能被罰；開在路上或停在路上被查到，還要補繳牌照稅，並可能被罰應納稅額 2 倍以下。',
-        '要先拿到遺產稅繳清證明書（或免稅證明書），並繳清當年度的稅費和交通罰單。'
+        '沒有拋棄繼承的話，就算還沒過戶，繼承人也要繳使用牌照稅。車子不要了，一樣要在 1 年內辦過戶或報廢。',
+        '車牌被註銷以後還開上路，駕駛人可能被罰；開在路上或停在路上被查到，還要補繳使用牌照稅，並可能被罰應納稅額 2 倍以下。',
+        '要先拿到遺產稅繳清證明書或免稅證明書，並繳清當年度的稅費和交通罰單。'
       ],
-      where: () => ['交通部公路局的監理站、監理所。'],
+      where: () => ['交通部公路局的監理站、監理所。去之前要先繳清當年度的稅費和交通罰單；汽車滿 10 年、機車滿 5 年，要先做臨時檢驗（公路局 2017 年的說明）。'],
       bring: () => [
         '遺產稅繳清證明書（或免稅、不計入遺產總額證明書）',
         '繼承人的身分證、印章，以及駕照或健保卡',
@@ -1102,11 +1674,37 @@ window.CONTENT = (function () {
         '領牌登記書',
         '請別人代辦：代辦人的身分證'
       ],
-      notes: () => [
-        '來不及在 1 年內辦的，可以在期限到之前，用書面寫明理由，申請延長 6 個月（只能延 1 次）。',
+      notes: (c) => [
+        c.pastMonths(12) ? null : '來不及在 1 年內辦的，可以在期限到之前，用書面寫明理由，申請延長 6 個月（只能延 1 次）。',
         '因為沒辦繼承而被註銷車牌時，依規定監理機關不用另外寄註銷通知給車主，所以不要等通知。',
         '汽車滿 10 年、機車滿 5 年，要先做臨時檢驗（公路局 2017 年的說明）。'
       ],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '先拿到遺產稅繳清證明書或免稅證明書', p: '也要先繳清當年度的稅費和交通罰單。' },
+          { h: '到交通部公路局的監理站、監理所辦', p: '汽車滿 10 年、機車滿 5 年，要先做臨時檢驗（公路局 2017 年的說明）。' },
+          { h: '帶這些東西去', ul: [
+            '遺產稅繳清證明書（或免稅、不計入遺產總額證明書）',
+            '繼承人的身分證、印章，以及駕照或健保卡',
+            '行照、強制險卡（電子式保險證）',
+            '家族會議協議書（或分割協議書、法院文件）',
+            '領牌登記書'
+          ], more: [
+            '請別人代辦：代辦人的身分證'
+          ] }
+        ],
+        why: '繼承人沒有在 1 年內辦，監理機關會直接註銷車牌；依規定監理機關不用另外寄註銷通知給車主，所以不要等通知。',
+        watch: (c) => [
+          '沒有拋棄繼承的話，就算還沒過戶，繼承人也要繳使用牌照稅。車子不要了，一樣要在 1 年內辦過戶或報廢。',
+          '車牌被註銷以後還開上路，駕駛人可能被罰；開在路上或停在路上被查到，還要補繳使用牌照稅，並可能被罰應納稅額 2 倍以下。',
+          // v3.8.1：超過 1 年就不寫（期限前才能申請延長）Only before the deadline
+          c.pastMonths(12) ? null : '來不及在 1 年內辦的，可以在期限到之前，用書面寫明理由，申請延長 6 個月（只能延 1 次）。'
+        ],
+        moreHint: '期限、官方說明',
+        more: () => ['deadline']
+      },
       sources: ['trafficRule33', 'thbVehicle', 'tmvVehicle', 'etaxVehicleTax']
     },
     {
@@ -1114,21 +1712,42 @@ window.CONTENT = (function () {
       feedbackName: '存款、股票辦繼承', // 回報用，固定名稱 for feedback
       title: (c) => c.hasOrUnsure('assets', 'stock') ? '存款、股票辦繼承' : '存款辦繼承',
       deadline: { type: 'none', text: '官方沒有寫期限' },
-      why: () => ['要先拿到遺產稅繳清證明書或免稅證明書，才能把存款、股票轉給繼承人（遺產及贈與稅法第 8、42 條）。'],
+      why: (c) => ['要先拿到遺產稅繳清證明書或免稅證明書，才能把' + (c.hasOrUnsure('assets', 'stock') ? '存款、股票' : '存款') + '轉給繼承人（遺產及贈與稅法第 8、42 條）。'],
       where: (c) => [
-        '存款：過世者開戶的銀行、郵局。',
+        (c.hasOrUnsure('assets', 'stock') ? '存款：' : '') + '過世者開戶的銀行、郵局。',
         c.hasOrUnsure('assets', 'stock') ? '股票：過世者開戶的證券商，申請轉到繼承人的集保帳戶。' : null
       ],
       bring: (c) => [
-        '存款：官方沒有統一的文件清單，出發前先打電話問過世者開戶的銀行或郵局。',
-        c.hasOrUnsure('assets', 'stock') ? '股票：遺產稅繳清證明書或免稅證明書，和證券商要求的證明文件；申請書叫「繼承、贈與、抵繳股款及拋棄股份轉帳／撤銷申請書」。' : null
+        (c.hasOrUnsure('assets', 'stock') ? '存款：' : '') + '遺產稅繳清證明書或免稅證明書；其他文件官方沒有統一的清單，出發前先打電話問過世者開戶的銀行或郵局。',
+        c.hasOrUnsure('assets', 'stock') ? '股票：遺產稅繳清證明書或免稅證明書，以及證券商要求的證明文件；申請書叫「繼承、贈與、抵繳股款及拋棄股份轉帳／撤銷申請書」。' : null
       ],
       notes: (c) => [
-        '部分銀行有「小額存款繼承簡便措施」：到場的繼承人寫切結書後，不用再附其他繼承人的印鑑證明；門檻由各銀行自己訂。',
-        '過世者如果有租銀行保管箱：不要自己先開。要先和銀行約好手續和日期，再通知國稅局派人一起點驗（財政部說明）。',
+        '部分銀行有「小額存款繼承簡便措施」：到場的繼承人寫切結書後，不用再附其他繼承人的印鑑證明；多少錢以下算小額，由各銀行自己訂。',
+        '過世者如果有租銀行保管箱：不要自己先開。要先問好銀行的手續、約好日期，再通知國稅局派人一起點驗（財政部說明）。',
         c.hasOrUnsure('assets', 'stock') ? '不知道過世者有哪些股票，可以透過國稅局（金融遺產查詢）或集保結算所查。' : null
       ],
       phones: (c) => c.hasOrUnsure('assets', 'stock') ? ['tdcc'] : [],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: (c) => [
+          { h: '先拿到遺產稅繳清證明書或免稅證明書', p: '要先拿到才能辦。' },
+          // v3.8.1：沒有股票時，不寫「存款：」；存款也要帶遺產稅證明書 No 「存款：」 without stocks; deposits need the certificate too
+          { h: (c.hasOrUnsure('assets', 'stock') ? '存款：' : '') + '到過世者開戶的銀行、郵局辦', p: '帶遺產稅繳清證明書或免稅證明書；其他文件官方沒有統一的清單，出發前先打電話問過世者開戶的銀行或郵局。' },
+          c.hasOrUnsure('assets', 'stock') ? { h: '股票：到過世者開戶的證券商，申請轉到繼承人的集保帳戶', p: [
+            // v3.8.1：先知道有哪些股票，再去辦 Find out which stocks first
+            '不知道過世者有哪些股票，可以透過國稅局（金融遺產查詢）或集保結算所查。',
+            '帶遺產稅繳清證明書或免稅證明書，以及證券商要求的證明文件；申請書叫「繼承、贈與、抵繳股款及拋棄股份轉帳／撤銷申請書」。'
+          ], tel: ['tdcc'] } : null
+        ],
+        why: (c) => '法律規定，要先拿到遺產稅繳清證明書或免稅證明書，才能把' + (c.hasOrUnsure('assets', 'stock') ? '存款、股票' : '存款') + '轉給繼承人（遺產及贈與稅法第 8、42 條）。',
+        watch: () => [
+          '過世者如果有租銀行保管箱：不要自己先開。要先問好銀行的手續、約好日期，再通知國稅局派人一起點驗（財政部說明）。',
+          '部分銀行有「小額存款繼承簡便措施」：到場的繼承人寫切結書後，不用再附其他繼承人的印鑑證明；多少錢以下算小額，由各銀行自己訂。'
+        ],
+        moreHint: '官方說明',
+        more: () => []
+      },
       sources: ['estateLaw', 'fscSmall', 'govEstate', 'tdccQA', 'tdccInquiry']
     },
     {
@@ -1142,7 +1761,7 @@ window.CONTENT = (function () {
       title: '如果是車禍過世：申請強制險的死亡給付',
       deadline: { type: 'months', n: 24,
         law: '從知道有損害、也知道是哪一家保險公司起 2 年內；最長從車禍發生起 10 年（強制汽車責任保險法第 14 條）。找特別補償基金的，從知道肇事車找不到、沒有保險等情況時起算。',
-        start: '工具用過世日期估算，請盡早申請。',
+        start: '上面的日期是用過世日期估算的，請盡早申請。',
         late: lateClaim(2, '打電話問保險公司，或特別補償基金 0800-565-678'), lateShort: LATE_CLAIM_SHORT },
       why: (c) => {
         const d = c.a.date;
@@ -1151,18 +1770,19 @@ window.CONTENT = (function () {
         return [
           '因為車禍過世，不論是誰的過失，家屬都可以向對方車輛（家人是乘客的話，就是他搭的那輛車）的「強制汽車責任保險」（強制險）申請死亡給付（強制汽車責任保險法第 7 條）。',
           before
-            ? '死亡給付每人 200 萬元（車禍發生在 2026 年 6 月 30 日以前）。過世前的醫療費可以另外申請，加起來最多 220 萬元（強制汽車責任保險給付標準 2026 年 2 月版）。'
-            : '死亡給付每人 300 萬元；車禍如果是在 2026 年 6 月 30 日以前發生的，是 200 萬元（強制汽車責任保險給付標準第 6 條）。過世前的醫療費可以另外申請，加起來最多 320 萬元。',
-          '可以先申請一半（第 35 條）；文件交齊後，保險公司要在 10 個工作日內付款（第 25 條）。',
+            ? '死亡給付每位過世者 200 萬元（車禍發生在 2026 年 6 月 30 日以前）。過世前的醫療費可以另外申請，加起來最多 220 萬元（強制汽車責任保險給付標準 2026 年 2 月版）。'
+            : '死亡給付每位過世者 300 萬元；車禍如果是在 2026 年 6 月 30 日以前發生的，是 200 萬元（強制汽車責任保險給付標準第 6 條）。過世前的醫療費可以另外申請，加起來最多 320 萬元（車禍在 2026 年 6 月 30 日以前發生的，最多 220 萬元）。',
+          '可以先申請保險給付的一半（強制汽車責任保險法第 35 條）；文件交齊後，保險公司要在 10 個工作日內付款（第 25 條）。',
           '誰可以領：父母、子女、配偶，同一順位的人平分；都沒有的話，依序是祖父母、孫子女、兄弟姊妹。這些家人都沒有的話，幫忙付殯葬費的人，可以在殯葬費的金額內申請（第 11 條）。',
-          '過世的家人自己也有過失，還是可以向對方車輛的保險公司申請。但如果是自己開車或騎車自撞、自摔，沒有和別的車相撞，開車、騎車的人本人不能申請；同車的乘客可以（強制險官網問答）。',
+          '過世的家人自己也有過失，還是可以向對方車輛的保險公司申請。但如果是自己開車或騎車自撞、自摔，沒有和別的車相撞：過世的是開車、騎車的人，家屬不能申請強制險的死亡給付；過世的是同車的乘客，家屬可以申請（強制險官網問答）。',
           '少數情況保險公司可以不付：車禍是過世的家人故意造成的，或是在從事犯罪行為時發生的（第 28 條）。不確定的話，先問保險公司。'
         ];
       },
       where: () => [
-        '向肇事車輛投保強制險的產物保險公司申請。不知道是哪一家，可以打保險事業發展中心 0800-825-688 問（強制險官網申請須知）。',
-        '肇事車逃逸找不到、沒有保強制險、是被偷的車，或是不用保強制險的車：改向「汽車交通事故特別補償基金」申請，一樣到產物保險公司的分支機構送件（強制汽車責任保險法第 40 條；特別補償基金說明）。',
-        '車禍的處理證明、現場圖、現場照片、初步分析研判表，向處理車禍的警察機關（交通隊）申請（強制險官網申請須知）。什麼時候拿得到，請直接問處理的警察機關。'
+        // v3.8.1：順序和畫面一樣：先向警察機關拿處理證明 Same order as the screen: police record first
+        '車禍的處理證明、現場圖、現場照片、初步分析研判表，向處理車禍的警察機關（交通隊）申請（強制險官網申請須知）。什麼時候拿得到，請直接問處理的警察機關。',
+        '向對方車輛（家人是乘客的話，就是他搭的那輛車）投保強制險的產物保險公司申請。不知道是哪一家，可以打保險事業發展中心 0800-825-688 問（強制險官網申請須知）。',
+        '肇事車逃逸找不到、沒有保強制險、是被偷的車，或是不用保強制險的車：改向「汽車交通事故特別補償基金」申請，一樣到產物保險公司的分支機構送件（強制汽車責任保險法第 40 條；特別補償基金說明）。'
       ],
       bring: () => [
         '請領人的身分證明文件',
@@ -1172,36 +1792,91 @@ window.CONTENT = (function () {
         '由一個人代表大家去辦的話：全體請領人簽的授權委託書，和代理人的身分證明',
         '已經從對方拿到賠償的話：拿到賠償的證明',
         '存摺封面影本',
-        '其他保險公司要求的文件'
+        '保險公司要求的其他文件'
       ],
       notes: () => [
-        '向肇事者要求賠償（殯葬費、扶養費、精神慰撫金）是另一件事（民法第 192、194 條）：從知道損害和要賠償的人起 2 年內，最長從車禍起 10 年（民法第 197 條）。強制險付的錢，會從賠償金額裡扣掉（強制汽車責任保險法第 32 條）。',
+        '向肇事者要求賠償（殯葬費、扶養費、精神慰撫金）是另一件事（民法第 192、194 條），也有期限：從知道有損害、也知道要負責賠償的人是誰起 2 年內，最長從車禍起 10 年（民法第 197 條）。強制險付的錢，會從賠償金額裡扣掉（強制汽車責任保險法第 32 條）。',
         '經濟有困難、需要律師協助的，可以問法律扶助基金會。',
         '車禍過世、可以申請強制險的，不能再申請犯罪被害補償金（犯罪被害人權益保障法第 50 條）。'
       ],
       phones: ['tii', 'mvacf', 'laf'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        // v3.8.1：超過期限時，紅字已經寫「依過世日期估算…請盡快…」，截止日下面那一句不顯示 Hide the start note when overdue
+        startLate: null,
+        steps: () => [
+          { h: '向處理車禍的警察機關（交通隊）申請處理證明', p: '現場圖、現場照片、初步分析研判表，也是向處理車禍的警察機關申請（強制險官網申請須知）。什麼時候拿得到，請直接問處理的警察機關。' },
+          { h: '向對方車輛投保強制險的產物保險公司申請', p: [
+            '家人是乘客的話，是向他搭的那輛車投保強制險的保險公司申請。不知道是哪一家，可以打保險事業發展中心問（強制險官網申請須知）。',
+            '肇事車逃逸找不到、沒有保強制險、是被偷的車，或是不用保強制險的車：改向「汽車交通事故特別補償基金」申請，一樣到產物保險公司的分支機構送件（強制汽車責任保險法第 40 條；特別補償基金說明）。'
+          ], tel: ['tii', 'mvacf'] },
+          { h: '帶這些東西去', ul: [
+            '請領人的身分證明文件',
+            '警察機關的處理證明（或其他相關證明文件）',
+            '死亡證明書或相驗屍體證明書',
+            '過世後申請的全戶戶籍謄本（請領人和過世者不同戶的話，也要附請領人的戶籍謄本）',
+            '存摺封面影本',
+            '保險公司要求的其他文件'
+          ], more: [
+            '由一個人代表大家去辦的話：全體請領人簽的授權委託書，和代理人的身分證明',
+            '已經從對方拿到賠償的話：拿到賠償的證明'
+          ] }
+        ],
+        why: (c) => {
+          const d = c.a.date;
+          // 新金額看「車禍發生日」：過世日在 2026-07-01 以前，車禍一定也在這之前 The amount follows the accident date
+          const before = d && (d.y * 10000 + d.m * 100 + d.d) < 20260701;
+          return before
+            ? '不論是誰的過失，家屬都可以申請強制險的死亡給付：每位過世者 200 萬元（車禍發生在 2026 年 6 月 30 日以前），由同一順位的家屬平分。'
+            : '不論是誰的過失，家屬都可以申請強制險的死亡給付：每位過世者 300 萬元（車禍在 2026 年 6 月 30 日以前發生的，是 200 萬元），由同一順位的家屬平分。';
+        },
+        watch: () => [
+          '過世的家人自己也有過失，還是可以向對方車輛的保險公司申請。但如果是自己開車或騎車自撞、自摔，沒有和別的車相撞：過世的是開車、騎車的人，家屬不能申請強制險的死亡給付；過世的是同車的乘客，家屬可以申請（強制險官網問答）。',
+          '向肇事者要求賠償（殯葬費、扶養費、精神慰撫金）是另一件事（民法第 192、194 條），也有期限：從知道有損害、也知道要負責賠償的人是誰起 2 年內，最長從車禍起 10 年（民法第 197 條）。強制險付的錢，會從賠償金額裡扣掉（強制汽車責任保險法第 32 條）。',
+          '車禍過世、可以申請強制險的，不能再申請犯罪被害補償金（犯罪被害人權益保障法第 50 條）。'
+        ],
+        moreHint: '能領多少、誰可以領、保險公司可以不付的情況、期限、電話、官方說明',
+        more: (c) => {
+          const d = c.a.date;
+          const before = d && (d.y * 10000 + d.m * 100 + d.d) < 20260701;
+          return [
+            { h: '能領多少、多久拿到', body: [
+              '因為車禍過世，不論是誰的過失，家屬都可以向對方車輛（家人是乘客的話，就是他搭的那輛車）的「強制汽車責任保險」（強制險）申請死亡給付（強制汽車責任保險法第 7 條）。',
+              before
+                ? '死亡給付每位過世者 200 萬元（車禍發生在 2026 年 6 月 30 日以前）。過世前的醫療費可以另外申請，加起來最多 220 萬元（強制汽車責任保險給付標準 2026 年 2 月版）。'
+                : '死亡給付每位過世者 300 萬元；車禍如果是在 2026 年 6 月 30 日以前發生的，是 200 萬元（強制汽車責任保險給付標準第 6 條）。過世前的醫療費可以另外申請，加起來最多 320 萬元（車禍在 2026 年 6 月 30 日以前發生的，最多 220 萬元）。',
+              '可以先申請保險給付的一半（強制汽車責任保險法第 35 條）；文件交齊後，保險公司要在 10 個工作日內付款（第 25 條）。'
+            ] },
+            { h: '誰可以領', body: ['父母、子女、配偶，同一順位的人平分；都沒有的話，依序是祖父母、孫子女、兄弟姊妹。這些家人都沒有的話，幫忙付殯葬費的人，可以在殯葬費的金額內申請（第 11 條）。'] },
+            { h: '保險公司可以不付的情況', body: ['少數情況保險公司可以不付：車禍是過世的家人故意造成的，或是在從事犯罪行為時發生的（第 28 條）。不確定的話，先問保險公司。'] },
+            { h: '需要律師協助', body: ['經濟有困難、需要律師協助的，可以問法律扶助基金會。'] },
+            'deadline'
+          ];
+        }
+      },
       sources: ['caliAct', 'caliStd', 'caliStdOld', 'caliNotice', 'caliQA', 'mvacf', 'civil197', 'mojCheck', 'judLaf']
     },
     {
       // 犯罪被害人權益保障法第 50、53、56、57、59、62、63、69 條 Crime Victim Rights Protection Act
       id: 'crime-victim', group: 'long', show: (c) => c.notDisease,
       confirm: () => true,
-      confirmText: '這一項只適用於家人因為別人的犯罪行為而過世（對方是故意或過失都算；車禍請看強制險那一項）。不是的話，這一項不用辦，直接打勾就好。',
+      confirmText: '這一項只適用於家人因為別人的犯罪行為而過世（對方是故意或過失都算；車禍請看「如果是車禍過世」那一項）。不是的話，這一項不用辦，直接打勾就好。',
       confirmTag: '犯罪被害才需要',
       confirmTagExport: '（因為別人的犯罪行為過世才需要）',
       title: '如果家人是因為別人的犯罪行為過世：申請犯罪被害補償金',
       deadline: { type: 'months', n: 60,
         law: '從知道有犯罪被害時起 5 年內；最長從犯罪發生起 10 年（犯罪被害人權益保障法第 63 條）。家屬在犯罪發生時還未成年的，成年後 5 年內還可以申請。',
-        start: '工具用過世日期估算。',
-        late: lateClaim(5, '打電話問犯罪被害人保護協會 0800-005-850'), lateShort: LATE_CLAIM_SHORT },
+        start: '上面的日期是用過世日期估算的。',
+        late: lateClaim(5, '打電話問犯罪被害人保護協會 0800-005-850') + '家屬在犯罪發生時還未成年的，成年後 5 年內還可以申請。', lateShort: LATE_CLAIM_SHORT },
       why: () => [
         '家人因為犯罪過世（故意或過失的犯罪都算），遺屬可以向國家申請「遺屬補償金」180 萬元（犯罪被害人權益保障法第 57 條；犯罪被害人保護協會說明）。',
-        '急需用錢的，可以先申請「暫時補償金」，最多 40 萬元。之後決定的補償金，會扣掉已經領的部分；但如果申請最後沒有通過，或決定的金額比暫時補償金少，要把錢（或多領的部分）還回去（第 69 條）。',
+        '急需用錢的，可以先申請「暫時補償金」，最多 40 萬元。之後決定的補償金，會扣掉已經領的暫時補償金；如果申請最後沒有通過，要把暫時補償金還回去；決定的金額比暫時補償金少的，要把多領的部分還回去（第 69 條）。',
         '誰可以領：父母、配偶、子女；都沒有的話，依序是祖父母、孫子女、兄弟姊妹。180 萬元是同一順序的人一起分，例如 3 個人，每人 60 萬元。原則上要一起領；有人沒有一起申請，審議會會請大家協議由一個人代表領，談不攏就平均分給每個人（第 53 條；犯罪被害人保護協會說明）。',
         '車禍過世、可以申請強制險的，不能申請這項補償（第 50 條），請看「如果是車禍過世」那一項。'
       ],
       where: () => [
-        '用書面向犯罪發生地的地方檢察署「犯罪被害人補償審議會」申請（第 62 條）；也可以用法務部的「犯罪被害補償金線上申辦系統」申請（犯罪被害人保護協會網頁有連結）。',
+        '用書面向犯罪發生地的地方檢察署「犯罪被害人補償審議會」申請（犯罪被害人權益保障法第 62 條）；也可以用法務部的「犯罪被害補償金線上申辦系統」申請（犯罪被害人保護協會網頁有連結）。',
         '財團法人犯罪被害人保護協會可以協助申請補償，也有法律諮詢、殯葬協助、心理諮商等服務。'
       ],
       bring: () => [
@@ -1214,37 +1889,84 @@ window.CONTENT = (function () {
       notes: () => [
         '領到補償金以後，加害人才賠償的，補償金不用還（犯罪被害人保護協會說明）。',
         '過世的家人自己對被害有故意或重大過失時，審議會可能少補償或不補償（第 59 條）。',
-        '向加害人要求賠償（殯葬費、扶養費、精神慰撫金）是另一件事：從知道損害和加害人起 2 年內，最長 10 年（民法第 192、194、197 條）。',
+        '向加害人要求賠償（殯葬費、扶養費、精神慰撫金）是另一件事，也有期限：從知道有損害、也知道加害人是誰起 2 年內，最長從犯罪發生起 10 年（民法第 192、194、197 條）。',
         '補償金額和條件，以審議會的決定為準。'
       ],
       together: { ids: ['car-accident'], text: '另一種情況' },
       phones: ['avs', 'laf'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        // v3.8.1：超過期限時，紅字已經寫「依過世日期估算…」和未成年的例外，截止日下面那一句不顯示 Hide the start note when overdue
+        startLate: null,
+        steps: () => [
+          { h: '可以先打電話給犯罪被害人保護協會', p: '財團法人犯罪被害人保護協會可以協助申請補償，也有法律諮詢、殯葬協助、心理諮商等服務。', tel: ['avs'] },
+          { h: '用書面向犯罪發生地的地方檢察署「犯罪被害人補償審議會」申請（犯罪被害人權益保障法第 62 條）', p: [
+            '也可以用法務部的「犯罪被害補償金線上申辦系統」申請（犯罪被害人保護協會網頁有連結）。',
+            '急需用錢的，可以先申請「暫時補償金」，最多 40 萬元。之後決定的補償金，會扣掉已經領的暫時補償金；如果申請最後沒有通過，要把暫時補償金還回去；決定的金額比暫時補償金少的，要把多領的部分還回去（第 69 條）。'
+          ] },
+          { h: '要附的文件', ul: [
+            '補償金申請書',
+            '案件的證明文件，例如受（處）理案件證明單、起訴書或判決書',
+            '身分證正反面影本，和新式戶口名簿或戶籍謄本',
+            '繼承系統表（或其他可以證明遺屬人數和順序的文件）'
+          ], more: [
+            '同一順序有好幾個人時：共同具領同意書（只有 1 個人申請的不用附）'
+          ], moreH: '看情況再附：' }
+        ],
+        why: '家人因為犯罪過世（故意或過失的犯罪都算），遺屬可以向國家申請「遺屬補償金」180 萬元（犯罪被害人權益保障法第 57 條；犯罪被害人保護協會說明），同一順序的人一起分；補償金額和條件，以審議會的決定為準。',
+        watch: () => [
+          '車禍過世、可以申請強制險的，不能申請這項補償（第 50 條），請看「如果是車禍過世」那一項。',
+          '過世的家人自己對被害有故意或重大過失時，審議會可能少補償或不補償（第 59 條）。',
+          '向加害人要求賠償（殯葬費、扶養費、精神慰撫金）是另一件事，也有期限：從知道有損害、也知道加害人是誰起 2 年內，最長從犯罪發生起 10 年（民法第 192、194、197 條）。'
+        ],
+        moreHint: '誰可以領、加害人之後才賠償、期限、電話、官方說明',
+        more: () => [
+          { h: '誰可以領', body: ['父母、配偶、子女；都沒有的話，依序是祖父母、孫子女、兄弟姊妹。180 萬元是同一順序的人一起分，例如 3 個人，每人 60 萬元。原則上要一起領；有人沒有一起申請，審議會會請大家協議由一個人代表領，談不攏就平均分給每個人（犯罪被害人權益保障法第 53 條；犯罪被害人保護協會說明）。'] },
+          { h: '加害人之後才賠償', body: ['領到補償金以後，加害人才賠償的，補償金不用還（犯罪被害人保護協會說明）。'] },
+          'deadline'
+        ]
+      },
       sources: ['avsComp', 'mojForm', 'mojCheck', 'avsServ', 'civil197', 'judLaf']
     },
     {
       id: 'commercial-ins', group: 'long', show: (c) => c.hasOrUnsure('ins', 'commercial'),
       confirm: (c) => c.unsureOnly('ins', 'commercial'),
       title: '申請人壽保險等商業保險的理賠',
-      deadline: { type: 'months', n: 24, law: '自可以請求之日起 2 年（保險法第 65 條）', start: '有些情況起算點比較晚，例如能證明自己不是因為疏忽才不知情的，從知道的時候起算（同條第 2 款）。工具用過世日期估算，建議早一點申請。', late: lateClaim(2, '打電話問過世者投保的保險公司'), lateShort: LATE_CLAIM_SHORT },
+      deadline: { type: 'months', n: 24, law: '自可以請求之日起 2 年（保險法第 65 條）', start: '上面的日期是用過世日期估算的，建議早一點申請。有些情況起算點比較晚，例如能證明自己不是因為疏忽才不知情的，從知道的時候起算（保險法第 65 條第 2 款）。', late: lateClaim(2, '打電話問過世者投保的保險公司'), lateShort: LATE_CLAIM_SHORT },
       why: () => ['保險理賠有時效，超過就不能請求。'],
       where: () => ['打電話給過世者投保的保險公司，問理賠要帶什麼。不知道是哪一家，先做「查過世家人有沒有買人壽保險」那一項。'],
       bring: () => null,
       together: { ids: ['life-ins'], text: '先查有哪些保單' },
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        // v3.8.1：超過期限時，只留「起算點比較晚」的例外，不再寫「建議早一點申請」When overdue keep only the later-start exception
+        startLate: '有些情況起算點比較晚，例如能證明自己不是因為疏忽才不知情的，從知道的時候起算（保險法第 65 條第 2 款）。',
+        steps: () => [
+          { h: '不知道是哪一家保險公司的話：先做「查過世家人有沒有買人壽保險」那一項', go: 'life-ins' },
+          { h: '打電話給過世者投保的保險公司，問理賠要帶什麼', p: '要帶什麼，官方說明沒有列出，所以要先打電話問保險公司。' }
+        ],
+        why: '保險理賠有時效，超過就不能請求。',
+        watch: () => [],
+        moreHint: '期限、官方說明',
+        more: () => ['deadline']
+      },
       sources: ['ins65']
     },
     {
       id: 'labor-self', group: 'long', show: (c) => c.hasOrUnsure('ins', 'labor'),
       confirm: (c) => c.unsureOnly('ins', 'labor'),
       title: '申請勞保的本人死亡給付',
-      deadline: { type: 'months', n: 60, law: '自可以請領之日起 5 年（勞工保險條例第 30 條）', late: LATE_BLI(5), lateShort: LATE_CLAIM_SHORT },
+      deadline: { type: 'months', n: 60, law: '從可以請領的那天起 5 年（勞工保險條例第 30 條）', late: LATE_BLI(5), lateShort: LATE_CLAIM_SHORT },
       why: () => [
         { h: '過世時還有勞保', ul: [
           '付喪葬費的人可以領「喪葬津貼」：5 個月的平均月投保薪資；沒有符合條件的家人（遺屬）時，是 10 個月。',
-          '符合條件的家人可以領每月的「遺屬年金」；2009 年 1 月 1 日勞保年金開始以前就有勞保年資的，也可以改選一次領的「遺屬津貼」（兩種只能選一種）。',
-          '退保後 1 年內，因為同一個傷病過世，也算在內。'
+          '符合條件的家人可以領每月的「遺屬年金」；過世者在 2009 年 1 月 1 日勞保年金開始以前就有勞保年資的，家人也可以改選一次領的「遺屬津貼」（兩種只能選一種）。',
+          '退保後 1 年內，因為有勞保期間發生的傷病，或它引起的疾病過世的，也算「過世時還有勞保」。'
         ] },
         { h: '在領勞保老年年金或失能年金時過世', ul: [
-          '符合條件的家人可以改領「遺屬年金」，金額是原本年金的一半。在領老年年金、2009 年 1 月 1 日以前就有年資並符合條件的，也可以改選一次領的「差額金」，請問勞保局。',
+          '符合條件的家人可以改領「遺屬年金」，金額是原本年金的一半。過世者在領老年年金、2009 年 1 月 1 日以前就有年資並符合條件的，家人也可以改選一次領的「差額金」，請問勞保局。',
           '這種情況能不能領喪葬津貼，官方說明沒有寫，請問勞保局。'
         ] },
         '因為職業災害過世，另外有給付，請問勞保局。'
@@ -1253,12 +1975,45 @@ window.CONTENT = (function () {
       bring: () => [
         '勞工保險本人死亡給付申請書及給付收據',
         '死亡證明書或檢察官相驗屍體證明書',
-        '喪葬津貼：載有死亡日期的全戶戶籍謄本、請領人的現住址戶籍謄本、付喪葬費的證明正本',
-        '遺屬年金或遺屬津貼：戶籍謄本等（詳細文件請看勞保局說明）'
+        '申請喪葬津貼的話：載有死亡日期的全戶戶籍謄本、請領人的現住址戶籍謄本、付喪葬費的證明正本',
+        '申請遺屬年金或遺屬津貼的話：戶籍謄本等（詳細文件請看勞保局說明）'
       ],
       notes: (c) => [c.shows('labor-family') ? '「本人死亡給付」和「家屬死亡給付」只能選一種申請。' : null],
       together: { ids: ['pension', 'np'], text: '一樣在勞保局辦' },
       phones: ['bli'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '先打勞保局電話，問可以領哪些、要怎麼選', p: '過世者是在領勞保老年年金或失能年金時過世的：能不能領喪葬津貼，官方說明沒有寫，打電話時一起問。', tel: ['bli'] },
+          { h: '填申請書，郵寄或親自送到勞保局', p: '在職過世時，申請書原則上要請過世者的公司蓋章；公司也要幫過世者辦勞保退保。' },
+          { h: '準備這些東西', ul: [
+            '勞工保險本人死亡給付申請書及給付收據',
+            '死亡證明書或檢察官相驗屍體證明書'
+          ], more: [
+            '喪葬津貼：載有死亡日期的全戶戶籍謄本、請領人的現住址戶籍謄本、付喪葬費的證明正本',
+            '遺屬年金或遺屬津貼：戶籍謄本等（詳細文件請看勞保局說明）'
+          ], moreH: '有申請下面這些給付的，再分別加附：' }
+        ],
+        why: '過世時還有勞保（退保後 1 年內，因為有勞保期間發生的傷病，或它引起的疾病過世的，也算），或是在領勞保老年年金、失能年金時過世，可以申請「本人死亡給付」；誰可以領、能領哪些，要看過世時的情況。',
+        watch: (c) => [
+          c.shows('labor-family') ? '「本人死亡給付」（用過世者的勞保）和「家屬死亡給付」（用您自己的勞保）只能選一種申請。' : null,
+          '過世時還有勞保的：符合條件的家人可以領每月的「遺屬年金」；過世者在 2009 年 1 月 1 日勞保年金開始以前就有勞保年資的，家人也可以改選一次領的「遺屬津貼」（兩種只能選一種）。在領老年年金或失能年金時過世的，見「看詳細說明」。',
+          '因為職業災害過世，另外有給付，請問勞保局。'
+        ],
+        moreHint: '能領哪些、多少、期限、官方說明',
+        more: () => [
+          { h: '過世時還有勞保', body: [{ ul: [
+            '付喪葬費的人可以領「喪葬津貼」：5 個月的平均月投保薪資；沒有符合條件的家人（遺屬）時，是 10 個月。',
+            '退保後 1 年內，因為有勞保期間發生的傷病，或它引起的疾病過世的，也算「過世時還有勞保」。'
+          ] }] },
+          { h: '在領勞保老年年金或失能年金時過世', body: [{ ul: [
+            '符合條件的家人可以改領「遺屬年金」，金額是原本年金的一半。過世者在領老年年金、2009 年 1 月 1 日以前就有年資並符合條件的，家人也可以改選一次領的「差額金」，請問勞保局。',
+            '這種情況能不能領喪葬津貼，官方說明沒有寫，請問勞保局。'
+          ] }] },
+          'deadline'
+        ]
+      },
       sources: ['bliSelfQA', 'bliSurvivor', 'bliSelfProc', 'bliSelfDocs', 'bliPrescr', 'bliChoose', 'bliPassed']
     },
     {
@@ -1266,7 +2021,7 @@ window.CONTENT = (function () {
       show: (c) => ['spouse', 'child', 'parent'].includes(c.a.rel) && ['yes', 'unsure'].includes(c.a.selfLabor),
       confirm: (c) => c.a.selfLabor === 'unsure',
       title: '申請勞保的家屬死亡給付',
-      deadline: { type: 'months', n: 60, law: '5 年（勞工保險條例第 30 條）', late: LATE_BLI(5), lateShort: LATE_CLAIM_SHORT },
+      deadline: { type: 'months', n: 60, law: '從可以請領的那天起 5 年（勞工保險條例第 30 條）', late: LATE_BLI(5), lateShort: LATE_CLAIM_SHORT },
       why: (c) => {
         const base = c.a.rel === 'parent'
           ? '過世那天您自己有勞保，過世的是您的子女：滿 12 歲的，可以領 2.5 個月；未滿 12 歲的，1.5 個月（按您自己的平均月投保薪資計算）。'
@@ -1276,15 +2031,43 @@ window.CONTENT = (function () {
       where: (c) => [
         c.shows('labor-self') ? '過世者自己也有勞保的話，「本人死亡給付」和「家屬死亡給付」只能選一種：請先打勞保局電話問哪一種比較適合，再決定申請哪一種。' : null,
         '最方便：辦死亡登記時，在戶政事務所一起申請。',
-        '或填申請書，附存摺影本，郵寄或親送勞保局。',
-        '或用自然人憑證等登入勞保局網站申請（沒有或不會用的話，用前面兩種方式就好）。',
+        '或填申請書，附存摺影本，郵寄或親自送到勞保局。',
+        '或用自然人憑證等登入勞保局網站申請（沒有或不會用的話，在戶政事務所一起申請，或郵寄、親自送到勞保局就好）。',
         '在國內有戶籍的人可以自己申請，不用公司蓋章。',
-        '要先辦好死亡登記，才能申請。'
+        '要先辦死亡登記，才能申請（在戶政事務所辦登記時，可以當場一起申請）。'
       ],
       bring: () => ['您自己在國內金融機構（銀行、郵局等）的存摺影本', '請別人代辦：委託書'],
-      notes: (c) => [c.shows('labor-self') ? '和「本人死亡給付」只能選一種申請。' : null],
+      notes: (c) => [c.shows('labor-self') ? '這一項和「本人死亡給付」只能選一種申請。' : null],
       together: { ids: ['death-reg'], text: '可以和死亡登記一起辦' },
       phones: ['bli'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: (c) => [
+          { h: '最方便：辦死亡登記時，在戶政事務所一起申請', p: c.shows('labor-self')
+            ? '但過世者自己也有勞保的話，「本人死亡給付」和「家屬死亡給付」只能選一種：請先打勞保局電話問哪一種比較適合，再決定申請哪一種。' : null,
+          tel: c.shows('labor-self') || c.a.selfLabor === 'unsure' ? ['bli'] : [], go: 'death-reg' },
+          { h: '或自己申請', p: '在國內有戶籍的人可以自己申請，不用公司蓋章。', ul: [
+            '填申請書，附存摺影本，郵寄或親自送到勞保局',
+            '用自然人憑證等登入勞保局網站申請（沒有或不會用的話，在戶政事務所一起申請，或郵寄、親自送到勞保局就好）'
+          ] },
+          { h: '要帶的東西', ul: [
+            '您自己在國內金融機構（銀行、郵局等）的存摺影本'
+          ], more: [
+            '請別人代辦：委託書'
+          ] }
+        ],
+        why: (c) => (c.a.rel === 'parent'
+          ? '過世那天您自己有勞保，過世的是您的子女：滿 12 歲的，可以領 2.5 個月；未滿 12 歲的，1.5 個月（按您自己的平均月投保薪資計算）。'
+          : `過世那天您自己有勞保，過世的是您的${c.a.rel === 'spouse' ? '配偶' : '父母'}：可以領 3 個月的「家屬死亡給付」（按您自己的平均月投保薪資計算；不用附喪葬費收據）。`),
+        watch: (c) => [
+          c.a.selfLabor === 'unsure' ? '您不確定自己那天有沒有勞保：可以問公司，或打電話問勞保局。' : null,
+          '要先辦死亡登記，才能申請（在戶政事務所辦登記時，可以當場一起申請）。'
+        ],
+        // 勞保局電話已經放在步驟 1 的時候，收起來的地方就沒有電話 No phone in the fold when it is already in step 1
+        moreHint: (c) => (c.shows('labor-self') || c.a.selfLabor === 'unsure' ? '期限、官方說明' : '期限、電話、官方說明'),
+        more: () => ['deadline']
+      },
       sources: ['bliFamStd', 'bliFamProc', 'bliChoose', 'molOneStop', 'risOnline']
     },
     {
@@ -1294,33 +2077,58 @@ window.CONTENT = (function () {
       deadline: { type: 'months', n: 120, law: '自可以請領之日起 10 年（勞工退休金條例第 28 條）；勞保局宣導寫「過世隔天起 10 年內」。', late: LATE_BLI(10), lateShort: LATE_CLAIM_SHORT },
       why: () => [
         '過世者勞退新制專戶裡的錢，由家人（遺屬）或遺囑指定的人一次領回。勞保局收件後 30 天內發給。',
-        '家人的順位：配偶和子女、父母、祖父母、孫子女、兄弟姊妹。'
+        '家人的順位（排在前面的優先）：配偶和子女、父母、祖父母、孫子女、兄弟姊妹。'
       ],
-      where: () => ['勞保局。想先知道專戶有多少錢，要到勞保局櫃檯查詢。'],
+      where: () => ['勞保局。想先知道過世者的勞退專戶裡有多少錢，要到勞保局櫃檯查詢。'],
       bring: () => [
         '勞工退休金（遺屬或指定請領人）申請書及收據（不是勞保死亡給付的申請書）',
         '載有過世者死亡日期的戶口名簿影本（要印到「非現住人口」和「詳細記事」的部分）',
         '死亡證明書（勞保局寫「死亡診斷書」）、檢察官相驗屍體證明書，或法院的死亡宣告裁定等證明',
-        '請領人和過世者不同戶籍：證明身分關係的戶口名簿影本',
+        '申請人和過世者不同戶籍：證明身分關係的戶口名簿影本',
         '遺囑指定請領人：身分證明影本和遺囑影本',
         '申請人未成年：法定代理人簽章，附法定代理人的戶口名簿影本'
       ],
       notes: () => ['不要等通知：過世超過 2 年還沒申請，勞保局才會發函通知，但還是要在 10 年內申請。'],
       together: { ids: ['labor-self', 'np'], text: '一樣在勞保局辦' },
       phones: ['bli'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '向勞保局申請', p: '想先知道過世者的勞退專戶裡有多少錢，要到勞保局櫃檯查詢。' },
+          { h: '帶這些東西', ul: [
+            '勞工退休金（遺屬或指定請領人）申請書及收據（不是勞保死亡給付的申請書）',
+            '載有過世者死亡日期的戶口名簿影本（要印到「非現住人口」和「詳細記事」的部分）',
+            '死亡證明書（勞保局寫「死亡診斷書」）、檢察官相驗屍體證明書，或法院的死亡宣告裁定等證明'
+          ], more: [
+            '申請人和過世者不同戶籍：證明身分關係的戶口名簿影本',
+            '遺囑指定請領人：身分證明影本和遺囑影本',
+            '申請人未成年：法定代理人簽章，附法定代理人的戶口名簿影本'
+          ], moreH: '看情況再附：' }
+        ],
+        why: '過世者勞退新制專戶裡的錢，由家人（遺屬）或遺囑指定的人一次領回。勞保局收件後 30 天內發給。',
+        watch: () => [
+          '不要等通知：過世超過 2 年還沒申請，勞保局才會發函通知，但還是要在 10 年內申請。'
+        ],
+        moreHint: '誰可以領、期限、電話、官方說明',
+        more: () => [
+          { h: '誰可以領', body: ['家人的順位（排在前面的優先）：配偶和子女、父母、祖父母、孫子女、兄弟姊妹。'] },
+          'deadline'
+        ]
+      },
       sources: ['bliPension', 'bliPensionOrder', 'bliPension10', 'tpPensionLaw']
     },
     {
       id: 'np', group: 'long', show: (c) => c.hasOrUnsure('ins', 'np'),
       confirm: (c) => c.unsureOnly('ins', 'np'),
       title: '申請國民年金的喪葬給付',
-      deadline: { type: 'months', n: 60, law: '過世隔天起 5 年內', late: LATE_BLI(5).replace('可能已經超過', '喪葬給付可能已經超過') + '遺屬年金的規定不一樣，也請一起問。', lateShort: LATE_CLAIM_SHORT },
+      deadline: { type: 'months', n: 60, law: '過世隔天起 5 年內。', late: LATE_BLI(5).replace('可能已經超過', '喪葬給付可能已經超過') + '遺屬年金的規定不一樣，也請一起問。', lateShort: LATE_CLAIM_SHORT },
       why: () => [
-        '過世者在 65 歲前、有國民年金的期間過世：付喪葬費的人可以領 5 個月的月投保金額。',
-        '65 歲以後或退保期間過世的，不能領喪葬給付；遺屬年金的條件不一樣，請一起問勞保局。',
-        '符合條件的家人也可以申請每月的「遺屬年金」。'
+        '過世者在 65 歲前、還有參加國民年金保險的期間過世：付喪葬費的人可以領 5 個月的月投保金額。',
+        '符合條件的家人也可以申請每月的「遺屬年金」。',
+        '65 歲以後或退保期間過世的，不能領喪葬給付；遺屬年金的條件不一樣，請一起問勞保局。'
       ],
-      where: () => ['郵寄到勞保局國民年金組，或送到勞保局各地辦事處。申請書可以在勞保局網站下載，或向勞保局各地辦事處、鄉鎮市區公所索取。'],
+      where: () => ['申請書可以在勞保局網站下載，或向勞保局各地辦事處、鄉鎮市區公所索取。準備好以後，郵寄到勞保局國民年金組，或送到勞保局各地辦事處。'],
       bring: () => [
         '國民年金喪葬給付申請書（貼申請人身分證正反面影本和存摺封面影本）',
         '死亡證明書或檢察官相驗屍體證明書',
@@ -1329,6 +2137,27 @@ window.CONTENT = (function () {
       ],
       together: { ids: ['labor-self', 'pension'], text: '一樣在勞保局辦' },
       phones: ['bliNp'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '拿申請書', p: '可以在勞保局網站下載，或向勞保局各地辦事處、鄉鎮市區公所索取。' },
+          { h: '準備這些東西', ul: [
+            '國民年金喪葬給付申請書（貼申請人身分證正反面影本和存摺封面影本）',
+            '死亡證明書或檢察官相驗屍體證明書',
+            '載有死亡登記日期的戶口名簿影本',
+            '付喪葬費的證明正本'
+          ] },
+          { h: '郵寄到勞保局國民年金組，或送到勞保局各地辦事處' }
+        ],
+        why: '過世者在 65 歲前、還有參加國民年金保險的期間過世：付喪葬費的人可以領 5 個月的月投保金額。',
+        watch: () => [
+          '符合條件的家人也可以申請每月的「遺屬年金」。',
+          '65 歲以後或退保期間過世的，不能領喪葬給付；遺屬年金的條件不一樣，請一起問勞保局。'
+        ],
+        moreHint: '期限、電話、官方說明',
+        more: () => ['deadline']
+      },
       sources: ['bliNpFuneral', 'bliNpNews']
     },
     {
@@ -1342,15 +2171,15 @@ window.CONTENT = (function () {
         return f ? '申請農保喪葬津貼' : '申請老農津貼沒領到的部分';
       },
       deadline: (c) => c.hasOrUnsure('ins', 'farmer')
-        ? { type: 'months', n: 60, law: '農保喪葬津貼：過世日起 5 年內；老農津貼沒領到的部分：官方沒有寫期限。', late: LATE_BLI(5).replace('可能已經超過', '農保喪葬津貼可能已經超過') + (c.hasOrUnsure('flags', 'oldfarmer') ? '老農津貼沒領到的部分，官方沒有寫期限，也請一起問。' : ''), lateShort: LATE_CLAIM_SHORT }
+        ? { type: 'months', n: 60, law: c.hasOrUnsure('flags', 'oldfarmer') ? '農保喪葬津貼：過世日起 5 年內；老農津貼沒領到的部分：官方沒有寫期限。' : '農保喪葬津貼：過世日起 5 年內。', late: LATE_BLI(5).replace('可能已經超過', '農保喪葬津貼可能已經超過') + (c.hasOrUnsure('flags', 'oldfarmer') ? '老農津貼沒領到的部分，官方沒有寫期限，也請一起問。' : ''), lateShort: LATE_CLAIM_SHORT }
         : { type: 'none', text: '官方沒有寫期限' },
       why: (c) => [
         c.hasOrUnsure('ins', 'farmer') ? '過世時有農保：付喪葬費的人可以領 15 個月投保金額的喪葬津貼（限 1 人請領）。' : null,
         c.hasOrUnsure('flags', 'oldfarmer') ? '過世者在領老農津貼：還沒領到的金額，可以由法定繼承人附切結書申請；繼承人 2 人以上時，用「共同委任及切結書」，由 1 人代表申請。' : null,
-        c.hasOrUnsure('flags', 'oldfarmer') && !c.hasOrUnsure('ins', 'farmer') ? '過世者如果也有農保，還可以申請農保的喪葬津貼；不確定有沒有，請問過世者投保的農會。' : null
+        c.hasOrUnsure('flags', 'oldfarmer') && !c.hasOrUnsure('ins', 'farmer') ? '過世者如果也有農保，還可以申請農保的喪葬津貼；不確定有沒有，請問過世者投保過的農會。' : null
       ],
       where: (c) => [
-        c.hasOrUnsure('ins', 'farmer') ? '農保喪葬津貼：投保的農會櫃檯；或先辦好死亡登記，再用自然人憑證等上網申請（申請後要打電話向農會確認）。' : null,
+        c.hasOrUnsure('ins', 'farmer') ? '農保喪葬津貼：過世者投保的農會櫃檯；或先辦好死亡登記，再用自然人憑證等上網申請（申請後要打電話向農會確認）。' : null,
         c.hasOrUnsure('flags', 'oldfarmer') ? '老農津貼：自己郵寄到勞保局，或請農會幫忙寄。' : null
       ],
       bring: (c) => [
@@ -1362,9 +2191,45 @@ window.CONTENT = (function () {
           '沒有付喪葬費的證明時：申請人是配偶或二親等以內的親屬（例如父母、子女、兄弟姊妹、祖父母、孫子女），可以改附切結書和親屬關係證明；但好幾個人都要申請、又談不攏時，不能這樣辦',
           '含過世者詳細記事的戶口名簿影本'
         ] : []),
-        ...(c.hasOrUnsure('flags', 'oldfarmer') ? ['老農津貼：切結書（或共同委任及切結書，可以在勞保局網站下載）'] : [])
+        ...(c.hasOrUnsure('flags', 'oldfarmer') ? ['老農津貼：切結書（或「共同委任及切結書」，可以在勞保局網站下載）'] : [])
       ],
       phones: (c) => c.hasOrUnsure('ins', 'farmer') ? ['bliFarm'] : ['bli'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: (c) => {
+          const f = c.hasOrUnsure('ins', 'farmer'), o = c.hasOrUnsure('flags', 'oldfarmer');
+          return [
+            f ? { h: '農保喪葬津貼：到過世者投保的農會櫃檯申請', p: '或先辦好死亡登記，再用自然人憑證等上網申請（申請後要打電話向農會確認）。' } : null,
+            f ? { h: '農保喪葬津貼要帶的東西', ul: [
+              '農保喪葬津貼申請書暨給付收據',
+              '死亡證明書或檢察官相驗屍體證明書',
+              '申請人的身分證正反面影本或戶口名簿影本',
+              '付喪葬費的證明：上面要有過世者的姓名，抬頭寫申請人的姓名',
+              '含過世者詳細記事的戶口名簿影本'
+            ], more: [
+              '沒有付喪葬費的證明時：申請人是配偶或二親等以內的親屬（例如父母、子女、兄弟姊妹、祖父母、孫子女），可以改附切結書和親屬關係證明；但好幾個人都要申請、又談不攏時，不能這樣辦'
+            ] } : null,
+            o ? { h: '老農津貼沒領到的部分：自己郵寄到勞保局，或請農會幫忙寄', p: '要寄的東西：', ul: [
+              '切結書（或「共同委任及切結書」，可以在勞保局網站下載）'
+            ] } : null
+          ];
+        },
+        why: (c) => (c.hasOrUnsure('ins', 'farmer')
+          ? '過世時有農保：付喪葬費的人可以領 15 個月投保金額的喪葬津貼（限 1 人請領）。'
+          : '過世者在領老農津貼：還沒領到的金額，可以由法定繼承人申請。'),
+        watch: (c) => {
+          const f = c.hasOrUnsure('ins', 'farmer'), o = c.hasOrUnsure('flags', 'oldfarmer');
+          return [
+            o ? (f
+              ? '過世者在領老農津貼：還沒領到的金額，可以由法定繼承人附切結書申請；繼承人 2 人以上時，用「共同委任及切結書」，由 1 人代表申請。'
+              : '老農津貼要附切結書；繼承人 2 人以上時，用「共同委任及切結書」，由 1 人代表申請。') : null,
+            o && !f ? '過世者如果也有農保，還可以申請農保的喪葬津貼；不確定有沒有，請問過世者投保過的農會。' : null
+          ];
+        },
+        moreHint: (c) => (c.hasOrUnsure('ins', 'farmer') ? '期限、電話、官方說明' : '電話、官方說明'),
+        more: () => ['deadline']
+      },
       sources: ['bliFarmer', 'bliOldFarmer']
     },
     {
@@ -1378,26 +2243,26 @@ window.CONTENT = (function () {
         late: lateClaim(10, '打電話問過世者原服務機關的人事單位'), lateShort: LATE_CLAIM_SHORT },
       why: () => [
         '過世的家人是退休公務人員，每個月領退休金（月退），家人可以申請「遺屬金」（公務人員退休資遣撫卹法第 43 條）。退休時一部分一次領、一部分每月領（叫「兼領」）的也可以。',
-        { h: '有兩種，選一種', ul: [
+        { h: '遺屬金有兩種，選一種', ul: [
           '遺屬一次金：一次領完。',
           '遺屬年金：每月領，金額是過世者月退休金的一半。只有配偶、未成年子女、身心障礙且沒有工作能力的成年子女、父母可以選，而且要符合下面的條件。'
         ] },
         { h: '遺屬一次金給誰', ul: [
           '沒有再婚的配偶領一半，另一半給子女；沒有子女，給父母。子女和父母都沒有，配偶全部領。',
-          '沒有配偶：全部先給子女，再來是父母、兄弟姊妹、祖父母。',
+          '沒有配偶：全部給子女；沒有子女，給父母；再沒有，給兄弟姊妹；再沒有，給祖父母。',
           '同一種家人有好幾個，就平分。'
         ] },
         { h: '遺屬年金的條件', ul: [
-          '配偶：沒有再婚，到過世時婚姻關係加起來滿 10 年，而且年滿 55 歲，或身心障礙且沒有工作能力。還沒滿 55 歲的，可以等滿 55 歲再開始領。',
+          '配偶：沒有再婚，到過世時婚姻關係加起來滿 10 年，而且符合其中一個：年滿 55 歲，或身心障礙且沒有工作能力。還沒滿 55 歲的，可以等滿 55 歲再開始領。',
           '未成年子女領到成年；配偶、父母、身心障礙且沒有工作能力的子女，領一輩子。',
           '「身心障礙且沒有工作能力」是指：重度以上身心障礙，或被法院宣告需要監護（監護宣告）；而且平均每個月的所得沒有超過基本工資，每年都要交前一年的所得資料。',
-          '要選年金的家人，自己也在領政府的退休金、撫卹金等每月的給付時，不能選年金；除非放棄自己那一份，而且發給的機關同意（第 45 條第 4 項）。'
+          '要選年金的家人，自己也在領政府的退休金、撫卹金等每月的給付時，不能選年金；除非放棄自己那一份，而且發給那一份的機關同意（公務人員退休資遣撫卹法第 45 條第 4 項）。'
         ] },
         '要領多少，可以請人事單位先試算，看過再決定選哪一種。'
       ],
       where: () => [
         '過世者退休前服務的機關（原服務機關）的人事單位（人事室）。人事單位會幫忙填表，送銓敘部審定後發給。',
-        '打電話給那個機關，說「退休人員過世了，要申請遺屬金」就可以。',
+        '打電話給那個機關的人事單位，說「退休人員過世了，要申請遺屬金」就可以。',
         '這一項寫的是公務人員的規定。退休的公立學校教職員、軍人，請直接問過世者原本服務的學校或單位。'
       ],
       bring: () => [
@@ -1407,7 +2272,7 @@ window.CONTENT = (function () {
         '證明家人關係的戶籍謄本',
         '退撫給與領受人員資料卡，附要撥款的金融機構存摺封面影本',
         '選遺屬年金的人：遺族領受遺屬年金同意書',
-        '同一種家人有好幾個、推 1 個人代表申請：代表領受同意書；有人不領：拋棄同意書',
+        '同一種家人有好幾個（例如好幾個子女）、推 1 個人代表申請：代表領受同意書；有人不領：拋棄同意書',
         '身心障礙的配偶或子女要選遺屬年金：重度以上身心障礙手冊或證明（或法院監護宣告的文件），和前一年的所得申報資料',
         '申請人未成年：由法定代理人代為申請，附法定代理人的身分證明'
       ],
@@ -1418,9 +2283,64 @@ window.CONTENT = (function () {
         return [
           before2018 ? '這套規定是 2018 年 7 月 1 日開始施行；您的家人在這之前過世，請直接問人事單位要怎麼申請。' : null,
           '過世以後多發的月退休金，會從遺屬金裡扣回來（施行細則第 95 條）。請盡早通知人事單位。',
-          '過世者如果用遺囑指定由誰領，照遺囑；但未成年子女能領的比例，不能比原本少（第 48 條）。',
-          '法律寫的是「領月退休金或兼領月退休金」的人。退休時一次領完退休金的，有沒有可以申請的，請問人事單位。'
+          '過世者如果用遺囑指定由誰領，照遺囑；但未成年子女能領的比例，不能比原本少（公務人員退休資遣撫卹法第 48 條）。',
+          '遺屬金的規定，法律寫的是「領月退休金或兼領月退休金」的人。退休時一次領完退休金的，有沒有可以申請的，請問人事單位。'
         ];
+      },
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '打電話給過世者退休前服務的機關（原服務機關）的人事單位（人事室）', p: [
+            '說「退休人員過世了，要申請遺屬金」就可以。人事單位會幫忙填表，送銓敘部審定後發給。',
+            '這一項寫的是公務人員的規定。退休的公立學校教職員、軍人，請直接問過世者原本服務的學校或單位。'
+          ] },
+          { h: '可以先請人事單位試算要領多少，看過再決定選哪一種', p: [
+            '遺屬金有兩種，選一種：遺屬一次金（一次領完），或遺屬年金（每月領，金額是過世者月退休金的一半）。',
+            '遺屬年金只有配偶、未成年子女、身心障礙且沒有工作能力的成年子女、父母可以選，而且要符合條件（見「看詳細說明」）。',
+            '要選年金的家人，自己也在領政府的退休金、撫卹金等每月的給付時，不能選年金；除非放棄自己那一份，而且發給那一份的機關同意（公務人員退休資遣撫卹法第 45 條第 4 項）。'
+          ] },
+          { h: '帶這些東西', ul: [
+            '遺屬一次金或遺屬年金申請書（向人事單位拿，人事單位會協助填寫）',
+            '遺族請領順序系統表（列出有哪些家人、是什麼關係的表）',
+            '死亡證明書或除戶戶籍謄本',
+            '證明家人關係的戶籍謄本',
+            '退撫給與領受人員資料卡，附要撥款的金融機構存摺封面影本'
+          ], more: [
+            '選遺屬年金的人：遺族領受遺屬年金同意書',
+            '同一種家人有好幾個（例如好幾個子女）、推 1 個人代表申請：代表領受同意書；有人不領：拋棄同意書',
+            '身心障礙的配偶或子女要選遺屬年金：重度以上身心障礙手冊或證明（或法院監護宣告的文件），和前一年的所得申報資料',
+            '申請人未成年：由法定代理人代為申請，附法定代理人的身分證明'
+          ] }
+        ],
+        why: '過世的家人是退休公務人員，每個月領退休金（月退）或「兼領」（退休時一部分一次領、一部分每月領），家人可以申請「遺屬金」（公務人員退休資遣撫卹法第 43 條）。',
+        watch: (c) => {
+          const d = c.a.date;
+          // 新法 2018-07-01 施行（第 95 條） The current Act took effect on 2018-07-01
+          const before2018 = d && (d.y * 10000 + d.m * 100 + d.d) < 20180701;
+          return [
+            before2018 ? '這套規定是 2018 年 7 月 1 日開始施行；您的家人在這之前過世，請直接問人事單位要怎麼申請。' : null,
+            '過世以後多發的月退休金，會從遺屬金裡扣回來（施行細則第 95 條）。請盡早通知人事單位。',
+            '過世者如果用遺囑指定由誰領，照遺囑；但未成年子女能領的比例，不能比原本少（公務人員退休資遣撫卹法第 48 條）。'
+          ];
+        },
+        moreHint: '遺屬年金的條件、一次金給誰、期限、官方說明',
+        more: () => [
+          { h: '遺屬年金的條件', body: [{ ul: [
+            '配偶：沒有再婚，到過世時婚姻關係加起來滿 10 年，而且符合其中一個：年滿 55 歲，或身心障礙且沒有工作能力。還沒滿 55 歲的，可以等滿 55 歲再開始領。',
+            '未成年子女領到成年；配偶、父母、身心障礙且沒有工作能力的子女，領一輩子。',
+            '「身心障礙且沒有工作能力」是指：重度以上身心障礙，或被法院宣告需要監護（監護宣告）；而且平均每個月的所得沒有超過基本工資，每年都要交前一年的所得資料。'
+          ] }] },
+          { h: '遺屬一次金給誰', body: [{ ul: [
+            '沒有再婚的配偶領一半，另一半給子女；沒有子女，給父母。子女和父母都沒有，配偶全部領。',
+            '沒有配偶：全部給子女；沒有子女，給父母；再沒有，給兄弟姊妹；再沒有，給祖父母。',
+            '同一種家人有好幾個，就平分。'
+          ] }] },
+          { h: '其他', body: [
+            '遺屬金的規定，法律寫的是「領月退休金或兼領月退休金」的人。退休時一次領完退休金的，有沒有可以申請的，請問人事單位。'
+          ] },
+          'deadline'
+        ]
       },
       sources: ['csrAct', 'csrRule', 'tcSurvivor', 'apa131']
     },
@@ -1430,9 +2350,21 @@ window.CONTENT = (function () {
       title: '公保、軍保：打電話問承辦單位',
       deadline: { type: 'none', text: '依各保險規定' },
       why: () => ['公保、軍保的死亡給付規定，這個工具沒有寫，請直接問承辦單位。'],
-      where: () => ['公保：打電話問臺灣銀行公教保險部現金給付科，並問清楚要不要透過過世者的服務機關送件。', '軍保：請打電話問國防部，要去哪裡申請、要帶什麼。'],
+      where: () => ['公保：打電話問臺灣銀行公教保險部現金給付科，問清楚要帶什麼，還有要不要透過過世者的服務機關送件。', '軍保：打電話問國防部要去哪裡申請、要帶什麼。'],
       bring: () => null,
       phones: ['bot'],
+      // 畫面上的詳細頁（v3.8 起）：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊的數字、期限、條件一致）。
+      // On-screen detail page (v3.8+): the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '有公保的話：打電話問臺灣銀行公教保險部現金給付科', p: '問清楚要帶什麼，還有要不要透過過世者的服務機關送件。', tel: ['bot'] },
+          { h: '有軍保的話：打電話問國防部', p: '問要去哪裡申請、要帶什麼。' }
+        ],
+        why: '公保、軍保的死亡給付規定，這個工具沒有寫，請直接問承辦單位。',
+        watch: () => ['要帶什麼，官方說明沒有列出，請在電話裡一起問清楚。'],
+        moreHint: '官方說明',
+        more: () => []
+      },
       sources: ['botGei', 'mndIns']
     }
   ];
@@ -1494,6 +2426,7 @@ window.CONTENT = (function () {
   const groupOpen = {}; // 這次使用中各組打開或收起（不存起來） Session-only group open state
   let returnToRow = null; // 回到清單時要捲到哪一項 Row to scroll to when returning to the list
   let lastRoute = '';
+  let viaCard = null; // 從「現在先做這一件」打開的項目 Item opened from the "do this first" card
 
   function probeStorage() {
     try { const k = '__probe__'; localStorage.setItem(k, '1'); localStorage.removeItem(k); return true; } catch (e) { return false; }
@@ -1563,7 +2496,8 @@ window.CONTENT = (function () {
   const val = (x, c) => (typeof x === 'function' ? x(c) : x);
   // 日期、星期包成不換行的一段（兩段之間還是可以換行，字大時才不會超出畫面）
   // Wrap dates and weekdays in no-wrap spans (a break between them is still allowed so large text never overflows)
-  const DATE_PARTS = /(\d{4}年\d{1,2}月\d{1,2}日|星期[日一二三四五六])/;
+  // v3.8：「年」和「月日」分成兩段（字很大時可以在年和月之間換行）v3.8: year and month-day are separate parts
+  const DATE_PARTS = /(\d{4}年|\d{1,2}月\d{1,2}日|星期[日一二三四五六])/;
   const noBreakDates = (text) => String(text).split(DATE_PARTS).map((p, i) => (i % 2 ? h('span', { class: 'nw' }, p) : p));
   const clean = (arr) => (arr || []).filter((x) => x != null && x !== '');
 
@@ -1579,6 +2513,8 @@ window.CONTENT = (function () {
       unsureOnly: (k, v) => ctx.isUnsure(k) && !ctx.has(k, v),
       // 今天是不是已經超過過世後 n 個月 Whether today is past n months after death
       pastMonths: (n) => !!a.date && D.cmp(D.today(), D.addMonthsLegal(a.date, n)) > 0,
+      // v3.8.1：過世超過 n 天（和死亡登記 30 天的算法一樣）More than n days since the death (same rule as death registration)
+      pastDays: (n) => !!a.date && D.cmp(D.today(), D.addDaysLegal(a.date, n)) > 0,
       debtRisk: a.debt === 'maybe' || a.debt === 'unsure',
       // 第 2 題選「不是因病」或「不確定」：可能是車禍或犯罪 Possibly an accident or a crime
       notDisease: a.cause === 'notdisease' || a.cause === 'unsure',
@@ -1626,11 +2562,11 @@ window.CONTENT = (function () {
       const what = forExport ? `：${dl.lateShort || '請盡快問辦理單位怎麼補辦'}` : '';
       return { text: `已超過期限（估算 ${D.fmtPlain(date)}）${what}`, late: true };
     }
-    const label = due.suggest ? '建議' : '截止';
+    const label = due.suggest ? '建議日期' : '截止';
     let tail = '';
     // 列印、PDF、分享的文字不寫「還有幾天」，因為可能幾天後才看到 Exports omit "days left"
     if (!forExport) {
-      if (due.left === 0) tail = '，今天';
+      if (due.left === 0) tail = due.suggest ? '，就是今天' : '，今天是最後一天';
       else if (due.left <= 60) tail = `，還有 ${due.left} 天`;
     }
     return { text: `${label} ${D.fmt(date)}（估算${tail}）`, late: false };
@@ -1764,8 +2700,10 @@ window.CONTENT = (function () {
         if (!answersComplete(a)) return go(firstUnanswered(), true);
         // 從某一項回到清單時，捲回那一項 Coming back from an item: scroll to that row
         const fromItem = lastRoute.startsWith('item/') ? lastRoute.slice(5) : null;
-        const target = returnToRow || fromItem;
-        returnToRow = null; lastRoute = 'list';
+        // 從「現在先做這一件」打開的，回來時停在最上面，看下一件 Opened from the card: come back to the top to see the next one
+        const backToCard = viaCard !== null && (fromItem === viaCard || returnToRow === viaCard);
+        const target = backToCard ? null : (returnToRow || fromItem);
+        returnToRow = null; viaCard = null; lastRoute = 'list';
         if (target) { const it = C.ITEMS.find((x) => x.id === target); if (it) groupOpen[it.group] = true; }
         render(viewList(), false, target);
         return;
@@ -1820,7 +2758,7 @@ window.CONTENT = (function () {
       h('h1', null, '身後通'),
       h('p', { class: 'comfort' }, '家人離開了，辛苦您了。'),
       h('p', { class: 'lead' }, '回答幾個簡單的問題，就能看到接下來要辦的事：什麼時候以前要辦好、去哪裡辦、要帶什麼。'),
-      h('p', null, '不用一次辦完，慢慢來。'),
+      h('p', null, '不用一次辦完，一件一件來就好。'),
       complete
         ? h('div', { class: 'stack' },
             h('a', { class: 'btn btn-primary', href: '#/list' }, '看我的待辦清單'),
@@ -1905,7 +2843,18 @@ window.CONTENT = (function () {
       });
       return b;
     });
-    wrap.append(...buttons);
+    if (q.groups) {
+      // v3.8.1：選項分組（第 6 題）。每一組有小標題，最後一組（都沒有、不確定）用一條線隔開
+      // v3.8.1: option groups (Q6). Each group has a small heading; the last group (none / unsure) is set apart by a line
+      const byKey = Object.fromEntries(buttons.map((b) => [b.dataset.value, b]));
+      q.groups.forEach((g, gi) => {
+        const gid = `${q.id}-group-${gi}`;
+        wrap.append(h('div', { class: 'opt-group' + (g.title ? '' : ' opt-group-plain'), role: g.title ? 'group' : null, 'aria-labelledby': g.title ? gid : null },
+          g.title ? h('p', { class: 'opt-group-title', id: gid }, g.title) : null,
+          g.note ? h('p', { class: 'opt-group-note' }, g.note) : null,
+          g.keys.map((k) => byKey[k])));
+      });
+    } else wrap.append(...buttons);
     if (!multi) {
       // 回到已經答過的題目時，給一個「下一步」，不用重選 Revisit: allow moving on without re-selecting
       if (current() == null) return wrap;
@@ -1963,6 +2912,35 @@ window.CONTENT = (function () {
   }
 
   // ===== 畫面 3：待辦清單 List =====
+  // 「現在先做這一件」：先選已經超過期限的；沒有的話，選 14 天內就到期的（最早到期的那一項）；都沒有的話，選清單上最前面、還沒打勾的。
+  // "Do this one first": an overdue item first; otherwise the item due soonest within 14 days; otherwise the first unticked row.
+  const NEXT_SOON_DAYS = 14;
+  function pickNext(built) {
+    const rows = built.groups.flatMap((x) => x.rows).filter((r) => !state.done[r.it.id]);
+    if (!rows.length) return null;
+    const late = rows.find((r) => r.due.late && !r.due.suggest);
+    if (late) return late;
+    const soon = rows.filter((r) => r.due.date && !r.due.late && r.due.left <= NEXT_SOON_DAYS);
+    if (soon.length) return soon.reduce((a, b) => {
+      // 法定期限比「建議」日期優先 Legal deadlines before suggested dates
+      if (a.due.suggest !== b.due.suggest) return a.due.suggest ? b : a;
+      return b.due.left < a.due.left ? b : a;
+    });
+    return rows[0];
+  }
+  function nextCard(r) {
+    if (!r) return null;
+    const line = dueLine(r.due);
+    return h('section', { class: 'next-card', 'aria-labelledby': 'next-h', 'data-next': r.it.id },
+      h('h2', { id: 'next-h' }, '現在先做這一件'),
+      h('p', { class: 'next-t' }, r.title,
+        r.important ? h('span', { class: 'tag tag-imp' }, '重要') : null,
+        r.confirm ? h('span', { class: 'tag tag-chk' }, r.it.confirmTag || '需要再確認') : null),
+      h('p', { class: 'next-due' + (line.late ? ' late' : '') }, noBreakDates(line.text)),
+      // 用按鈕不用連結：清單裡那一項的連結才是唯一的「#/item/…」連結 A button, so each item still has exactly one link on the list
+      h('button', { type: 'button', class: 'btn btn-primary', 'aria-label': '看怎麼辦：' + r.title, onclick: () => { viaCard = r.it.id; go('#/item/' + r.it.id); } }, '看怎麼辦'));
+  }
+
   function viewList() {
     const built = buildList(state.answers);
     const { groups, donts, items, ctx } = built;
@@ -1984,7 +2962,7 @@ window.CONTENT = (function () {
       const panel = h('div', { class: 'panel', id: panelId, hidden: !open }, rows.map((r) => rowNode(r)));
       const head = h('button', { type: 'button', class: 'group-head', 'aria-expanded': String(open), 'aria-controls': panelId },
         h('span', null, h('span', { class: 'group-title' }, g.title), g.sub ? h('span', { class: 'group-sub' }, g.sub) : null),
-        h('span', { class: 'group-count' }, `${rows.length} 件${doneInGroup ? `，完成 ${doneInGroup}` : ''} `, h('span', { class: 'chev', 'aria-hidden': 'true' }, '›')));
+        h('span', { class: 'group-count' }, `${rows.length} 件${doneInGroup ? `，完成 ${doneInGroup} 件` : ''} `, h('span', { class: 'chev', 'aria-hidden': 'true' }, '›')));
       head.addEventListener('click', () => {
         const isOpen = head.getAttribute('aria-expanded') === 'true';
         head.setAttribute('aria-expanded', String(!isOpen));
@@ -1995,15 +2973,18 @@ window.CONTENT = (function () {
     });
 
     const deathTxt = D.fmtPlain(ctx.a.date);
+    const next = pickNext(built);
     return h('div', { class: 'wrap' },
       h('h1', null, '您的待辦清單'),
       h('p', { class: 'summary muted' }, items.some((r) => r.due.late && !r.due.suggest && !state.done[r.it.id])
-        ? `依過世日期 ${deathTxt} 估算。有幾項已經超過估算的期限（紅字），請先看那幾項，打電話問怎麼補辦。不用一次辦完。`
-        : `依過世日期 ${deathTxt} 估算。不用一次辦完，先看「現在先做」就好。`),
+        ? `依過世日期 ${deathTxt} 估算。紅字的項目已經超過估算的期限，請先看紅字的項目，打電話問現在還能怎麼辦。不用一次辦完。`
+        : next ? `依過世日期 ${deathTxt} 估算。不用一次辦完，先做下面這一件就好。`
+          : `依過世日期 ${deathTxt} 估算。清單上的每一項都打勾了，辛苦您了。如果有還沒辦完的，可以點下面的分組打開，再取消打勾。`),
+      nextCard(next),
       h('div', { class: 'done-count' },
         h('span', null, `已完成 ${doneN} 件，共 ${total} 件`),
         h('span', { class: 'bar', 'aria-hidden': 'true' }, h('span', { style: `width:${total ? Math.round(doneN / total * 100) : 0}%` }))),
-      storageOK ? null : h('p', { class: 'storage-warn' }, '這支手機目前沒辦法保存打勾紀錄（可能是用了無痕模式）。關掉網頁後，打勾會不見；需要的話，可以先存成 PDF 或傳給家人。'),
+      storageOK ? null : h('p', { class: 'storage-warn' }, '這支手機目前沒辦法保存您的回答和打勾紀錄（可能是用了無痕模式）。關掉網頁後，回答和打勾都會不見；需要的話，可以先存成 PDF 或傳給家人。'),
       dontsNode(donts),
       h('div', { class: 'timeline' }, groupNodes),
       h('div', { class: 'tools stack' },
@@ -2021,7 +3002,7 @@ window.CONTENT = (function () {
         h('p', { class: 'disclaim' }, '僅供參考，以官方公告為準；不是法律意見。有問題請自行詢問律師、地政士（代書）或辦理單位。'),
         h('p', null, `內容查證日期：${C.VERIFIED_ON}。這是個人製作的參考工具，不是政府網站。您的回答只存在這支手機裡。`),
         feedbackNode('待辦清單'),
-        h('p', null, h('button', { type: 'button', class: 'btn-text', onclick: confirmClear }, '清除這支手機上的所有紀錄')))
+        h('p', null, h('button', { type: 'button', class: 'btn-text', onclick: confirmClear }, '清除這支手機上的回答和打勾紀錄')))
     );
   }
 
@@ -2032,12 +3013,15 @@ window.CONTENT = (function () {
     const cbId = 'cb-' + id;
     const cb = h('input', { type: 'checkbox', id: cbId, checked: done ? true : null, 'aria-label': `${r.title}：做完了` });
     cb.addEventListener('change', () => {
+      const top0 = cb.getBoundingClientRect().top; // 打勾前的位置 Position before re-rendering
       if (cb.checked) state.done[id] = true; else delete state.done[id];
       save();
       groupOpen[r.it.group] = true; // 打勾的那一組維持打開 Keep this group open
       // 重畫清單（不跳回最上面），更新計數 Re-render in place to update counts
       render(viewList(), true);
-      const again = document.getElementById(cbId); if (again) again.focus({ preventScroll: true });
+      const again = document.getElementById(cbId);
+      // 上面的「現在先做這一件」換了或不見了，捲回原本的位置 Scroll back so the row stays where it was
+      if (again) { window.scrollBy(0, again.getBoundingClientRect().top - top0); again.focus({ preventScroll: true }); }
     });
     return h('div', { class: 'row' + (done ? ' done' : '') },
       h('label', { class: 'check', for: cbId }, cb),
@@ -2067,7 +3051,7 @@ window.CONTENT = (function () {
   function srcDate(x) {
     if (x === '頁面無日期') return '頁面沒有標日期';
     if (x === '頁面無更新日期') return '頁面沒有標更新日期';
-    if (/^\d{4}-\d{2}/.test(x) && !/查閱|整編|引用|公布|生效|版|修正|函/.test(x)) return '頁面日期：' + x;
+    if (/^\d{4}-\d{2}/.test(x) && !/查閱|整編|引用|公布|生效|版|修正|函|更新|發布/.test(x)) return '頁面日期：' + x;
     return x;
   }
   function srcLink(k) {
@@ -2116,7 +3100,7 @@ window.CONTENT = (function () {
     if (due.date) {
       const text = due.late
         ? (due.suggest ? `建議日期已過（${D.fmt(due.date)}）` : `已超過期限（估算 ${D.fmt(due.date)}）`)
-        : `${due.suggest ? '建議' : '截止'} ${D.fmt(due.date)}（估算）`;
+        : `${due.suggest ? '建議日期' : '截止'} ${D.fmt(due.date)}（估算）`;
       pill = h('p', { class: 'due-pill' + (due.late && !due.suggest ? ' late' : '') }, noBreakDates(text));
     } else {
       pill = h('p', { class: 'due-pill' }, dl.text);
@@ -2144,6 +3128,16 @@ window.CONTENT = (function () {
         go('#/list', true); // 不多留一筆「返回」紀錄 don't add a history entry
       }
     });
+
+    if (it.brief) {
+      const importantNode = (() => {
+        if (!row.important) return null;
+        const t = it.importantText ? it.importantText(ctx, due) : '這一項很重要。';
+        return t ? h('p', { class: 'late-msg' }, t) : null;
+      })();
+      const confirmNode = row.confirm ? h('p', { class: 'confirm-note' }, val(it.confirmText, ctx) || '您在問題裡選了「不確定」，所以先列出來。請先問問家人，或打電話問辦理的單位，確認有沒有這一項；有的話，就要在期限內辦。') : null;
+      return viewBrief({ row, it, due, ctx, done, pill, lateNow, importantNode, confirmNode, toggle, phones, built });
+    }
 
     return h('article', { class: 'wrap detail', 'data-item': it.id },
       h('p', { class: 'top-back' }, h('a', { class: 'btn-text', href: '#/list' }, '‹ 回清單')),
@@ -2177,6 +3171,127 @@ window.CONTENT = (function () {
     );
   }
 
+  // ===== 詳細頁新版（v3.8） New detail layout =====
+  // 要做什麼＋截止日 → 怎麼辦（最多 3 步）→ 為什麼（一句）→ 要注意（最多 3 點）→「看詳細說明」收起來；打勾固定在下方
+  // What + deadline → how (≤3 steps) → why (one line) → watch out (≤3) → folded details; done button pinned at the bottom
+  // 步驟的欄位 Step fields：h 標題、p 說明（一段或幾段，在清單前面）、ul 清單、more 看情況再帶（moreH 改標題）、
+  // after 清單後面的說明、tel 電話（一按就能打）、src 官方連結、go 連到另一項
+  function viewBrief(p) {
+    const { row, it, due, ctx, done, pill, lateNow, importantNode, confirmNode, toggle, phones, built } = p;
+    const B = it.brief;
+    const dl = due.dl;
+    const titleOf = (id) => { const r = built.items.find((x) => x.it.id === id); return r ? r.title : id; };
+    // 還有幾天（和舊版一樣：60 天內才顯示） Days left (shown within 60 days, as before)
+    const left = (!due.late && due.date && due.left <= 60)
+      ? h('span', { class: 'days-left' }, due.left === 0 ? (due.suggest ? '今天就是建議日期' : '今天是估算的最後一天') : `還有 ${due.left} 天`) : null;
+    // 「（估算）」不要從中間斷開 Keep "(estimate)" on one line
+    Array.from(pill.childNodes).forEach((n) => {
+      if (n.nodeType === 3 && n.textContent.includes('（估算）')) {
+        const [x, y] = n.textContent.split('（估算）');
+        n.replaceWith(x, h('span', { class: 'nw' }, '（估算）'), y);
+      }
+    });
+    const steps = clean(val(B.steps, ctx)).slice(0, 3);
+    const watch = clean(val(B.watch, ctx)).slice(0, 3);
+    // 步驟裡已經放的電話、連結，下面就不再重複 Phones and links already shown in a step are not repeated below
+    const stepTel = new Set();
+    const stepGo = new Set();
+    steps.forEach((st) => { clean(st.tel).forEach((k) => stepTel.add(k)); if (st.go) stepGo.add(st.go); });
+    const paras = (x, cls) => clean([].concat(x == null ? [] : x)).map((t) => h('p', { class: cls }, t));
+    const list = (arr) => h('ul', null, clean(arr).map((x) => h('li', null, x)));
+    const stepNode = (st) => h('li', null,
+      h('p', { class: 'step-h' }, st.h),
+      paras(st.p, 'step-p'),
+      st.ul && clean(st.ul).length ? list(st.ul) : null,
+      st.more && clean(st.more).length ? h('div', { class: 'step-more' },
+        h('p', { class: 'step-more-h' }, st.moreH || '看情況再帶：'), list(st.more)) : null,
+      paras(st.after, 'step-p'),
+      st.src && C.SRC[st.src] ? h('p', { class: 'step-p' }, srcLink(st.src)) : null,
+      st.go && ctx.shows(st.go) ? h('p', { class: 'step-p' }, h('a', { href: '#/item/' + st.go }, `打開「${titleOf(st.go)}」`)) : null,
+      clean(st.tel).length ? h('div', { class: 'step-tel' }, phoneList(clean(st.tel))) : null);
+
+    // 看詳細說明裡的一段 One section inside the fold
+    const bodyBlocks = (arr) => clean(arr).map((x) => {
+      if (typeof x === 'string') return h('p', null, x);
+      const lst = x.ol ? h('ol', null, clean(x.ol).map((li) => h('li', null, li))) : list(x.ul);
+      return h('div', null, x.h ? h('p', { style: 'font-weight:700;margin-bottom:0' }, x.h) : null, lst);
+    });
+    const sec = (title, content) => (content && (!Array.isArray(content) || content.length)
+      ? h('section', { class: 'more-sec' }, h('h3', null, title), content) : null);
+    const deadlineSec = () => {
+      const out = [];
+      if (dl.law) out.push(h('p', null, dl.law));
+      // 期限從什麼時候開始算（dl.start）放在上面截止日下面，這裡不重複 dl.start is shown under the date on top
+      clean(val(B.deadlineMore, ctx)).forEach((t) => out.push(h('p', null, t)));
+      if (due.date) {
+        const basis = h('a', { href: C.SRC.period[1], target: '_blank', rel: 'noopener noreferrer' }, '法律依據');
+        out.push(due.suggest
+          // v3.8.1：「建議日期」不是法律規定的期限（查財產）A suggested date is not a legal deadline
+          ? h('p', { class: 'small muted' }, `建議日期是用過世日期算的${dl.months ? `（過世後 ${dl.months} 個月）` : ''}，不是法律規定的期限。`)
+          : h('p', { class: 'small muted' }, '日期是照法律規定的算法（', basis, '）估算的；最後一天如果剛好是假日，這裡沒有往後延。'));
+      }
+      return sec(B.deadlineTitle || '期限', out);
+    };
+    const moreSecs = clean(val(B.more, ctx)).map((x) => (x === 'deadline' ? deadlineSec() : sec(x.h, bodyBlocks(val(x.body, ctx)))));
+    // 相關的事（連到其他項目） Related items
+    const together = it.together ? it.together.ids.filter((id) => ctx.shows(id) && !stepGo.has(id)) : [];
+    if (together.length) moreSecs.push(sec(it.together.text, h('ul', null, together.map((id) => h('li', null, h('a', { href: '#/item/' + id }, titleOf(id)))))));
+    // 提示字：收起來的地方有相關的事，就寫出來 Mention related items in the hint when they are in the fold
+    let hint = val(B.moreHint, ctx) || '';
+    // v3.8.1：收起來的地方「相關的事」在「電話」前面，提示字也照這個順序 Same order as the sections: related items come before phones
+    if (together.length && !hint.includes('相關')) hint = /(^|、)電話、/.test(hint) ? hint.replace(/(^|、)電話、/, '$1相關的事、電話、')
+      : hint.includes('官方說明') ? hint.replace('官方說明', '相關的事、官方說明') : (hint ? hint + '、相關的事' : '相關的事');
+    const morePhones = phones.filter((k) => !stepTel.has(k));
+    if (morePhones.length) moreSecs.push(sec('不清楚的話，可以打電話問', h('div', { class: 'phones-in' }, phoneList(morePhones))));
+    moreSecs.push(sec('官方說明', [
+      h('ul', { class: 'sources' }, clean(it.sources).map((k) => h('li', null, srcLink(k), h('span', { class: 'date' }, srcDate(C.SRC[k][2]))))),
+      h('p', { class: 'small muted' }, `查證日期：${C.VERIFIED_ON}。`)
+    ]));
+
+    // 聲明和回報縮成一行 Disclaimer and feedback in one short line
+    const fb = feedbackHref(feedbackName(it));
+    let filled = false; // 有沒有真的先填好「哪一頁」 whether the page name is really pre-filled
+    try { const k = C.FEEDBACK.whereEntry; filled = !!fb && /^entry\.\d+$/.test(k || '') && new URL(fb).searchParams.has(k); } catch (e) { filled = false; }
+    const foot = h('p', { class: 'brief-foot small muted' }, '僅供參考，以官方公告為準。',
+      fb ? h('span', { class: 'feedback' }, h('a', { href: fb, target: '_blank', rel: 'noopener noreferrer' }, '回報錯誤或過時的資料'),
+        filled ? '（會打開 Google 表單，是另一個網站；已經先填好是哪一頁；您在這個工具裡的回答不會送出去）'
+          : '（會打開 Google 表單，是另一個網站；您在這個工具裡的回答不會送出去）') : null);
+
+    const why = val(B.why, ctx);
+    // v3.8.1：超過法定期限時，有的項目改用 brief.startLate（null＝不顯示），免得「已超過期限」後面又接「請盡早申請」
+    // v3.8.1: when a legal deadline has passed, some items use brief.startLate instead (null = hide)
+    const startTxt = (due.late && !due.suggest && B.startLate !== undefined) ? B.startLate : dl.start;
+    return h('article', { class: 'wrap detail brief', 'data-item': it.id },
+      h('p', { class: 'top-back' }, h('a', { class: 'btn-text', href: '#/list' }, '‹ 回清單')),
+      h('h1', null, row.title),
+      done ? h('p', { class: 'muted' }, '✓ 已經打勾，做完了') : null,
+      h('div', { class: 'due-line' }, pill, left),
+      // 超過期限的紅字先 The overdue message first
+      lateNow,
+      // 期限從什麼時候開始算、有沒有例外（例如從知道自己是繼承人那天起算），放在截止日（和紅字）下面
+      // When the period starts and its exceptions, right under the date (and the overdue message)
+      startTxt ? h('p', { class: 'start-note' }, startTxt) : null,
+      importantNode, confirmNode,
+      h('section', { class: 'how', 'aria-labelledby': 'how-h' },
+        h('h2', { id: 'how-h' }, '怎麼辦'),
+        h('ol', { class: 'steps' }, steps.map(stepNode))),
+      why ? h('p', { class: 'why-line' }, h('b', null, '為什麼：'), why) : null,
+      watch.length ? h('section', { class: 'watch', 'aria-labelledby': 'watch-h' },
+        h('h2', { id: 'watch-h' }, '要注意'),
+        list(watch)) : null,
+      // 讀螢幕軟體才看得到的標題，讓下面的小標不會被當成「要注意」的一部分 Screen-reader-only heading for the fold
+      h('h2', { class: 'sr-only' }, '詳細說明'),
+      h('details', { class: 'more' },
+        h('summary', null,
+          h('span', null, '看詳細說明', hint ? h('span', { class: 'more-hint' }, hint) : null),
+          h('span', { class: 'plus', 'aria-hidden': 'true' }, '＋')),
+        moreSecs),
+      foot,
+      // 打勾固定在畫面下方，不用滑到底 Done button pinned to the bottom of the screen
+      h('div', { class: 'done-bar' }, h('div', { class: 'in' }, toggle))
+    );
+  }
+
   // 匯出（列印、PDF）時拿掉指向畫面連結的括號說明 Drop "see the link below" asides on paper
   const forPaper = (t) => t.replace(/（下面「官方說明」[^）]*）/g, '');
 
@@ -2187,7 +3302,7 @@ window.CONTENT = (function () {
     const t = D.today();
     area.replaceChildren(h('div', null,
       h('h1', null, '身後通：待辦清單'),
-      h('p', null, `依過世日期 ${D.fmtPlain(ctx.a.date)} 估算，製作日期 ${D.fmtPlain(t)}。僅供參考，以官方公告為準；最後一天遇到假日沒有往後延，請不要等到最後一天。`),
+      h('p', null, `依過世日期 ${D.fmtPlain(ctx.a.date)} 估算，製作日期 ${D.fmtPlain(t)}。僅供參考，以官方公告為準；最後一天如果是假日，這裡沒有往後延，請不要等到最後一天。`),
       donts.length ? [h('h2', null, '先不要做'), h('ul', null, donts.map((d) => h('li', null, d.title, h('br'), '為什麼：' + d.why)))] : null,
       groups.map(({ g, rows }) => [
         h('h2', null, g.title),
@@ -2293,7 +3408,7 @@ window.CONTENT = (function () {
     block([
       { text: '身後通：待辦清單', size: 52, bold: true, after: 12 },
       { text: `依過世日期 ${D.fmtPlain(c.a.date)} 估算，製作日期 ${D.fmtPlain(D.today())}。`, size: 28, color: '#333' },
-      { text: '僅供參考，以官方公告為準；最後一天遇到假日沒有往後延，請不要等到最後一天。', size: 28, color: '#333' }
+      { text: '僅供參考，以官方公告為準；最後一天如果是假日，這裡沒有往後延，請不要等到最後一天。', size: 28, color: '#333' }
     ], 20);
     rule();
     if (donts.length) {
@@ -2447,7 +3562,7 @@ window.CONTENT = (function () {
       h('p', { class: 'small muted' }, '之後如果有打勾或改過回答，請再按一次「存成 PDF，拿去超商印」，印出來才是最新的。')];
     else head = h('p', { class: 'error', role: 'alert' }, status === 'declined'
       ? '剛剛沒有存檔。需要的話，可以按「再存一次」。'
-      : '這個瀏覽器沒辦法存檔。可以改用 Safari 或 Chrome 打開這個網頁，再試一次。');
+      : '沒有存成功。可以再試一次；還是不行的話，請改用 Safari 或 Chrome 打開這個網頁再試。');
     const retry = (status === 'declined' || status === 'failed') && built && btn
       ? h('div', { class: 'q-actions' }, h('button', { type: 'button', class: 'btn btn-primary', onclick: () => { closeModal(); doPdf(built, btn); } }, '再存一次'))
       : null;
@@ -2462,7 +3577,7 @@ window.CONTENT = (function () {
       '711': () => [
         h('h3', { class: 'store', tabindex: '-1' }, '7-ELEVEN（ibon）的步驟'),
         h('ol', { class: 'steps' },
-          h('li', null, '打開', ext('https://print.ibon.com.tw/ibonprinter', '「ibon 雲端列印網」'), '，上傳剛剛存的 PDF。'),
+          h('li', null, '打開', ext('https://print.ibon.com.tw/ibonprinter', '「ibon 雲端列印網」'), '，上傳存好的 PDF。'),
           h('li', null, '上傳後會拿到一組「取件編號」，請記下來或截圖。'),
           h('li', null, '到 7-ELEVEN 的 ibon 機台，選「列印掃描」→「ibon文件下載列印」，輸入取件編號就能印。')),
         h('p', { class: 'small muted' }, '也可以把 PDF 用電子郵件寄到 ibon@ibon.com.tw，回信裡會有取件編號；用電子郵件寄的，取件編號從上傳起 3 天（72 小時）內有效。用網站上傳的有效時間，以上傳後畫面顯示為準。費用以機台顯示為準。'),
@@ -2471,7 +3586,7 @@ window.CONTENT = (function () {
       fami: () => [
         h('h3', { class: 'store', tabindex: '-1' }, '全家（My FamiPort）的步驟'),
         h('ol', { class: 'steps' },
-          h('li', null, '打開全家的「My FamiPort」App，用「雲端列印」上傳剛剛存的 PDF。'),
+          h('li', null, '打開全家的「My FamiPort」App，用「雲端列印」上傳存好的 PDF。'),
           h('li', null, '再照 App 的說明，在全家門市印出來。')),
         h('p', { class: 'small muted' }, '費用和有效時間，以 App 和門市機台顯示為準。'),
         h('p', { class: 'small muted' }, '資料來源：', ext('https://apps.apple.com/us/app/my-famiport/id926152183', 'My FamiPort App 說明'), `（${STORE_VERIFIED} 查證）`)
@@ -2512,7 +3627,7 @@ window.CONTENT = (function () {
   // ===== 分享 Share =====
   function shareText(built) {
     const { groups, donts, ctx } = built;
-    const lines = ['身後通：待辦清單', `（依過世日期 ${D.fmtPlain(ctx.a.date)} 估算，製作日期 ${D.fmtPlain(D.today())}。僅供參考，以官方公告為準）`, ''];
+    const lines = ['身後通：待辦清單', `（依過世日期 ${D.fmtPlain(ctx.a.date)} 估算，製作日期 ${D.fmtPlain(D.today())}；僅供參考，以官方公告為準）`, ''];
     if (donts.length) { lines.push('【先不要做】'); donts.forEach((d) => lines.push('・' + d.title)); lines.push(''); }
     groups.forEach(({ g, rows }) => {
       lines.push(`【${g.title}】`);
@@ -2524,7 +3639,7 @@ window.CONTENT = (function () {
       });
       lines.push('');
     });
-    lines.push('不是法律意見。有問題請自行詢問律師、地政士（代書）或辦理單位。');
+    lines.push('這是個人製作的參考工具，不是政府網站，也不是法律意見；有問題請自行詢問律師、地政士（代書）或辦理單位。');
     return lines.join('\n').trim();
   }
   async function doShare(built) {
@@ -2604,7 +3719,7 @@ window.CONTENT = (function () {
   });
 
   function confirmClear() {
-    openModal('要清除所有紀錄嗎？',
+    openModal('要清除回答和打勾紀錄嗎？',
       h('p', null, '會清除這支手機上的回答和打勾紀錄，清除後沒辦法復原。'),
       h('div', { class: 'btn-row', style: 'margin-top:.8em' },
         h('button', { type: 'button', class: 'btn btn-secondary', onclick: closeModal }, '不要清除'),
@@ -2622,7 +3737,7 @@ window.CONTENT = (function () {
   route();
 
   // 給自動測試用的唯讀介面 Read-only hooks for automated tests
-  window.__SHD__ = { D, buildList, shareText, makeCtx, buildListPdf, wrapText };
+  window.__SHD__ = { D, buildList, shareText, makeCtx, buildListPdf, wrapText, pickNext };
 })();
 </script>
 </body>
