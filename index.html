@@ -29,6 +29,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <title>身後通</title>
 <!--
+  身後通 v3.10（2026-10-20）
+  v3.10：「火化許可證明」獨立成一項（要火化的話先申請；殯葬管理條例第 3、25 條；要帶什麼和 30 天的規定用臺北市當例子）。
+  這一項不算進死亡證明書的參考份數（份數那句寫的是「還沒算辦喪事要用的」）。
   身後通 v3.9.2（2026-10-20）
   v3.9.2：照「可能有錯就拿掉、解釋要好懂或有例子」：7 個白話說明改得更保守；金融遺產查詢的保險只查得到過世者是要保人的保單；
   所得稅受扶養親屬的情形；欠款按比例還的「有優先權的債主除外」；臺灣居住者、以遺產為限、起算點加例子；陳報遺產清冊名稱加白話。
@@ -614,7 +617,7 @@ html[data-scale="1.2"] .row .body, html[data-scale="1.4"] .row .body { padding-r
 window.CONTENT = (function () {
   const VERIFIED_ON = '2026-10-11 至 2026-10-20';
   // 工具版本（回報錯誤時自動帶入） Tool version, pre-filled in feedback reports
-  const APP_VERSION = 'v3.9.2';
+  const APP_VERSION = 'v3.10';
 
   // ---- 回報錯誤的 Google 表單 Feedback Google Form ----
   // url：表單網址（docs.google.com/forms/.../viewform）。空的就不顯示回報連結。
@@ -737,7 +740,10 @@ window.CONTENT = (function () {
     // v3.8.4：查詢頁本身打不開（網頁讀取工具、內建瀏覽器都被擋），網址和頁名從搜尋結果確認，頁面日期沒看到
     // v3.8.4: the query page could not be opened; URL and page name confirmed from search results, page date unknown
     moiMortLegal: ['內政部全國殯葬資訊入口網：合法業者查詢', 'https://mort.moi.gov.tw/frontsite/search/funeralCompanyAction.do?method=viewCompanyList&siteId=MTAx&subMenuId=402', '頁面日期未確認'],
-    funeralAct: ['殯葬管理條例第 3、42、49、50 條（臺北市法規查詢系統轉載）', 'https://laws.gov.taipei/law/LawSearch/LawExport/FL002030?type=0', '最新修正 2025-05-28']
+    funeralAct: ['殯葬管理條例第 3、42、49、50 條（臺北市法規查詢系統轉載）', 'https://laws.gov.taipei/law/LawSearch/LawExport/FL002030?type=0', '最新修正 2025-05-28'],
+    funeralAct25: ['殯葬管理條例第 3、25 條（火化要有火化許可證明、誰核發；臺北市法規查詢系統轉載）', 'https://laws.gov.taipei/law/LawSearch/LawExport/FL002030?type=0', '最新修正 2025-05-28'],
+    tpFuneralRule14: ['臺北市市立殯葬設施使用管理辦法第 5、14 條（申請火化許可證明要附的文件）', 'https://laws.gov.taipei/law/LawSearch/LawExport/FL077597?type=0', '2026-08-18 修正'],
+    tpFuneralAuto: ['臺北市殯葬管理自治條例第 7 條（過世後 30 天內要埋葬或火化）', 'https://laws.gov.taipei/law/LawSearch/LawExport/FL002177?type=0', '2015-08-10 修正']
   };
 
   // ---- 常用電話（只放官方頁面上查到的號碼） Verified phone numbers ----
@@ -1062,6 +1068,64 @@ window.CONTENT = (function () {
         ]
       },
       sources: ['moiMortLegal', 'funeralAct']
+    },
+    {
+      // v3.10（2026-10-20）：「火化許可證明」獨立成一項。沒有問要火化還是土葬，所以每個人都看得到，標題寫「要火化的話」
+      // v3.10: the cremation permit as its own item. Burial vs cremation is not asked, so it is shown to everyone
+      // 要帶什麼用臺北市市立火化場當例子（只做全國共通的項目，各縣市不同的寫例子和去哪裡問）
+      // The bring list is Taipei's municipal crematorium, as an example (other cities and counties may differ)
+      id: 'cremation', group: 'now', show: () => true,
+      title: '要火化的話：先申請「火化許可證明」',
+      deadline: { type: 'none', text: '看各縣市的規定（例如臺北市：過世後 30 天內要埋葬或火化）' },
+      why: () => [
+        '法律規定，火化場不可以火化沒有「火化許可證明」的遺體（殯葬管理條例第 25 條）。'
+      ],
+      where: () => [
+        '有請禮儀公司的話，請先問禮儀公司會不會幫您申請。',
+        '自己申請的話，麻煩您先打電話問要去的火化場或當地的殯葬管理單位：在哪裡申請、要帶什麼。'
+      ],
+      bring: () => [
+          '例如臺北市市立火化場的規定（其他縣市可能不同）：',
+          '申請書',
+          '證明您可以申請的文件（例如證明您是過世者的親屬）',
+          '死亡證明書或相驗屍體證明書（官方說明沒有寫要正本還是影本）',
+          '請別人代辦時：代辦的人的身分證明文件和委託書',
+          '申請時要繳費'
+      ],
+      notes: (c) => [
+        '法律規定，申請火化許可證明要附死亡證明文件（殯葬管理條例第 25 條）。',
+        '由誰核發：法律規定是地方政府（直轄市政府、市政府，或鄉、鎮、市公所；在縣政府設的火化場火化的，是縣政府），也可能是它們委託的其他單位（殯葬管理條例第 3、25 條）。實際要向哪個窗口申請，各地不同，例如臺北市是向殯葬處申請（臺北市市立殯葬設施使用管理辦法第 14 條），所以請先打電話問。',
+        '例如臺北市規定，過世後 30 天內要埋葬或火化；有特殊情形來不及的話，可以向臺北市的殯葬處申請延期，要等他們同意（臺北市殯葬管理自治條例第 7 條）。其他縣市請問當地的殯葬管理單位。',
+        c.a.cause === 'notdisease' || c.a.cause === 'unsure' ? '不是因病或年老自然過世的：要附的是地方檢察署（地檢署）開立的「相驗屍體證明書」。' : null
+      ],
+      // 畫面上的詳細頁：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊一致）。
+      // On-screen detail page: the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '有請禮儀公司的話，請先問禮儀公司會不會幫您申請' },
+          { h: '自己申請的話，麻煩您先打電話問要去的火化場或當地的殯葬管理單位', pTop: true, p: '問在哪裡申請、要帶什麼。' },
+          { h: '請準備這些東西（例如臺北市市立火化場的規定，其他縣市可能不同）', ul: [
+              '申請書',
+              '證明您可以申請的文件（例如證明您是過世者的親屬）',
+              '死亡證明書或相驗屍體證明書（官方說明沒有寫要正本還是影本）',
+              '請別人代辦時：代辦的人的身分證明文件和委託書',
+              '申請時要繳費'
+          ] }
+        ],
+        why: '法律規定，火化場不可以火化沒有「火化許可證明」的遺體（殯葬管理條例第 25 條）。',
+        watch: (c) => [
+          '例如臺北市規定，過世後 30 天內要埋葬或火化；有特殊情形來不及的話，可以向臺北市的殯葬處申請延期，要等他們同意（臺北市殯葬管理自治條例第 7 條）。其他縣市請問當地的殯葬管理單位。',
+          c.a.cause === 'notdisease' || c.a.cause === 'unsure' ? '不是因病或年老自然過世的：要附的是地方檢察署（地檢署）開立的「相驗屍體證明書」。' : null
+        ],
+        moreHint: '誰核發、官方說明',
+        more: () => [
+          { h: '誰核發火化許可證明', body: [
+            '法律規定，申請火化許可證明要附死亡證明文件（殯葬管理條例第 25 條）。',
+            '由誰核發：法律規定是地方政府（直轄市政府、市政府，或鄉、鎮、市公所；在縣政府設的火化場火化的，是縣政府），也可能是它們委託的其他單位（殯葬管理條例第 3、25 條）。實際要向哪個窗口申請，各地不同，例如臺北市是向殯葬處申請（臺北市市立殯葬設施使用管理辦法第 14 條），所以請先打電話問。'
+          ] }
+        ]
+      },
+      sources: ['funeralAct25', 'tpFuneralRule14', 'tpFuneralAuto']
     },
     {
       id: 'funeral-receipt', group: 'now',
@@ -2695,7 +2759,8 @@ window.CONTENT = (function () {
       insFuneral: ['labor', 'np', 'farmer'].some((k) => Array.isArray(a.ins) && (a.ins.includes(k) || a.ins.includes('unsure'))),
       shows: (id) => { const it = C.ITEMS.find((i) => i.id === id); return !!it && !!it.show(ctx); },
       // 清單裡有幾項手續的文件列了死亡證明（參考份數） How many visible procedures list a death certificate
-      certCount: () => C.ITEMS.filter((it) => it.id !== 'death-cert' && it.show(ctx) && typeof it.bring === 'function')
+      // v3.10：火化（辦喪事）不算，份數那句寫的是「還沒算辦喪事要用的」 Cremation is a funeral step, which the sentence says is not counted
+      certCount: () => C.ITEMS.filter((it) => it.id !== 'death-cert' && it.id !== 'cremation' && it.show(ctx) && typeof it.bring === 'function')
         .filter((it) => clean(it.bring(ctx)).some((b) => /死亡證明|相驗屍體證明書|死亡診斷書/.test(b) && !/可以不附/.test(b))).length
     };
     return ctx;
