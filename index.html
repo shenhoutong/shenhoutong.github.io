@@ -29,6 +29,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <title>身後通</title>
 <!--
+  身後通 v3.13（2026-10-21）
+  v3.13：新增「手機、市話、網路退租或改名」（是過世家人名字申請的才需要；中華電信、台灣大哥大、遠傳的服務契約都寫，
+  法定繼承人可以選退租或更名，要帶「相關證明文件」但沒寫是哪些，請家屬先打電話問；合約期間退租的補貼款，契約沒寫過世的例外）。
   身後通 v3.12（2026-10-21）
   v3.12：新增「水電瓦斯帳單過戶」（帳單是過世家人名字才需要；台電、台灣自來水公司、臺北自來水事業處的說明和電話；
   官方沒寫原來的用戶過世怎麼辦，請家屬先打電話問；瓦斯公司的做法沒有讀到官方原文，只寫「請打帳單上的電話問」）。
@@ -623,7 +626,7 @@ html[data-scale="1.2"] .row .body, html[data-scale="1.4"] .row .body { padding-r
 window.CONTENT = (function () {
   const VERIFIED_ON = '2026-10-11 至 2026-10-21';
   // 工具版本（回報錯誤時自動帶入） Tool version, pre-filled in feedback reports
-  const APP_VERSION = 'v3.12';
+  const APP_VERSION = 'v3.13';
 
   // ---- 回報錯誤的 Google 表單 Feedback Google Form ----
   // url：表單網址（docs.google.com/forms/.../viewform）。空的就不顯示回報連結。
@@ -761,7 +764,12 @@ window.CONTENT = (function () {
     tpcEbill: ['台電電子帳單服務系統（24 小時客服專線 1911）', 'https://service.taipower.com.tw/ebpps2/', '2026-10-21 查閱'],
     twcNotice: ['台灣自來水公司：申辦須知（變更用水人名義(過戶)：要帶的東西、代辦、網路申請）', 'https://www.water.gov.tw/ch/Notice/Detail/7919?nodeId=812', '2026-10-07 更新'],
     twcTransfer: ['台灣自來水公司：常見問答「如何申請過戶(用水名義人變更)？」（單獨申請、客服專線 1910）', 'https://www.water.gov.tw/ch/Subject/Detail/3711?nodeId=4889', '2026-09-09 更新'],
-    tpwTransfer: ['臺北自來水事業處：常見問答「如何申請過戶（名義變更）﹖」（要帶的東西、電話過戶、24 小時客服專線）', 'https://www.water.gov.taipei/News_Content.aspx?n=30E4EDA27F6D9953&sms=87415A8B9CE81B16&s=5937E138CE0CE791', '2024-12-20 資料更新']
+    tpwTransfer: ['臺北自來水事業處：常見問答「如何申請過戶（名義變更）﹖」（要帶的東西、電話過戶、24 小時客服專線）', 'https://www.water.gov.taipei/News_Content.aspx?n=30E4EDA27F6D9953&sms=87415A8B9CE81B16&s=5937E138CE0CE791', '2024-12-20 資料更新'],
+    chtMobile: ['中華電信：行動寬頻服務契約（過世時繼承人可以退租或更名、怎麼退租、補貼款）', 'https://www.cht.com.tw/zh-TW/home/cht/-/media/eShop-Images/IPM-DOC/iPM/docs/10376.pdf', '2025-12-18 核准'],
+    twmMobile: ['台灣大哥大：行動寬頻服務契約（過世時繼承人可以退租或更名、怎麼退租、補貼款）', 'https://www.taiwanmobile.com/csonline/uploads/download/NCC_service_1150117_v2.pdf', '2025-12-18 核准'],
+    fetMobile: ['遠傳：行動寬頻服務契約（過世時繼承人可以退租或更名、怎麼退租、補貼款）', 'https://www.fetnet.net/content/dam/fetnet/user_resource/corp/documents/about-us/fetnetrule/FET%E8%A1%8C%E5%8B%95%E5%AF%AC%E9%A0%BB%E6%9C%8D%E5%8B%99%E5%A5%91%E7%B4%84.pdf', '2025-12-18 核准'],
+    chtLine: ['中華電信：市內網路服務契約（市內電話；過世時繼承人可以退租或更名、怎麼退租）', 'https://www.cht.com.tw/zh-TW/home/cht/-/media/eShop-Images/IPM-DOC/iPM/docs/9093.pdf', '2025-08-14 起實施'],
+    chtNet: ['中華電信：網際網路接取服務契約（HiNet、光世代上網；過世時繼承人可以退租或更名、怎麼退租）', 'https://www.cht.com.tw/ipm/docs/22/22_14030.pdf', '2025-09-10 起實施']
   };
 
   // ---- 常用電話（只放官方頁面上查到的號碼） Verified phone numbers ----
@@ -2779,6 +2787,52 @@ window.CONTENT = (function () {
         ]
       },
       sources: ['tpcChange', 'tpcOnline', 'tpcEbill', 'twcNotice', 'twcTransfer', 'tpwTransfer']
+    },
+    {
+      // v3.13（2026-10-21）：手機、市話、網路退租或改名。每個人都列出來（沒有問），不是過世家人名字申請的直接打勾
+      // v3.13: mobile, landline, internet. Shown to everyone (no question); tick it off if not in the deceased's name
+      // 三家電信的服務契約都寫：過世時法定繼承人可以選退租或更名，要帶「相關證明文件」（沒寫是哪些 → 請先打電話問）
+      // All three carriers' contracts: heirs may cancel or change the name with "relevant documents" (not listed -> call first)
+      id: 'telecom', group: 'long', show: () => true,
+      confirm: () => true,
+      confirmText: '這一項只適用在手機門號、市話或網路是用過世家人的名字申請的情況；不知道的話，請看帳單上的名字。不是的話，這一項不用辦，請直接打勾就好。',
+      confirmTag: '是過世家人名字才需要',
+      confirmTagExport: '（是過世家人的名字才需要）',
+      title: '手機、市話、網路退租或改名',
+      deadline: { type: 'none', text: '官方沒有寫期限' },
+      why: () => [
+        '手機門號、市話、網路是用過世家人的名字申請的話，法定繼承人（法律規定可以繼承遺產的家人）可以選擇辦退租（不再使用），或改成繼承人的名字繼續用（契約上叫「更名」）。'
+      ],
+      // 紙本（PDF、列印）只印標題、期限、去哪裡辦、要帶什麼，所以要注意的事也寫在這裡
+      // Exports print only title, deadline, where and bring, so the watch points go here too
+      where: () => [
+        '請先打電話給那一家電信公司，問清楚要帶什麼。電話請看帳單上的客服電話，也可以直接到那一家的門市問。',
+        '不再使用：請辦退租。要填寫書面申請（手機要到門市辦），並把費用繳清，還沒出帳的也要繳（例如退租以後才寄來的最後一張帳單）。',
+        '要繼續用：請辦「更名」，改成繼承人的名字。例如家裡還有人在用這支手機，或還要用這條網路。',
+        '手機還在合約期間（例如當初辦門號時買手機或月租費有優惠）的話，提前退租要照剩下的天數付「補貼款」（把當初的優惠按比例還回去）。契約沒有寫過世的情況可以不用付，請在門市問清楚。',
+        '這個工具查到的是中華電信（手機、市話、網路）、台灣大哥大（手機）、遠傳（手機）的服務契約。其他公司（例如有線電視公司的網路），請打那一家帳單上的電話問。'
+      ],
+      bring: () => [
+        '電信公司的服務契約只寫要帶「相關證明文件」，沒有寫是哪些，所以出發前麻煩您先問清楚。'
+      ],
+      phones: [],
+      // 畫面上的詳細頁：和上面的欄位是同一批事實，只是重新排。改內容時兩邊都要改（自動測試會檢查兩邊一致）。
+      // On-screen detail page: the same facts as the fields above, rearranged. Update both; tests check they match.
+      brief: {
+        steps: () => [
+          { h: '請先打電話給那一家電信公司，問清楚要帶什麼', pTop: true, p: ['電話請看帳單上的客服電話，也可以直接到那一家的門市問。', '電信公司的服務契約只寫要帶「相關證明文件」，沒有寫是哪些，所以出發前麻煩您先問清楚。'] },
+          { h: '不再使用：請辦退租', pTop: true, p: '要填寫書面申請（手機要到門市辦），並把費用繳清，還沒出帳的也要繳（例如退租以後才寄來的最後一張帳單）。' },
+          { h: '要繼續用：請辦「更名」，改成繼承人的名字', p: '例如家裡還有人在用這支手機，或還要用這條網路。' }
+        ],
+        why: '手機門號、市話、網路是用過世家人的名字申請的話，法定繼承人（法律規定可以繼承遺產的家人）可以選擇辦退租（不再使用），或改成繼承人的名字繼續用（契約上叫「更名」）。',
+        watch: () => [
+          '手機還在合約期間（例如當初辦門號時買手機或月租費有優惠）的話，提前退租要照剩下的天數付「補貼款」（把當初的優惠按比例還回去）。契約沒有寫過世的情況可以不用付，請在門市問清楚。',
+          '這個工具查到的是中華電信（手機、市話、網路）、台灣大哥大（手機）、遠傳（手機）的服務契約。其他公司（例如有線電視公司的網路），請打那一家帳單上的電話問。'
+        ],
+        moreHint: '官方說明',
+        more: () => []
+      },
+      sources: ['chtMobile', 'twmMobile', 'fetMobile', 'chtLine', 'chtNet']
     }
   ];
 
