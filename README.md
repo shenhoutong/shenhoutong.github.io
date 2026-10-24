@@ -32,3 +32,4 @@
 | `apple-touch-icon.png`、`icon-*.png`、`favicon*` | 主畫面和瀏覽器分頁的小圖示 |
 | `og-image.png` | 在 LINE、Facebook 貼網址時顯示的預覽圖 |
 | `.nojekyll` | 告訴 GitHub Pages 直接放檔案、不要另外轉換 |
+| `google8151a5a7b53b8783.html` | Google Search Console 確認網站主人用的（請不要刪，刪了就要重新驗證） |
